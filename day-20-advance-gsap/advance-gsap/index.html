@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DEFENDER | The Ultimate 3D Experience</title>
+    <link rel="stylesheet" href="https://unpkg.com/sheryjs/dist/Shery.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <div class="loader">
+      <div class="loader-content">
+        <div class="counter display-heading" id="counterEl">0%</div>
+        <div class="line-container">
+          <div class="line-fill" id="lineEl"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-cursor" id="viewCursor">
+      <span>VIEW</span>
+    </div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <nav class="navbar">
+      <div class="logo">DEFENDER</div>
+      <ul class="nav-links">
+        <li><a href="#" class="magnet-target">Explore</a></li>
+        <li><a href="#" class="magnet-target">Heritage</a></li>
+        <li><a href="#" class="magnet-target">Capability</a></li>
+      </ul>
+    </nav>
+
+    <main class="smooth-scroll-wrapper">
+      <section class="section1 s-hero">
+        <div class="hero-content">
+          <h1 class="hero-text bg-text solid display-heading">DEFENDER</h1>
+          <h1 id="hero-stroke" class="hero-text bg-text stroke display-heading">
+            DEFENDER
+          </h1>
+          <p id="hero-tagline" class="hero-text tagline">
+            Engineered for the impossible.
+          </p>
+        </div>
+      </section>
+
+      <section class="section2 s-about container">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 class="reveal-text section-title">FORGED IN<br />THE WILD.</h2>
+            <p class="reveal-text body-large mt-2">
+              Since 1948, Land Rover has been crafting vehicles that redefine
+              the boundaries of exploration. The new Defender respects its
+              bloodline while embracing 21st-century geometry and off-road
+              technology.
+            </p>
+          </div>
+          <div class="about-images">
+            <img
+              class="anim-img img-1"
+              src="https://i.pinimg.com/1200x/69/20/20/69202019d757f84336b4bdfd8fa07097.jpg"
+              alt="History" />
+            <img
+              class="anim-img img-2"
+              src="https://i.pinimg.com/736x/da/31/d4/da31d4a8c64a03a47c18d89c586402ae.jpg"
+              alt="Concept" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section3 s-drive container">
+        <div class="drive-ui">
+          <h2 class="reveal-text section-title right-align">
+            ALL-TERRAIN<br />DYNAMICS.
+          </h2>
+          <div class="drag-wrapper mt-4" id="drag-container">
+            <div class="drag-card" id="drag-item">
+              <img
+                src="https://i.pinimg.com/1200x/11/3b/b8/113bb87a2f2229df7d058b65aa9bd5ca.jpg"
+                alt="Specs" />
+              <div class="drag-info">
+                <h3>DRAG TO EXPLORE SPECS</h3>
+                <p>Swipe to reveal hidden telemetry data.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section4 s-gallery container">
+        <h2 class="reveal-text section-title mb-4">THE ARSENAL</h2>
+        <div class="gallery-grid">
+          <div class="g-item">
+            <img
+              src="https://i.pinimg.com/736x/8b/59/4e/8b594e2249d197305330be189c404326.jpg"
+              alt="G1" />
+          </div>
+          <div class="g-item">
+            <img
+              src="https://i.pinimg.com/736x/24/8f/d0/248fd0de390bf2095030753029a26aad.jpg"
+              alt="G2" />
+          </div>
+          <div class="g-item">
+            <img
+              src="https://i.pinimg.com/736x/ee/be/d9/eebed91b207e2fe9b8225072f5e8c75d.jpg"
+              alt="G3" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section5 s-path">
+        <div class="path-container">
+          <h2 class="path-title display-heading">THE JOURNEY</h2>
+          <svg
+            viewBox="0 0 1200 600"
+            preserveAspectRatio="none"
+            class="journey-svg">
+            <path
+              id="the-route"
+              d="M 0,300 C 200,470 400,130 600,300 C 800,470 1000,130 1200,300"
+              fill="none"
+              stroke="rgba(255,255,255,0.15)"
+              stroke-width="4"
+              stroke-dasharray="10, 10" />
+          </svg>
+          <div class="path-item car-img">
+            <img
+              src="https://i.pinimg.com/736x/c7/19/8a/c7198ae03d22d487b7c796e38aee2e99.jpg"
+              alt="Lead" />
+          </div>
+          <div class="path-item arrow-sign">➔</div>
+          <div class="path-item car-img">
+            <img
+              src="https://i.pinimg.com/736x/7a/4e/a7/7a4ea7e4d7471e2ae47f429a9ed7e66e.jpg"
+              alt="Middle" />
+          </div>
+          <div class="path-item arrow-sign">➔</div>
+          <div class="path-item car-img">
+            <img
+              src="https://i.pinimg.com/1200x/69/20/20/69202019d757f84336b4bdfd8fa07097.jpg"
+              alt="Trail" />
+          </div>
+        </div>
+      </section>
+
+      <div id="return-gallery" style="display: none; opacity: 0">
+        <section class="return-sec hover-view">
+          <div class="r-img-wrapper">
+            <img
+              src="https://i.pinimg.com/736x/7b/71/8b/7b718b0e51a19edaeb5d71d54f4a1c04.jpg"
+              alt="Stance"
+              class="r-bg" />
+          </div>
+          <div class="r-content">
+            <h3 class="r-title">01 // THE POSTURE</h3>
+            <p>
+              Monocoque architecture engineered to absorb 100% of high-impact
+              off-road payload spikes.
+            </p>
+          </div>
+        </section>
+        <section class="return-sec hover-view">
+          <div class="r-img-wrapper">
+            <img
+              src="https://i.pinimg.com/736x/23/a2/3b/23a23b24377b943b3eae7deabde77f85.jpg"
+              alt="Profile"
+              class="r-bg" />
+          </div>
+          <div class="r-content">
+            <h3 class="r-title">02 // THE SILHOUETTE</h3>
+            <p>
+              Minimalist geometric overhangs guaranteeing uncompromised terrain
+              entry and departure angles.
+            </p>
+          </div>
+        </section>
+        <section class="return-sec hover-view">
+          <div class="r-img-wrapper">
+            <img
+              src="https://i.pinimg.com/736x/41/da/86/41da866b59a9fa24657b0afd3db5dbb0.jpg"
+              alt="Tread"
+              class="r-bg" />
+          </div>
+          <div class="r-content">
+            <h3 class="r-title">03 // THE CONTACT</h3>
+            <p>
+              Intelligent All-Wheel Drive calculating mechanical slip across
+              individual tire treads at 100hz.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <section class="section6 s-ignition container">
+        <div class="ignition-ui">
+          <h2 class="reveal-text section-title">IGNITION</h2>
+          <button id="start-engine-btn" class="magnet-target ignite-btn">
+            START ENGINE
+          </button>
+        </div>
+      </section>
+
+      <section class="section7 s-engine container">
+        <div class="engine-header flex-header">
+          <div>
+            <h2 class="reveal-text section-title">V8 BLUEPRINT</h2>
+            <p class="body-large mt-2">
+              Click and drag the workbench to pan; grab individual telemetry
+              cards to inspect.
+            </p>
+          </div>
+          <button
+            id="arrange-btn"
+            class="magnet-target ignite-btn"
+            style="padding: 0.8rem 2rem; font-size: 1rem">
+            ARRANGE GRID
+          </button>
+        </div>
+
+        <div class="blueprint-wrapper mt-4">
+          <div id="blueprint-container">
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/736x/f5/1a/4b/f51a4b8d32d1e0074368dc9201b1d860.jpg"
+                alt="Block"
+                class="engine-img full" />
+              <div class="card-label">01 // CYLINDER BLOCK</div>
+            </div>
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/1200x/c2/71/d6/c271d647efabcefa2e7bb112975f4451.jpg"
+                alt="Pistons"
+                class="engine-img full" />
+              <div class="card-label">02 // PISTON MANIFOLD</div>
+            </div>
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/736x/8b/59/4e/8b594e2249d197305330be189c404326.jpg"
+                alt="Supercharger"
+                class="engine-img full" />
+              <div class="card-label">03 // SUPERCHARGER CORE</div>
+            </div>
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/736x/da/31/d4/da31d4a8c64a03a47c18d89c586402ae.jpg"
+                alt="Valves"
+                class="engine-img full" />
+              <div class="card-label">04 // INTAKE VALVES</div>
+            </div>
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/736x/ee/be/d9/eebed91b207e2fe9b8225072f5e8c75d.jpg"
+                alt="Turbos"
+                class="engine-img full" />
+              <div class="card-label">05 // TWIN TURBOCHARGERS</div>
+            </div>
+            <div class="engine-box">
+              <img
+                src="https://i.pinimg.com/736x/c7/19/8a/c7198ae03d22d487b7c796e38aee2e99.jpg"
+                alt="ECU"
+                class="engine-img full" />
+              <div class="card-label">06 // TELEMETRY ECU</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/sheryjs/dist/Shery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

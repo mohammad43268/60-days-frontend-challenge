@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProQuiz | Mastery Assessment</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="app-header glass-panel">
+        <div class="logo">
+            <i class="fa-solid fa-layer-group" style="color: var(--color-mint);"></i> ProQuiz
+        </div>
+        <div class="header-controls">
+            <span id="high-score-display" class="badge">Best: 0</span>
+            <button id="theme-toggle" aria-label="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section id="setup-screen" class="glass-panel active screen">
+            <h1>Configure Your Session</h1>
+            <p class="subtitle">Customize your quiz parameters before beginning.</p>
+            
+            <form id="setup-form">
+                <div class="form-group">
+                    <label for="category">Subject</label>
+                    <select id="category" required>
+                        <option value="frontend">Frontend Dev (HTML/CSS/JS)</option>
+                        <option value="general">General Knowledge</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" required>
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Number of Questions</label>
+                    <select id="amount" required>
+                        <option value="5" selected>5 Questions</option>
+                        <option value="10">10 Questions</option>
+                        <option value="15">15 Questions</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary ripple">Start Assessment <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+        </section>
+
+        <section id="quiz-screen" class="glass-panel screen hidden" aria-live="polite">
+            <div class="quiz-header">
+                <div class="progress-container">
+                    <div class="progress-text">
+                        <span id="question-counter">Question 1/10</span>
+                        <span id="score-tracker">Score: 0</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="timer-container">
+                    <i class="fa-regular fa-clock"></i> <span id="timer">15</span>s
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h2 id="question-text">Loading question...</h2>
+                <div id="options-container" class="options-grid">
+                    </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button id="btn-next" class="btn btn-secondary hidden">Next Question</button>
+            </div>
+        </section>
+
+        <section id="results-screen" class="glass-panel screen hidden">
+            <div class="results-header">
+                <h2>Assessment Complete</h2>
+                <p id="motivational-message">Great effort!</p>
+            </div>
+
+            <div class="score-circle">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path id="score-path" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <text x="18" y="20.35" id="score-percentage" class="percentage">0%</text>
+                </svg>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-check" style="color: var(--color-mint);"></i>
+                    <span id="correct-answers">0</span>
+                    <small>Correct</small>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-xmark" style="color: #ff6b6b;"></i>
+                    <span id="wrong-answers">0</span>
+                    <small>Incorrect</small>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btn-restart" class="btn btn-primary ripple"><i class="fa-solid fa-rotate-right"></i> Retake Quiz</button>
+                <button id="btn-home" class="btn btn-outline"><i class="fa-solid fa-house"></i> Home</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

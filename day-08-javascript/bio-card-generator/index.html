@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Tech Talent Directory</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="toast-container"></div>
+
+    <header>
+      <h1 class="page-title">Tech Talent Directory</h1>
+
+      <div class="controls-container">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search by name, role, or skill..." />
+        <div id="stats-container">
+          <span class="stat-badge"
+            >Total: <strong id="dev-count">0</strong></span
+          >
+        </div>
+      </div>
+
+      <div id="filter-container" class="filter-container"></div>
+    </header>
+
+    <main id="cards-container"></main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

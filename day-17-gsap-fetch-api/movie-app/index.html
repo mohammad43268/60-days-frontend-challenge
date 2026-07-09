@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anime Beyond Screens</title>
+    <meta name="referrer" content="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@400;600&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="loading">
+    <div class="preloader">
+      <div class="preloader-counter">0%</div>
+      <div class="preloader-text">AWAKENING UNIVERSE</div>
+    </div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-follower">
+      <span class="cursor-text"></span>
+    </div>
+    <canvas id="webgl-canvas"></canvas>
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <section id="hero" class="section hero">
+          <div class="hero-content">
+            <h1 class="huge-text hero-title">
+              <span class="line">DISCOVER</span>
+              <span class="line">ANIME</span>
+              <span class="line">BEYOND</span>
+              <span class="line">SCREENS</span>
+            </h1>
+            <div class="hero-cta">
+              <button class="magnetic-btn hover-trigger" data-cursor="PLAY">
+                <span>EXPLORE THE ARCHIVE</span>
+              </button>
+            </div>
+          </div>
+          <div class="hero-scroll-indicator">
+            <p>SCROLL TO EXPLORE</p>
+            <div class="line-indicator"></div>
+          </div>
+        </section>
+        <section id="manifesto" class="section manifesto">
+          <div class="container">
+            <h2 class="reveal-text">
+              WE ARE NOT JUST WATCHING. WE ARE STEPPING INTO WORLDS CRAFTED BY
+              VISIONARIES. A CURATED EXHIBITION OF JAPANESE ANIMATION.
+            </h2>
+          </div>
+        </section>
+        <section id="featured" class="section featured">
+          <div class="container">
+            <div class="section-header">
+              <h2 class="section-label">01 / FEATURED ARCHIVE</h2>
+              <p class="section-desc">
+                The highest-rated masterworks currently streaming.
+              </p>
+            </div>
+            <div class="bento-grid" id="bento-container"></div>
+          </div>
+        </section>
+
+        <section id="gallery-trail" class="section gallery-wrapper">
+          <h2 class="huge-outline-text background-layer">EXHIBITION</h2>
+          <div class="gallery-grid">
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/74/14/4a/74144abf94bde87c6f91f3194f6e78b0.jpg"
+                alt="Gallery Image 1" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/1200x/94/3b/6b/943b6b7f9f8ee0f775642fb41e4a998c.jpg"
+                alt="Gallery Image 2" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/4f/77/10/4f7710366204078972e24e31cc701d3b.jpg"
+                alt="Gallery Image 3" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/e6/da/b8/e6dab84613f146b271e37dddd9d878ae.jpg"
+                alt="Gallery Image 4" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/2e/36/79/2e36795211d6549efb19f07fafaf3650.jpg"
+                alt="Gallery Image 5" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/1200x/f4/f0/4f/f4f04f232a0df2ba91c8b2a8402bb898.jpg"
+                alt="Gallery Image 6" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/3d/4f/7c/3d4f7c5490aa5f5daecaec18389f70df.jpg"
+                alt="Gallery Image 7" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/6e/22/ad/6e22adc5aa455da30c922ef176ccf491.jpg"
+                alt="Gallery Image 8" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/51/3c/dc/513cdc6dd53614b1a9975b36c0ee9214.jpg"
+                alt="Gallery Image 9" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/1200x/95/73/31/9573313d68d846c6f3f6a50fbc48c205.jpg"
+                alt="Gallery Image 10" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/aa/6c/6d/aa6c6def99f0899f257b9be3381c660f.jpg"
+                alt="Gallery Image 11" />
+            </div>
+            <div
+              class="gallery-card glass-neo hover-trigger"
+              data-cursor="VIEW">
+              <img
+                src="https://i.pinimg.com/736x/03/ee/b2/03eeb24b9e2466c206a01e1211afb3ca.jpg"
+                alt="Gallery Image 12" />
+            </div>
+          </div>
+        </section>
+
+        <section id="spotlight" class="section spotlight">
+          <div class="container">
+            <div class="section-header">
+              <h2 class="section-label">02 / VISIONARY SPOTLIGHT</h2>
+              <p class="section-desc">
+                Immersive environments from legendary creators.
+              </p>
+            </div>
+            <div class="spotlight-grid">
+              <div
+                class="spotlight-card glass-neo hover-trigger"
+                data-cursor="ENTER">
+                <img
+                  src="https://i.pinimg.com/736x/38/d8/1a/38d81affe19c294f7aa552a6cf8754e0.jpg"
+                  alt="Neo Tokyo"
+                  class="spotlight-img" />
+                <h3 class="spotlight-title">NEO TOKYO</h3>
+              </div>
+              <div
+                class="spotlight-card glass-neo hover-trigger"
+                data-cursor="ENTER">
+                <img
+                  src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?q=80&w=1200&auto=format&fit=crop"
+                  alt="Mystic Realms"
+                  class="spotlight-img" />
+                <h3 class="spotlight-title">MYSTIC REALMS</h3>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="cinematic" class="section cinematic">
+          <div
+            class="video-container glass-neo hover-trigger"
+            data-cursor="WATCH">
+            <div class="video-overlay"></div>
+            <img
+              src="https://i.pinimg.com/1200x/8a/ef/4f/8aef4fe2656f831ffe0ee67aefb71bea.jpg"
+              alt="Anime Poster"
+              class="parallax-img" />
+            <h2 class="video-title">ENTER THE VOID</h2>
+          </div>
+        </section>
+        <section id="stats" class="section stats">
+          <div class="container stats-grid">
+            <div class="stat-item glass-neo">
+              <h3 class="counter huge-text" data-target="14580">0</h3>
+              <p class="stat-label">TOTAL EPISODES SYNCED</p>
+            </div>
+            <div class="stat-item glass-neo">
+              <h3 class="counter huge-text" data-target="98">0</h3>
+              <p class="stat-label">GLOBAL POPULARITY INDEX</p>
+            </div>
+            <div class="stat-item glass-neo">
+              <h3 class="counter huge-text" data-target="8.9">0</h3>
+              <p class="stat-label">AVERAGE MASTERPIECE RATING</p>
+            </div>
+          </div>
+        </section>
+        <section id="directory" class="section directory">
+          <div class="container">
+            <h2 class="section-label">03 / STUDIO DIRECTORY</h2>
+            <div class="accordion-list">
+              <div class="accordion-item hover-trigger" data-cursor="VIEW">
+                <div class="accordion-header">
+                  <h3>STUDIO GHIBLI</h3>
+                  <span>1985</span>
+                </div>
+                <div class="accordion-content">
+                  Pioneers of breathtaking fantasy and emotional depth.
+                </div>
+              </div>
+              <div class="accordion-item hover-trigger" data-cursor="VIEW">
+                <div class="accordion-header">
+                  <h3>MAPPA</h3>
+                  <span>2011</span>
+                </div>
+                <div class="accordion-content">
+                  Modern titans pushing the boundaries of action cinematography.
+                </div>
+              </div>
+              <div class="accordion-item hover-trigger" data-cursor="VIEW">
+                <div class="accordion-header">
+                  <h3>UFOTABLE</h3>
+                  <span>2000</span>
+                </div>
+                <div class="accordion-content">
+                  Masters of digital compositing and fluid particle effects.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="marquee" class="section marquee-section">
+          <div class="marquee-track">
+            <div class="marquee-content">
+              <h1 class="marquee-text">
+                WATCH • EXPLORE • DISCOVER • STREAM • ANIME •
+              </h1>
+              <h1 class="marquee-text outline">
+                WATCH • EXPLORE • DISCOVER • STREAM • ANIME •
+              </h1>
+            </div>
+          </div>
+        </section>
+        <footer id="footer" class="section footer">
+          <div class="container footer-container">
+            <div class="footer-top">
+              <h1 class="footer-logo huge-text">BEYOND.</h1>
+            </div>
+            <div class="footer-bottom">
+              <div class="footer-links">
+                <a href="#" class="magnetic-link hover-trigger" data-cursor="↗"
+                  >TWITTER</a
+                >
+                <a href="#" class="magnetic-link hover-trigger" data-cursor="↗"
+                  >INSTAGRAM</a
+                >
+                <a href="#" class="magnetic-link hover-trigger" data-cursor="↗"
+                  >AWWWARDS</a
+                >
+              </div>
+              <p class="footer-copyright">
+                © 2026 BEYOND SCREENS. ALL RIGHTS RESERVED.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

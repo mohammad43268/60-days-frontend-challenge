@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Box Model Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>CSS Box Model</h1>
+  <p class="subtitle">Every element is a box made of 4 layers</p>
+
+  <!-- DEMO 1: Showing all 4 layers -->
+  <section class="section">
+    <h2>The 4 Layers</h2>
+
+    <div class="box-demo">
+      <div class="layer margin-box">
+        <span class="label">Margin (outside space)</span>
+        <div class="layer border-box">
+          <span class="label">Border</span>
+          <div class="layer padding-box">
+            <span class="label">Padding (inside space)</span>
+            <div class="layer content-box">
+              Content
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO 2: content-box vs border-box -->
+  <section class="section">
+    <h2>content-box vs border-box</h2>
+
+    <div class="comparison">
+      <div class="box content-box-demo">
+        <p>content-box</p>
+        <small>width: 300px</small>
+        <small>padding adds ON TOP</small>
+        <small>actual size = 340px</small>
+      </div>
+
+      <div class="box border-box-demo">
+        <p>border-box</p>
+        <small>width: 300px</small>
+        <small>padding included INSIDE</small>
+        <small>actual size = 300px</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO 3: Margin collapse -->
+  <section class="section">
+    <h2>Margin Collapse</h2>
+    <p class="note">
+      When two vertical margins meet, they collapse into one. 
+      The larger margin wins — they do NOT add together.
+    </p>
+    <div class="collapse-demo">
+      <div class="collapse-box">margin-bottom: 40px</div>
+      <div class="collapse-box">margin-top: 20px</div>
+      <p class="note">Gap between them = 40px, not 60px</p>
+    </div>
+  </section>
+
+</body>
+</html>

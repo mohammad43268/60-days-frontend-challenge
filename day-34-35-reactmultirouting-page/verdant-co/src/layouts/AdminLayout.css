@@ -1,0 +1,101 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #F8F6F3; /* slightly different from cream for admin */
+}
+
+.admin-sidebar {
+  width: 280px;
+  background-color: var(--sage);
+  color: var(--surface);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.admin-brand {
+  padding: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-brand h2 {
+  color: var(--surface);
+  font-size: 1.5rem;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  flex: 1;
+  gap: 0.5rem;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.admin-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--surface);
+}
+
+.admin-nav a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--surface);
+}
+
+.admin-footer {
+  padding: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-user {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--surface);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.admin-logout:hover {
+  opacity: 1;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 3rem;
+  overflow-y: auto;
+}
+
+.admin-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}

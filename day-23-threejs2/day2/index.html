@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viewport-X // Enterprise 3D Laboratory</title>
+  </head>
+  <body class="relative h-full w-full overflow-hidden select-none">
+    <div
+      class="pointer-events-none absolute inset-0 z-10 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]"></div>
+
+    <header
+      class="pointer-events-none absolute top-6 left-6 right-6 z-20 flex items-start justify-between font-mono">
+      <div
+        class="flex items-center gap-3 border border-cyan-500/30 bg-slate-900/80 p-3 px-5 backdrop-blur-md shadow-lg shadow-cyan-500/10 border-l-4 border-l-cyan-400">
+        <span
+          class="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse"></span>
+        <div>
+          <h1 class="text-xs font-bold tracking-widest text-white">
+            VIEWPORT-X
+            <span class="text-[10px] font-normal text-cyan-400"
+              >// V1.0-PROD</span
+            >
+          </h1>
+          <p class="text-[9px] text-slate-400">
+            PHYSICALLY BASED RENDERING (PBR) LAB
+          </p>
+        </div>
+      </div>
+
+      <div class="hidden md:flex gap-2 text-[10px]">
+        <div
+          class="border border-slate-800 bg-slate-900/80 p-2 px-3 backdrop-blur-md">
+          <span class="text-slate-500 block text-[8px]">TONE MAPPING</span>
+          <span class="text-cyan-400 font-bold">ACES Filmic</span>
+        </div>
+        <div
+          class="border border-slate-800 bg-slate-900/80 p-2 px-3 backdrop-blur-md">
+          <span class="text-slate-500 block text-[8px]">COLOR SPACE</span>
+          <span class="text-slate-200 font-bold">sRGB Linear</span>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="telemetry-tooltip"
+      class="pointer-events-none absolute z-30 opacity-0 transition-opacity duration-150 font-mono text-xs">
+      <div
+        class="border border-cyan-500/40 bg-slate-950/90 p-3 backdrop-blur-md shadow-xl border-t-2 border-t-cyan-400 min-w-45">
+        <div
+          class="text-[10px] font-bold text-cyan-400 tracking-wider mb-1 border-b border-slate-800 pb-1"
+          id="tt-name">
+          SCANNING...
+        </div>
+        <div class="text-[10px] text-slate-300 grid grid-cols-2 gap-1 mt-1">
+          <span class="text-slate-500">SHADER:</span>
+          <span id="tt-mat" class="text-right text-white font-semibold"
+            >Standard</span
+          >
+          <span class="text-slate-500">STATUS:</span>
+          <span class="text-right text-emerald-400 font-semibold">OPTIMAL</span>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-20 font-mono text-[10px] tracking-widest text-slate-400 border border-slate-800/80 bg-slate-900/60 py-2 px-4 backdrop-blur-md rounded-full">
+      [L-CLICK + DRAG] ORBIT &nbsp;|&nbsp; [HOVER] TELEMETRY &nbsp;|&nbsp;
+      [SCROLL] ZOOM
+    </footer>
+
+    <canvas
+      class="absolute top-0 left-0 w-full h-screen block outline-none"
+      id="webgl-viewport"></canvas>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

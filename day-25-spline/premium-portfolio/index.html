@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mohammad Huzaifa | Creative Developer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
+  </head>
+  <body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar transition-nav">
+      <div class="nav-logo hover-target">MH.</div>
+      <div class="nav-links">
+        <a href="#about" class="hover-target">About</a>
+        <a href="#experience" class="hover-target">Experience</a>
+        <a href="#gallery" class="hover-target">Gallery</a>
+        <a href="#contact" class="hover-target">Contact</a>
+      </div>
+    </nav>
+
+    <main id="smooth-wrapper">
+      <div id="smooth-content">
+        <div class="hero-about-wrapper">
+          <section class="hero theme-light">
+            <div class="spline-bg">
+              <spline-viewer
+                url="https://prod.spline.design/0oH9zvWCV8aZQF4E/scene.splinecode"></spline-viewer>
+              <div class="watermark-hider-light"></div>
+            </div>
+            <div class="hero-content z-20">
+              <p class="greeting reveal-fade">Hello, my name is</p>
+              <h1 class="hero-title clean-text split-chars mt-2">
+                Mohammad Huzaifa
+              </h1>
+              <div class="hero-roles mt-4 reveal-fade">
+                <span class="static-text">I am a </span>
+                <div class="role-mask">
+                  <span class="dynamic-role clean-text"
+                    >Frontend Engineer.</span
+                  >
+                </div>
+              </div>
+              <div class="hero-cta reveal-fade mt-8">
+                <button class="btn btn-outline-dark magnetic hover-target">
+                  View Projects
+                </button>
+                <button class="btn btn-solid-dark magnetic hover-target">
+                  Let's Talk
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section id="about" class="about theme-dark">
+            <div class="about-spline">
+              <spline-viewer
+                url="https://prod.spline.design/KcQ7wfpEW9Oz9vji/scene.splinecode"></spline-viewer>
+              <div class="watermark-hider-dark"></div>
+            </div>
+            <div class="about-text glass-box">
+              <h2 class="section-title clean-text split-chars">
+                Digital<br />Craftsmanship.
+              </h2>
+              <p class="about-desc split-words mt-4">
+                I merge high-end design with modern engineering. Every pixel,
+                every frame, and every scroll is calculated to create a
+                seamless, cinematic experience that lives entirely in the
+                browser.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <section id="skills" class="skills theme-dark">
+          <div class="skills-spline">
+            <spline-viewer
+              url="https://prod.spline.design/IWXd39Ib8efz-0Lw/scene.splinecode"></spline-viewer>
+            <div class="watermark-hider-dark-solid"></div>
+          </div>
+          <div class="skills-content z-20">
+            <h2 class="huge-text clean-text split-chars">Tech Stack</h2>
+            <div class="skills-tags mt-8">
+              <span class="hover-target strand-a">React</span>
+              <span class="hover-target strand-a">Three.js</span>
+              <span class="hover-target strand-a">GSAP</span>
+              <span class="hover-target strand-a">Spline</span>
+              <span class="hover-target strand-a">Tailwind CSS</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="experience" class="experience-stack-section theme-dark">
+          <div class="section-header">
+            <h2 class="section-title text-center clean-text split-words">
+              My Journey.
+            </h2>
+          </div>
+          <div class="cards-wrapper mt-8">
+            <div class="stack-card dark-card">
+              <div class="card-content">
+                <span class="exp-year">2024 - Present</span>
+                <h3 class="exp-role mt-2">Senior Creative Developer</h3>
+                <p class="exp-company">Studio Innovation</p>
+              </div>
+            </div>
+            <div class="stack-card dark-card">
+              <div class="card-content">
+                <span class="exp-year">2022 - 2024</span>
+                <h3 class="exp-role mt-2">Frontend Engineer</h3>
+                <p class="exp-company">Digital Agency</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="gallery" class="draggable-section theme-dark">
+          <div class="drag-header">
+            <h2 class="section-title clean-text split-words">
+              Interactive Moodboard
+            </h2>
+            <p class="text-gray mb-4 mt-2">Drag the images around freely.</p>
+            <button
+              id="align-btn"
+              class="btn btn-solid-light magnetic hover-target mt-4">
+              Align Grid
+            </button>
+          </div>
+          <div class="drag-container mt-8">
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/89/67/57/8967576ab1b24936510d9b910dd8780f.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/d2/22/ab/d222ab9820dd0c9f2f3535abe553340a.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/6e/45/3b/6e453b05eb7a1eea45cab2c170c6f898.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/66/f2/03/66f203f36767d8411e556123ae4992de.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/24/01/dc/2401dcc428735f9877f64f026e61d45c.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/77/eb/b9/77ebb935c6fe2f9ad1a6d6c93b3c3390.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/23/d0/00/23d00057206171d14e3a6f0d5a103c61.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/45/30/90/453090c339eb88967b18d76d5077f6bd.jpg"
+              alt="Gallery Image" />
+            <img
+              class="drag-item hover-target"
+              loading="lazy"
+              src="https://i.pinimg.com/736x/3d/4f/7c/3d4f7c5490aa5f5daecaec18389f70df.jpg"
+              alt="Gallery Image" />
+          </div>
+        </section>
+
+        <section
+          id="creative-developer"
+          class="creative-dev-section theme-dark">
+          <div class="creative-spline">
+            <spline-viewer
+              url="https://prod.spline.design/QGfb54P-H78YtNjT/scene.splinecode"></spline-viewer>
+            <div class="watermark-hider-dark-solid"></div>
+          </div>
+          <img
+            class="floating-img pos-tl"
+            loading="lazy"
+            src="https://i.pinimg.com/736x/35/21/0d/35210dbb55ead501eb7228c3dc7fd8d6.jpg"
+            alt="Aesthetic 1" />
+          <img
+            class="floating-img pos-tr"
+            loading="lazy"
+            src="https://i.pinimg.com/736x/44/80/d1/4480d1e08c78ca71f899c902eec8b498.jpg"
+            alt="Aesthetic 2" />
+          <img
+            class="floating-img pos-bl"
+            loading="lazy"
+            src="https://i.pinimg.com/736x/9b/02/fc/9b02fc687298b5e8866b99ad10b9c717.jpg"
+            alt="Aesthetic 3" />
+          <img
+            class="floating-img pos-br"
+            loading="lazy"
+            src="https://i.pinimg.com/736x/42/d9/f5/42d9f55012b192fdd413f8ff30953cbc.jpg"
+            alt="Aesthetic 4" />
+        </section>
+
+        <footer id="contact" class="footer theme-dark">
+          <div class="footer-cta-content z-10">
+            <p class="footer-subtitle split-words">Got a project in mind?</p>
+            <h2 class="huge-text clean-text hover-target mt-4 split-chars">
+              Let's Talk.
+            </h2>
+            <button class="btn btn-solid-light magnetic hover-target mt-8">
+              HELLO@HUZAIFA.DEV
+            </button>
+          </div>
+          <div class="footer-bottom z-10">
+            <p>© 2024 Mohammad Huzaifa.</p>
+            <div class="socials">
+              <a href="#" class="hover-target social-icon" aria-label="GitHub">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="hover-target social-icon"
+                aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+    <div class="noise-overlay"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

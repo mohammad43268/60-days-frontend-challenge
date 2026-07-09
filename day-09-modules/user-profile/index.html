@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anime Battle Roster</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">BATTLE<span>NEXUS</span></div>
+      <div class="filters" id="filter-container">
+        <button class="filter-btn active" data-role="All">All</button>
+        <button class="filter-btn" data-role="Brawler">Brawler</button>
+        <button class="filter-btn" data-role="Swordsman">Swordsman</button>
+        <button class="filter-btn" data-role="Assassin">Assassin</button>
+        <button class="filter-btn" data-role="Sorcerer">Sorcerer</button>
+      </div>
+      <div class="user-stats">
+        Squad Value: <span id="squad-value">¥0</span>
+      </div>
+    </nav>
+
+    <main class="grid-layout" id="roster-grid"></main>
+
+    <div class="toast" id="action-toast">Character Hired!</div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

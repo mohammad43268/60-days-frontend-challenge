@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Aura OS | Mohammad Huzaifa</title>
+    <meta
+      name="description"
+      content="Mohammad Huzaifa | Computer Science Student & Frontend Developer. Welcome to my interactive Web OS Portfolio." />
+    <meta property="og:title" content="Aura OS | Mohammad Huzaifa" />
+    <meta
+      property="og:description"
+      content="An award-winning, fully interactive Web OS built with JavaScript and GSAP." />
+    <!-- Add your screenshot as preview.png in the public folder -->
+    <meta property="og:image" content="/preview.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&family=Julius+Sans+One&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="boot-screen">
+      <button id="boot-btn">
+        <i data-lucide="power"></i>
+        <span>Boot System</span>
+      </button>
+      <div
+        id="boot-text"
+        style="
+          margin-top: 20px;
+          font-family: &quot;Fira Code&quot;;
+          font-size: 12px;
+          color: var(--accent);
+          text-align: center;
+          min-height: 20px;
+          font-weight: bold;
+        "></div>
+    </div>
+
+    <!-- Solid Matte Background -->
+    <div class="ambient-bg"></div>
+
+    <div id="os-root">
+      <main id="desktop">
+        <div class="icon-grid">
+          <div class="app-icon" data-app="browser" data-title="Mini Browser">
+            <div class="icon-glass"><i data-lucide="globe"></i></div>
+            <span>Network</span>
+          </div>
+          <div class="app-icon" data-app="files" data-title="File Explorer">
+            <div class="icon-glass"><i data-lucide="folder-open"></i></div>
+            <span>Archive</span>
+          </div>
+          <div class="app-icon" data-app="terminal" data-title="Command Center">
+            <div class="icon-glass"><i data-lucide="terminal-square"></i></div>
+            <span>Command</span>
+          </div>
+          <div class="app-icon" data-app="editor" data-title="Aura Code">
+            <div class="icon-glass"><i data-lucide="code-2"></i></div>
+            <span>Code</span>
+          </div>
+        </div>
+
+        <aside class="widget-panel">
+          <div class="widget time-widget">
+            <h1 id="live-time">00:00</h1>
+            <p id="live-date">Loading...</p>
+          </div>
+          <div class="widget weather-widget">
+            <div class="weather-header">
+              <i data-lucide="cloud-lightning"></i>
+              <span>Live Weather</span>
+            </div>
+            <div class="weather-data">
+              <h2 id="weather-temp">--°C</h2>
+              <p id="weather-desc">Fetching API...</p>
+            </div>
+          </div>
+          <div class="widget notes-widget">
+            <div class="weather-header">
+              <i data-lucide="edit-3"></i>
+              <span>Scratchpad</span>
+            </div>
+            <textarea
+              id="quick-notes"
+              placeholder="Type notes here... Saves automatically."></textarea>
+          </div>
+        </aside>
+      </main>
+
+      <div id="window-manager"></div>
+
+      <!-- The Fixed Glass Box Context Menu -->
+      <div id="context-menu">
+        <div
+          class="ctx-item"
+          onclick="window.openApp('files', 'File Explorer')">
+          <i data-lucide="folder-plus"></i> Open Archive
+        </div>
+        <div class="ctx-item" onclick="window.openApp('editor', 'Aura Code')">
+          <i data-lucide="file-text"></i> New Code File
+        </div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" id="ctx-wallpaper">
+          <i data-lucide="monitor"></i> Change Color Theme
+        </div>
+      </div>
+
+      <div id="start-menu">
+        <div class="start-search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search apps, files, or web..." />
+        </div>
+
+        <div class="start-section">
+          <h3>Pinned Apps</h3>
+          <div class="start-grid">
+            <div
+              class="start-item"
+              onclick="openApp('browser', 'Mini Browser')">
+              <div class="start-icon"><i data-lucide="globe"></i></div>
+              <span>Browser</span>
+            </div>
+            <div
+              class="start-item"
+              onclick="openApp('terminal', 'Command Center')">
+              <div class="start-icon">
+                <i data-lucide="terminal-square"></i>
+              </div>
+              <span>Terminal</span>
+            </div>
+            <div class="start-item" onclick="openApp('files', 'File Explorer')">
+              <div class="start-icon"><i data-lucide="folder-open"></i></div>
+              <span>Files</span>
+            </div>
+            <div class="start-item" onclick="openApp('editor', 'Aura Code')">
+              <div class="start-icon"><i data-lucide="code-2"></i></div>
+              <span>Code</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="start-footer">
+          <div class="user-profile">
+            <i data-lucide="user"></i>
+            <span>M. Huzaifa</span>
+          </div>
+          <i
+            data-lucide="power"
+            style="cursor: pointer; color: var(--accent)"></i>
+        </div>
+      </div>
+
+      <nav id="taskbar">
+        <div class="taskbar-left">
+          <button id="start-btn" class="dock-item" data-title="Start Menu">
+            <i data-lucide="layout-grid"></i>
+          </button>
+          <div class="taskbar-separator"></div>
+        </div>
+        <div class="taskbar-center" id="running-apps"></div>
+        <div class="taskbar-right">
+          <div class="sys-tray">
+            <i data-lucide="wifi"></i>
+            <i data-lucide="battery-charging"></i>
+            <span id="taskbar-clock">00:00</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div
+      id="toast"
+      style="
+        position: fixed;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-family: &quot;Julius Sans One&quot;;
+        z-index: 999999;
+        font-weight: bold;
+        transition: 0.3s;
+        opacity: 0;
+      ">
+      File Saved to Archive!
+    </div>
+
+    <script type="module" src="/src/script.js"></script>
+  </body>
+</html>

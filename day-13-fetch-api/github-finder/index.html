@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Explorer Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar glass">
+        <div class="logo">
+          <h2>API<span>Explorer</span></h2>
+        </div>
+        <nav id="main-nav">
+          <button class="nav-btn active" data-view="dashboard">
+            Dashboard
+          </button>
+          <button class="nav-btn" data-view="users">Users</button>
+          <button class="nav-btn" data-view="posts">Posts</button>
+        </nav>
+        <div class="theme-toggle">
+          <button id="theme-btn">Toggle Theme</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar glass">
+          <div class="search-container">
+            <input
+              type="text"
+              id="global-search"
+              placeholder="Search users, posts... (Ctrl+K)"
+              aria-label="Global Search" />
+          </div>
+          <div class="stats-mini">
+            <span id="api-status" class="status-indicator online"
+              >System Online</span
+            >
+          </div>
+        </header>
+
+        <div id="content-area"></div>
+      </main>
+    </div>
+
+    <div id="loader" class="loader-overlay hidden">
+      <div class="spinner"></div>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

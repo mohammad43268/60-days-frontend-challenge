@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">Huzaifa_OS</div>
+        <nav class="nav-menu">
+          <a href="#" class="nav-item active">Console</a>
+          <a href="#" class="nav-item">Nodes</a>
+          <a href="#" class="nav-item">Vault</a>
+          <a href="#" class="nav-item">Config</a>
+        </nav>
+        <div class="user-profile">
+          <div class="avatar"></div>
+          <div class="user-info">
+            <span class="username">m_huzaifa</span>
+            <span class="user-role">ID: 2007_r</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-header">
+          <h1>Console / Root</h1>
+          <div class="search-bar">
+            <input type="text" placeholder="Filter parameters..." />
+          </div>
+        </header>
+
+        <div class="dashboard-grid">
+          <div class="card card-balance">
+            <h3>Net Allocation</h3>
+            <div class="balance-amount">$142,394.10</div>
+            <div class="card-footer">
+              <span>Delta +4.12%</span>
+              <button class="btn-action">+</button>
+            </div>
+          </div>
+
+          <div class="card card-stat">
+            <h3>Ingress</h3>
+            <div class="stat-number">942.1 GB</div>
+            <p class="stat-desc">Interval sync 4m ago</p>
+          </div>
+
+          <div class="card card-stat">
+            <h3>Egress</h3>
+            <div class="stat-number">128.4 GB</div>
+            <p class="stat-desc">Within nominal baseline</p>
+          </div>
+
+          <div class="card card-analytics">
+            <h3>Telemetry (24h)</h3>
+            <div class="chart-placeholder">
+              <div class="bar" style="--height: 35%"></div>
+              <div class="bar active" style="--height: 82%"></div>
+              <div class="bar" style="--height: 44%"></div>
+              <div class="bar" style="--height: 95%"></div>
+              <div class="bar" style="--height: 58%"></div>
+            </div>
+          </div>
+
+          <div class="card card-activity">
+            <h3>Log Entries</h3>
+            <ul class="activity-list">
+              <li>
+                <span class="item-title">Cron Job #04</span>
+                <span class="item-amount negative">ERR_02</span>
+              </li>
+              <li>
+                <span class="item-title">API_Gateway</span>
+                <span class="item-amount positive">200_OK</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

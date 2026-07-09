@@ -1,0 +1,55 @@
+:root {
+  --bg: #0f0f0f;
+  --text: #ffffff;
+  --accent: #ccd4d1;
+  --card-bg: #1a1a1a;
+  --radius: 12px;
+  --padding: calc(8px * 3); /* 24px using calc */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease; /* smooth theme change */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.card {
+  background: var(--card-bg);
+  padding: var(--padding);
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card__btn {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+.controls button {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}

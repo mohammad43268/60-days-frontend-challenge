@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spider-Verse | Cinematic Story</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@500;700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="ambient-glow" id="ambientGlow"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <section class="hero hidden-blur">
+      <div class="clay-card hero-content">
+        <h4 class="subtitle">A CINEMATIC JOURNEY</h4>
+        <h1 class="title">INTO THE SPIDER-VERSE</h1>
+        <p>
+          Scroll to explore the legacy, the responsibility, and the heroes
+          behind the mask.
+        </p>
+        <div class="scroll-indicator">↓</div>
+      </div>
+    </section>
+
+    <section class="character-section">
+      <div class="grid layout-left">
+        <div class="image-wrapper hidden-left">
+          <img
+            src="download (1).png"
+            alt="Hooded Spider-Man"
+            class="clay-img" />
+        </div>
+        <div class="text-wrapper hidden-right clay-card">
+          <h2 class="char-title">The Shadow</h2>
+          <p>
+            Operating from the darkness to protect the light. Sometimes the mask
+            isn't just to hide your face, but to protect those you love from the
+            enemies you make. In the cold nights of the city, silence is the
+            loudest weapon.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="character-section">
+      <div class="grid layout-right">
+        <div class="text-wrapper hidden-left clay-card">
+          <h2 class="char-title">The Leap</h2>
+          <p>
+            It’s a leap of faith. You can’t wait for the perfect moment or the
+            exact right time. Miles learned that being Spider-Man isn’t about
+            perfectly replicating the heroes before him; it’s about forging his
+            own path and making the suit his own.
+          </p>
+        </div>
+        <div class="image-wrapper hidden-right">
+          <img src="2.png" alt="Miles Morales" class="clay-img" />
+        </div>
+      </div>
+    </section>
+
+    <section class="character-section">
+      <div class="grid layout-left">
+        <div class="image-wrapper hidden-left">
+          <img
+            src="imagen.png"
+            alt="Spider-Man with Backpack"
+            class="clay-img" />
+        </div>
+        <div class="text-wrapper hidden-right clay-card">
+          <h2 class="char-title">The Burden</h2>
+          <p>
+            Balancing two lives takes its toll. Between the physics homework,
+            the late-night patrols, and the constant feeling of letting someone
+            down, the backpack isn't the heaviest thing Peter carries. The
+            responsibility is.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="character-section">
+      <div class="grid layout-right">
+        <div class="text-wrapper hidden-left clay-card">
+          <h2 class="char-title">The Icon</h2>
+          <p>
+            A symbol of hope and courage. Whenever the red and blue hero swings
+            through the city skyline, people feel a sense of safety and
+            reassurance. He is more than just a superhero; he represents
+            determination, responsibility, and the belief that anyone can make a
+            difference. No matter how many times he falls, gets beaten down,
+            faces impossible odds, or loses the things he cares about most, he
+            never gives up. Every setback becomes a lesson, and every failure
+            becomes a reason to grow stronger. He rises again and again, not
+            because he is the strongest, but because he refuses to stay down.
+            His true power is not found in his abilities, but in his resilience,
+            his heart, and his unwavering commitment to protecting others. That
+            is what makes him a hero, and that is the true power that inspires
+            millions.
+          </p>
+        </div>
+        <div class="image-wrapper hidden-right">
+          <img src="3.png" alt="Classic Red Suit" class="clay-img" />
+        </div>
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+              } else {
+                entry.target.classList.remove("show");
+              }
+            });
+          },
+          { threshold: 0.2 },
+        );
+
+        document
+          .querySelectorAll(".hidden-left, .hidden-right, .hidden-blur")
+          .forEach((el) => observer.observe(el));
+
+        const progressBar = document.getElementById("progressBar");
+        window.addEventListener("scroll", () => {
+          const scrollTop =
+            document.documentElement.scrollTop || document.body.scrollTop;
+          const scrollHeight =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+          progressBar.style.width = (scrollTop / scrollHeight) * 100 + "%";
+        });
+
+        const cursor = document.getElementById("cursor");
+        const follower = document.getElementById("cursorFollower");
+        const glow = document.getElementById("ambientGlow");
+        let mouseX = 0,
+          mouseY = 0,
+          followerX = 0,
+          followerY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursor.style.left = mouseX + "px";
+          cursor.style.top = mouseY + "px";
+          glow.style.left = mouseX + "px";
+          glow.style.top = mouseY + "px";
+        });
+
+        function animate() {
+          followerX += (mouseX - followerX) * 0.1;
+          followerY += (mouseY - followerY) * 0.1;
+          follower.style.left = followerX + "px";
+          follower.style.top = followerY + "px";
+          requestAnimationFrame(animate);
+        }
+        animate();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+﻿node_modules/
+dist/
+*.glb
+*.bin
+*.gltf
+*.glb
+*.bin
+*.gltf
+.git-backup/

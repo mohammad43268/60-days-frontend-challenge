@@ -1,0 +1,447 @@
+/* --- CSS Variables & Theming --- */
+:root {
+  /* Provided Palette */
+  --color-navy: #06202b;
+  --color-teal: #077a7d;
+  --color-mint: #7ae2cf;
+  --color-yellow: #fdeb9e;
+
+  /* Light Theme Defaults */
+  --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  --surface-color: rgba(255, 255, 255, 0.7);
+  --surface-border: rgba(255, 255, 255, 0.5);
+  --text-primary: var(--color-navy);
+  --text-secondary: #4a5568;
+  --shadow-soft: 0 8px 32px 0 rgba(6, 32, 43, 0.1);
+  --blob-1: var(--color-mint);
+  --blob-2: var(--color-teal);
+
+  /* System */
+  --radius-lg: 24px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #020a0e 0%, var(--color-navy) 100%);
+  --surface-color: rgba(6, 32, 43, 0.6);
+  --surface-border: rgba(122, 226, 207, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --blob-1: var(--color-teal);
+  --blob-2: var(--color-navy);
+}
+
+/* --- Reset & Typography --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  transition: var(--transition);
+}
+
+/* --- Animated Background Blobs --- */
+.background-blobs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  animation: float 10s infinite alternate ease-in-out;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--blob-1);
+  top: -100px;
+  left: -100px;
+}
+
+.blob-2 {
+  width: 300px;
+  height: 300px;
+  background: var(--blob-2);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(50px, 50px) scale(1.1);
+  }
+}
+
+/* --- Layout & Glassmorphism --- */
+.app-header {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  border-radius: var(--radius-full);
+}
+
+.glass-panel {
+  background: var(--surface-color);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.app-main {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.screen {
+  display: none;
+  padding: 2.5rem;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* --- Components --- */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.badge {
+  background: var(--color-teal);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: transparent;
+  transition: var(--transition);
+}
+
+#theme-toggle {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  padding: 0.5rem;
+}
+
+h1,
+h2 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+.subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* --- Forms --- */
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+select {
+  width: 100%;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  font-size: 1rem;
+  appearance: none;
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: var(--color-mint);
+  outline: none;
+}
+
+/* --- Buttons --- */
+.btn {
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.btn-primary {
+  background: var(--color-teal);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-navy);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--color-yellow);
+  color: var(--color-navy);
+}
+
+.btn-outline {
+  border: 2px solid var(--surface-border);
+  color: var(--text-primary);
+}
+
+/* --- Quiz UI --- */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.progress-container {
+  width: 70%;
+}
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-mint);
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.timer-container {
+  background: var(--surface-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: bold;
+  color: var(--color-teal);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--surface-border);
+}
+
+.timer-container.danger {
+  color: #ff6b6b;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.option-btn {
+  padding: 1.2rem;
+  text-align: left;
+  border: 2px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.option-btn:hover {
+  border-color: var(--color-mint);
+  background: rgba(122, 226, 207, 0.1);
+}
+
+.option-btn.selected {
+  background: var(--color-teal);
+  color: white;
+  border-color: var(--color-teal);
+}
+
+.option-btn.correct {
+  background: var(--color-mint);
+  color: var(--color-navy);
+  border-color: var(--color-mint);
+}
+
+.option-btn.wrong {
+  background: #ff6b6b;
+  color: white;
+  border-color: #ff6b6b;
+}
+
+/* --- Results Screen --- */
+.results-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.score-circle {
+  width: 150px;
+  margin: 0 auto 2rem;
+}
+
+.circular-chart {
+  display: block;
+  margin: 0 auto;
+  max-width: 80%;
+  max-height: 250px;
+}
+.circle-bg {
+  fill: none;
+  stroke: var(--surface-border);
+  stroke-width: 2.5;
+}
+.circle {
+  fill: none;
+  stroke-width: 2.5;
+  stroke: var(--color-mint);
+  stroke-linecap: round;
+  transition: stroke-dasharray 1.5s ease-out;
+}
+.percentage {
+  fill: var(--text-primary);
+  font-size: 0.5em;
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-card span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- Responsive --- */
+@media (min-width: 768px) {
+  .options-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

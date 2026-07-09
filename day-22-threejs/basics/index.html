@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js Master Laboratory | Premium WebGL Experience</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
+  </head>
+  <body>
+    <div id="loader-screen" class="loader-container">
+      <div class="loader-content">
+        <div class="glow-ring"></div>
+        <h1 class="loader-title">THREE.JS<span>LAB</span></h1>
+        <div class="progress-bar-container">
+          <div id="loader-progress" class="progress-bar"></div>
+        </div>
+        <p id="loader-status" class="loader-status-text">
+          Initializing WebGL Engine...
+        </p>
+      </div>
+    </div>
+
+    <header class="app-header glass-panel">
+      <div class="brand">
+        <div class="brand-indicator"></div>
+        <span class="brand-name">WebGL Explorer</span>
+        <span class="brand-version">v3.0 Pro</span>
+      </div>
+      <nav class="app-nav">
+        <button class="nav-btn active" data-section="geometry">Geometry</button>
+        <button class="nav-btn" data-section="materials">Materials</button>
+        <button class="nav-btn" data-section="lighting">Lighting</button>
+        <button class="nav-btn" data-section="particles">Particles</button>
+        <button class="nav-btn" data-section="shaders">Shaders</button>
+        <button class="nav-btn" data-section="configurator">
+          Configurator
+        </button>
+        <button class="nav-btn highlight" data-section="showcase">
+          Showcase
+        </button>
+      </nav>
+      <div class="header-actions">
+        <button id="btn-cinematic" class="action-btn pulse">
+          Cinematic Mode
+        </button>
+      </div>
+    </header>
+
+    <div class="app-container">
+      <aside class="playground-sidebar glass-panel">
+        <section class="sidebar-section">
+          <h3>Lab Controls</h3>
+          <p class="section-desc">
+            Select an active module to manipulate real-time matrix
+            transformations, shaders, and light vectors.
+          </p>
+          <div id="gui-container"></div>
+        </section>
+
+        <hr class="separator" />
+
+        <section class="sidebar-section">
+          <h3>Active Scene Hierarchy</h3>
+          <ul id="scene-graph-list" class="scene-graph">
+            <li class="graph-node active">Root Scene</li>
+            <li class="graph-node child">PerspectiveCamera</li>
+            <li class="graph-node child">HemisphereLight</li>
+            <li class="graph-node child">InteractiveMesh</li>
+          </ul>
+        </section>
+      </aside>
+
+      <main class="viewport-container">
+        <div id="canvas-wrapper"></div>
+
+        <div class="gizmo-controls glass-badge">
+          <button class="gizmo-btn active" data-mode="translate">
+            Translate (W)
+          </button>
+          <button class="gizmo-btn" data-mode="rotate">Rotate (E)</button>
+          <button class="gizmo-btn" data-mode="scale">Scale (R)</button>
+        </div>
+
+        <section id="info-panel" class="info-overlay glass-panel">
+          <h2 id="info-title">Geometry Laboratory</h2>
+          <p id="info-description">
+            Exploring parametric mathematical buffers. Use the GUI on the left
+            to modify vertex subdivision and scale dynamically.
+          </p>
+        </section>
+      </main>
+
+      <div class="right-hud">
+        <aside class="performance-panel glass-panel">
+          <div class="perf-header">
+            <span class="dot live"></span>
+            <h4>Telemetry</h4>
+          </div>
+          <div class="perf-metrics">
+            <div class="metric-box">
+              <span class="metric-val" id="metric-fps">60</span>
+              <span class="metric-label">FPS</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-val" id="metric-ms">16.2</span>
+              <span class="metric-label">Frame (ms)</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-val" id="metric-calls">12</span>
+              <span class="metric-label">Draw Calls</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-val" id="metric-triangles">1,240</span>
+              <span class="metric-label">Triangles</span>
+            </div>
+          </div>
+        </aside>
+
+        <aside class="asset-inspector glass-panel">
+          <h4>Environment Maps</h4>
+          <div class="asset-grid">
+            <div class="asset-item active" data-env="studio">Studio HDR</div>
+            <div class="asset-item" data-env="sunset">Sunset</div>
+            <div class="asset-item" data-env="cyberpunk">Neon City</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <footer class="app-footer glass-panel">
+      <div class="footer-left">
+        <span>Using WebGL 2.0 Context</span>
+        <span class="divider">•</span>
+        <span>Post-Processing: Active (Bloom + SMAA + RGB Shift)</span>
+      </div>
+      <div class="footer-right">
+        <span>Built with Vanilla JS & Three.js r164</span>
+      </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

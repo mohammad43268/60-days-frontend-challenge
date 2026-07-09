@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WOLF Acoustics | Shatter Silence</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Syncopate:wght@700&family=Inter:wght@300;500&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- LAYER 1: Background Typography -->
+    <div class="ui-layer layer-back">
+      <div class="hero-center-wrapper">
+        <div class="title-wrapper">
+          <h1 class="big-title back-text">SHATTER</h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER 1.5: Section 3 Floating Backdrop -->
+    <div class="floating-bg"></div>
+
+    <!-- LAYER 2: WebGL Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- LAYER 3: Interactive 3D Hotspots -->
+    <div class="hotspot" id="hotspot-1">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-card">
+        <h4>Beryllium Drivers</h4>
+        <p>Distortion-free acoustic resonance.</p>
+      </div>
+    </div>
+
+    <div class="hotspot new-hotspot" id="hotspot-2">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-card">
+        <h4>Plush Memory Foam</h4>
+        <p>Wrapped in breathable synthetic leather.</p>
+      </div>
+    </div>
+
+    <div class="hotspot new-hotspot" id="hotspot-3">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-card">
+        <h4>Aerospace Aluminum</h4>
+        <p>Lightweight, indestructible chassis.</p>
+      </div>
+    </div>
+
+    <!-- LAYER 4: Foreground UI Elements -->
+    <div class="ui-layer layer-front">
+      <!-- Navigation -->
+      <nav class="navbar">
+        <div class="logo">WOLF</div>
+        <div class="nav-links">
+          <a href="#">Design</a>
+          <a href="#">Studio</a>
+          <a href="#">Order</a>
+        </div>
+      </nav>
+
+      <!-- Section 1: Hero -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="title-wrapper hidden-placeholder">
+            <h1>SHATTER</h1>
+          </div>
+          <div class="title-wrapper">
+            <h1 class="big-title italic-title front-text">Silence.</h1>
+          </div>
+          <div class="meta-block">
+            <p class="subtitle">
+              The legendary Wolf architecture compressed into premium acoustic
+              art.
+            </p>
+            <button class="cta-btn">Explore Edition</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Features -->
+      <section class="features-section">
+        <div class="features-content left">
+          <h2 class="section-title">PURE<br /><span>CLARITY</span></h2>
+          <p>
+            Every detail engineered for acoustic perfection. The ultimate fusion
+            of design and sound.
+          </p>
+        </div>
+
+        <div class="features-content right">
+          <div class="glass-card">
+            <div class="spec-item">
+              <h3>40<span>mm</span></h3>
+              <p>Beryllium Drivers</p>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <h3>65<span>hr</span></h3>
+              <p>Battery Life</p>
+            </div>
+            <div class="spec-divider"></div>
+            <div class="spec-item">
+              <h3>ANC<span>+</span></h3>
+              <p>Active Noise Cancelation</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Material Studio -->
+      <section class="color-section">
+        <div class="color-ui glass-card">
+          <h2
+            class="section-title"
+            style="font-size: 3rem; margin-bottom: 0.5rem">
+            BESPOKE<br /><span>FINISHES</span>
+          </h2>
+          <p style="font-size: 0.85rem; margin-bottom: 2rem">
+            Select your signature aesthetic.
+          </p>
+
+          <div class="swatch-container">
+            <div
+              class="swatch"
+              data-color="white"
+              style="background: #e5e5cb"></div>
+            <div
+              class="swatch"
+              data-color="black"
+              style="background: #1a120b; border: 1px solid #d5cea3"></div>
+            <div
+              class="swatch"
+              data-color="bronze"
+              style="background: #8c7c61"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3.5: Editorial Lifestyle Gallery -->
+      <section class="gallery-section">
+        <div class="gallery-grid">
+          <div class="gallery-item item-left">
+            <img
+              src="https://i.pinimg.com/736x/6f/ed/0f/6fed0f60e87e20e5d854b15e0731d592.jpg"
+              alt="Lifestyle design" />
+          </div>
+
+          <div class="gallery-item item-center">
+            <div class="gallery-text">
+              <h3>FORM MEETS<br />FUNCTION.</h3>
+              <p>
+                Designed for the streets, engineered for the studio. The WOLF
+                architecture seamlessly adapts to your environment.
+              </p>
+            </div>
+          </div>
+
+          <div class="gallery-item item-right">
+            <img
+              src="https://i.pinimg.com/1200x/91/6c/69/916c69aa379209b8e60a8cb7f80f8a81.jpg"
+              alt="Studio design" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Pre-Order & Marquee -->
+      <section class="checkout-section">
+        <div class="marquee-container">
+          <div class="marquee-track track-1">
+            <h1>HEAR THE UNHEARD • HEAR THE UNHEARD • HEAR THE UNHEARD •</h1>
+            <h1>HEAR THE UNHEARD • HEAR THE UNHEARD • HEAR THE UNHEARD •</h1>
+          </div>
+          <div class="marquee-track track-2">
+            <h1 class="outline-text">
+              ABSOLUTE FIDELITY • ABSOLUTE FIDELITY • ABSOLUTE FIDELITY •
+            </h1>
+            <h1 class="outline-text">
+              ABSOLUTE FIDELITY • ABSOLUTE FIDELITY • ABSOLUTE FIDELITY •
+            </h1>
+          </div>
+          <div class="marquee-track track-3">
+            <h1>STUDIO GRADE • STUDIO GRADE • STUDIO GRADE •</h1>
+            <h1>STUDIO GRADE • STUDIO GRADE • STUDIO GRADE •</h1>
+          </div>
+        </div>
+
+        <div class="floating-badges">
+          <div class="badge badge-left">Lossless Audio</div>
+          <div class="badge badge-right">Bluetooth 5.3</div>
+          <div class="badge badge-bottom">Spatial Sound</div>
+        </div>
+
+        <div class="checkout-ui glass-card">
+          <h2 class="price">$599</h2>
+          <p class="edition-text">WOLF Signature Edition</p>
+          <button class="cta-btn preorder-btn">PRE-ORDER NOW</button>
+          <p class="shipping-info">Ships in 3-5 business days.</p>
+        </div>
+      </section>
+
+      <!-- Section 5: The Curtain Reveal Footer -->
+      <footer class="footer-section">
+        <div class="footer-grid">
+          <div class="footer-col brand-col">
+            <h4 class="logo-small">WOLF</h4>
+            <p>
+              Engineered for the absolute. Shatter the silence with pristine,
+              lossless sound architecture.
+            </p>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="#">Design</a>
+            <a href="#">Studio</a>
+            <a href="#">Technology</a>
+            <a href="#">Pre-order</a>
+          </div>
+          <div class="footer-col">
+            <h4>Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter</a>
+            <a href="#">YouTube</a>
+            <a href="#">Support</a>
+          </div>
+        </div>
+
+        <div class="footer-center-action">
+          <button id="back-to-top" class="btt-btn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </button>
+          <span>Back to Top</span>
+        </div>
+
+        <div class="massive-footer-logo">
+          <h1>WOLF</h1>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <p>&copy; 2026 WOLF Acoustics. All rights reserved.</p>
+          <div class="legal-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </footer>
+
+      <!-- SVG Kinetic Runner -->
+      <div class="rhythm-container">
+        <svg
+          class="rhythm-line"
+          viewBox="0 0 1000 50"
+          preserveAspectRatio="none">
+          <path
+            id="wave-track"
+            d="M0,25 Q50,0 100,25 T200,25 T300,25 T400,25 T500,25 T600,25 T700,25 T800,25 T900,25 T1000,25"
+            fill="none"
+            stroke="#D5CEA3"
+            stroke-width="1.5"
+            opacity="0.4" />
+          <circle id="kinetic-runner" cx="0" cy="0" r="4" fill="#E5E5CB" />
+        </svg>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glass Notes | Modern Note App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div id="onboarding-overlay" class="glass-panel">
+      <div class="onboarding-content">
+        <h2>Welcome to Glass Notes ✨</h2>
+        <p>Let's personalize your experience. What's your name?</p>
+        <form id="onboarding-form">
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Enter your name..."
+            required
+            autocomplete="off" />
+          <button type="submit" class="btn-primary">Get Started</button>
+        </form>
+      </div>
+    </div>
+
+    <main id="app-container" class="hidden">
+      <header class="glass-panel">
+        <h1 id="greeting">Hello, User!</h1>
+        <div id="sync-status">
+          <i class="fa-solid fa-cloud-check"></i> Synced
+        </div>
+      </header>
+
+      <div class="app-layout">
+        <section class="input-section glass-panel">
+          <h3><i class="fa-solid fa-pen-nib"></i> Take a Note</h3>
+          <form id="note-form">
+            <input
+              type="text"
+              id="note-title"
+              placeholder="Note Title"
+              required
+              autocomplete="off" />
+            <textarea
+              id="note-content"
+              placeholder="Write your thoughts here..."
+              rows="5"
+              required></textarea>
+
+            <div class="color-picker">
+              <label>Tag Color:</label>
+              <input
+                type="radio"
+                name="note-color"
+                value="#F4BFBF"
+                checked
+                style="background-color: #f4bfbf" />
+              <input
+                type="radio"
+                name="note-color"
+                value="#FFD9C0"
+                style="background-color: #ffd9c0" />
+              <input
+                type="radio"
+                name="note-color"
+                value="#FAF0D7"
+                style="background-color: #faf0d7" />
+              <input
+                type="radio"
+                name="note-color"
+                value="#8CC0DE"
+                style="background-color: #8cc0de" />
+            </div>
+
+            <button type="submit" class="btn-primary" id="add-note-btn">
+              <i class="fa-solid fa-plus"></i> Save Note
+            </button>
+          </form>
+        </section>
+
+        <section class="notes-section">
+          <div id="notes-grid" class="notes-grid"></div>
+
+          <div id="empty-state" class="hidden glass-panel">
+            <i class="fa-regular fa-folder-open"></i>
+            <p>No notes yet. Start writing above!</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

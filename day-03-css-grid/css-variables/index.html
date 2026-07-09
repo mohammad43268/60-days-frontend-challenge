@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="controls">
+      <button onclick="setTheme('dark')">Dark</button>
+      <button onclick="setTheme('light')">Light</button>
+      <button onclick="setTheme('blue')">Blue</button>
+    </div>
+
+    <div class="card">
+      <h2>CSS Variables</h2>
+      <p>Theme changes instantly using :root tokens</p>
+      <button class="card__btn">Click Me</button>
+      <script>
+        const themes = {
+          dark: {
+            "--bg": "#0f0f0f",
+            "--text": "#ffffff",
+            "--accent": "#00ff88",
+            "--card-bg": "#1a1a1a",
+          },
+          light: {
+            "--bg": "#ffffff",
+            "--text": "#0f0f0f",
+            "--accent": "#007aff",
+            "--card-bg": "#f5f5f5",
+          },
+          blue: {
+            "--bg": "#0a0a2e",
+            "--text": "#ffffff",
+            "--accent": "#00aaff",
+            "--card-bg": "#0f0f3a",
+          },
+        };
+
+        function setTheme(name) {
+          const root = document.documentElement;
+          const theme = themes[name];
+
+          /* loop through each variable and update it */
+          Object.entries(theme).forEach(([property, value]) => {
+            root.style.setProperty(property, value);
+          });
+        }
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  background: #0f0f0f;
+  color: #ffffff;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 40px;
+  color: #00ff88;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: #888;
+  margin-bottom: 48px;
+}
+
+.section {
+  margin-bottom: 64px;
+}
+
+/* ================================
+   BOX LAYERS DEMO
+================================ */
+
+.box-demo {
+  display: inline-block;
+}
+
+.layer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.margin-box {
+  background: #1a3a2a;
+  border: 2px dashed #00ff88;
+  padding: 40px;
+  color: #00ff88;
+}
+
+.border-box {
+  background: #1a2a3a;
+  border: 4px solid #00aaff;
+  padding: 32px;
+  color: #00aaff;
+}
+
+.padding-box {
+  background: #2a1a3a;
+  border: 2px dashed #aa00ff;
+  padding: 24px;
+  color: #aa00ff;
+}
+
+.content-box {
+  background: #3a1a1a;
+  border: 2px solid #ff4444;
+  padding: 20px 40px;
+  color: #ff4444;
+  font-weight: 700;
+}
+
+/* ================================
+   CONTENT-BOX VS BORDER-BOX
+================================ */
+
+.comparison {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.box {
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.box p {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.box small {
+  display: block;
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.content-box-demo {
+  width: 300px;
+  background: #1a1a2a;
+  border: 3px solid #00aaff;
+  box-sizing: content-box; /* default — padding adds to width */
+}
+
+.border-box-demo {
+  width: 300px;
+  background: #1a2a1a;
+  border: 3px solid #00ff88;
+  box-sizing: border-box; /* padding included in width */
+}
+
+/* ================================
+   MARGIN COLLAPSE DEMO
+================================ */
+
+.note {
+  color: #888;
+  margin-bottom: 20px;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.collapse-demo {
+  display: flex;
+  flex-direction: column;
+}
+
+.collapse-box {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+}
+
+.collapse-box:first-child {
+  margin-bottom: 40px;
+}
+
+.collapse-box:nth-child(2) {
+  margin-top: 20px;
+}

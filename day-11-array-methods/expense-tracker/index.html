@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MD.trackers</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-container">
+      <img src="aeroplane.png" alt="Aeroplane" class="bg-image bg-aeroplane" />
+      <img src="image_2.png" alt="Burger" class="bg-image bg-image-burger" />
+      <img src="image_3.png" alt="House" class="bg-image bg-image-house" />
+    </div>
+
+    <div class="app-container">
+      <header class="bento-box header">
+        <h1 class="logo">MD.trackers</h1>
+        <p>Modern Financial Management</p>
+      </header>
+
+      <main class="bento-grid">
+        <section class="bento-box summary">
+          <h2>Current Balance</h2>
+          <h1 id="total-amount">$0.00</h1>
+        </section>
+
+        <section class="bento-box stats">
+          <div class="stat-item">
+            <h3>Income</h3>
+            <p id="total-income" class="text-green">+$0.00</p>
+          </div>
+          <div class="stat-item">
+            <h3>Expenses</h3>
+            <p id="total-expense" class="text-red">-$0.00</p>
+          </div>
+        </section>
+
+        <section class="bento-box form-section">
+          <h3>New Transaction</h3>
+          <form id="tracker-form">
+            <div class="form-control">
+              <label for="text">Description</label>
+              <input
+                type="text"
+                id="text"
+                placeholder="Flight Ticket, Rent"
+                required />
+            </div>
+            <div class="form-control">
+              <label for="amount"
+                >Amount
+                <small>(neg. for expense, pos. for income)</small></label
+              >
+              <input
+                type="number"
+                id="amount"
+                placeholder="-500 or 1500"
+                required />
+            </div>
+            <div class="form-control">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="Travel">Travel</option>
+                <option value="Food">Food</option>
+                <option value="Housing">Housing</option>
+                <option value="Salary">Salary</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <button class="btn" type="submit">Add Transaction</button>
+          </form>
+        </section>
+
+        <section class="bento-box list-section">
+          <h3>History</h3>
+          <div class="list-container">
+            <ul id="list" class="list"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

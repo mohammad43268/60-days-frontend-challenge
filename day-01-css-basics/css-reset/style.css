@@ -1,0 +1,100 @@
+/* ================================
+   CSS RESET
+   Goal: Remove all browser default 
+   styles so we start from zero
+================================ */
+
+/* Remove margin, padding, set box-sizing on everything */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Remove default list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Remove underline from links, inherit color */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Make images behave like block elements */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Remove default button styles */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Make font consistent across all elements */
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+}
+
+/* ================================
+   NOW WE BUILD ON TOP OF RESET
+================================ */
+
+body {
+  background: #0f0f0f;
+  color: #ffffff;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 8px;
+  color: #00ff88;
+}
+h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+h3 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+p {
+  margin-bottom: 24px;
+  color: #cccccc;
+  max-width: 600px;
+}
+
+ul {
+  margin-bottom: 24px;
+}
+
+ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+  color: #aaaaaa;
+}
+
+button {
+  padding: 10px 24px;
+  background: #00ff88;
+  color: #0f0f0f;
+  border-radius: 6px;
+  font-weight: 700;
+  margin-right: 16px;
+}
+
+a {
+  color: #00ff88;
+  text-decoration: underline;
+}

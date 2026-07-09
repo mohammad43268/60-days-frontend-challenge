@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-canvas: #FAFAFA;
+    --color-surface: #FFFFFF;
+    --color-border: #E5E7EB;
+    --color-text: #1F2937;
+    --color-dots: #E5E7EB;
+  }
+
+  body {
+    @apply bg-canvas text-dark font-sans overflow-hidden select-none m-0 p-0 w-screen h-screen;
+  }
+}
+
+/* Base resets for inputs and buttons inside cards */
+input, textarea, [contenteditable="true"] {
+  @apply select-auto cursor-text;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #3b3e46;
+  border-radius: 4px;
+}

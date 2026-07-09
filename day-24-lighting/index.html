@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVULARI // SYNDICATE</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <div id="intro-screen" class="active">
+      <div class="glitch-title">AUDI NOVULARI</div>
+      <p class="subtitle">PROJECT // 2003_REVIVAL</p>
+      <button id="ignite-btn">START ENGINE</button>
+      <div class="warning-text">HEADPHONES REQUIRED // 60FPS SIMULATION</div>
+    </div>
+
+    <div id="hud" style="opacity: 0">
+      <div class="header">
+        <h1>TELEMETRY // LIVE</h1>
+        <div class="badge">SIM MODE</div>
+      </div>
+
+      <div class="section">
+        <h3>VEHICLE DYNAMICS</h3>
+        <div class="stat">
+          <span>SPEED:</span> <span id="speed-val" class="val">0 KM/H</span>
+        </div>
+        <div class="stat">
+          <span>RPM:</span> <span id="rpm-val" class="val">850</span>
+        </div>
+        <div class="stat">
+          <span>GEAR:</span> <span id="gear-val" class="val">P</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>ENVIRONMENT</h3>
+        <div class="stat">
+          <span>SURFACE:</span> <span class="val">DRY TARMAC</span>
+        </div>
+        <div class="stat">
+          <span>OPTICS:</span> <span class="val">ACES FILMIC + BLOOM</span>
+        </div>
+      </div>
+
+      <div class="controls-guide">
+        [W] Throttle &nbsp;|&nbsp; [S] Brake &nbsp;|&nbsp; [A/D] Steer
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

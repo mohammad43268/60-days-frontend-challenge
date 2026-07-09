@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+    <title>Modern Landing Page</title>
+  </head>
+
+  <body>
+    <nav>
+      <div class="logo">MD.</div>
+
+      <div class="nav_a_links">
+        <a href="#"><i data-lucide="house"></i>HOME</a>
+        <a href="#"><i data-lucide="user"></i>ABOUT</a>
+        <a href="#"><i data-lucide="mail"></i>CONTACT</a>
+        <a href="#"><i data-lucide="power"></i>POWER</a>
+      </div>
+
+      <div class="login">
+        <a href="#">
+          <i data-lucide="log-in"></i>
+          LOGIN
+        </a>
+      </div>
+    </nav>
+
+    <section class="section1">
+      <div class="hero_content">
+        <div>
+          <h1>
+            CRAFTING<br />
+            MODERN<br />
+            INTERFACES
+          </h1>
+          <p>
+            Explore the best resources for illustrations, animations, icons and
+            creative UI design.
+          </p>
+        </div>
+      </div>
+
+      <div class="bento_grid">
+        <div class="card card1">
+          <img src="Transhumans - Astro.png" alt="Astro Illustration" />
+          <h3>STORYSET</h3>
+        </div>
+        <div class="card card2">
+          <img src="Transhumans - Coffee.png" alt="Coffee Illustration" />
+          <h3>LOTTIEFILES</h3>
+        </div>
+        <div class="card card3">
+          <img
+            src="Transhumans - Entertainment.png"
+            alt="Entertainment Illustration" />
+          <h3>LUCIDE</h3>
+        </div>
+        <div class="card card4">
+          <img src="Transhumans - Groceries.png" alt="Groceries Illustration" />
+          <h3>OPEN DOODLES</h3>
+        </div>
+        <div class="card card5">
+          <img src="Transhumans - Roboto.png" alt="Robot Illustration" />
+          <h3>ANIMATIONS</h3>
+        </div>
+      </div>
+    </section>
+
+    <section class="section2">
+      <div class="workflow_heading">
+        <h2>DESIGN WORKFLOW</h2>
+        <p>From idea to production-ready interface.</p>
+      </div>
+
+      <div class="workflow_container">
+        <div class="workflow_card">
+          <span>01</span>
+          <h3>Research</h3>
+          <p>Understand users, goals and inspiration.</p>
+        </div>
+
+        <div class="workflow_card">
+          <span>02</span>
+          <h3>Wireframe</h3>
+          <p>Plan layout, hierarchy and user flow.</p>
+        </div>
+
+        <div class="workflow_card">
+          <span>03</span>
+          <h3>Design</h3>
+          <p>Create polished visual interfaces.</p>
+        </div>
+
+        <div class="workflow_card">
+          <span>04</span>
+          <h3>Develop</h3>
+          <p>Transform designs into responsive code.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer_logo">MD.</div>
+
+      <div class="footer_links">
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Email</a>
+      </div>
+
+      <p>© 2026 Mohammad. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      // Initialize Lucide Icons
+      lucide.createIcons();
+
+      // Spotlight Effect Calculation
+      document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty("--x", `${x}px`);
+          card.style.setProperty("--y", `${y}px`);
+        });
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/locomotion@1.0.5/index.min.js"></script>
+  </body>
+</html>

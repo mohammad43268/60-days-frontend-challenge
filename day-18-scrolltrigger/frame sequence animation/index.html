@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Botanica | Premium Reserve</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#0a0f0d] overflow-x-hidden select-none">
+    <div id="cursor"></div>
+
+    <header
+      class="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-[100] mix-blend-difference text-[#FBF5DD]">
+      <a
+        href="#"
+        class="font-['Playfair_Display'] text-3xl font-bold italic tracking-wider magnetic inline-block"
+        >Botanica.</a
+      >
+      <button
+        id="menu-btn"
+        class="font-['Outfit'] text-sm tracking-[0.2em] uppercase magnetic inline-block p-4">
+        Menu
+      </button>
+    </header>
+
+    <nav
+      id="full-menu"
+      class="fixed inset-0 bg-[#0D530E]/95 backdrop-blur-2xl z-[90] flex flex-col items-center justify-center translate-y-[-100%]">
+      <ul class="text-center flex flex-col gap-6">
+        <li class="menu-link opacity-0 translate-y-10">
+          <a
+            href="#"
+            class="font-['Playfair_Display'] text-6xl md:text-8xl text-[#FBF5DD] hover:text-[#E7E1B1] transition-colors magnetic inline-block p-4"
+            >Shop</a
+          >
+        </li>
+        <li class="menu-link opacity-0 translate-y-10">
+          <a
+            href="#"
+            class="font-['Playfair_Display'] text-6xl md:text-8xl text-[#FBF5DD] hover:text-[#E7E1B1] transition-colors magnetic inline-block p-4"
+            >Story</a
+          >
+        </li>
+        <li class="menu-link opacity-0 translate-y-10">
+          <a
+            href="#"
+            class="font-['Playfair_Display'] text-6xl md:text-8xl text-[#FBF5DD] hover:text-[#E7E1B1] transition-colors magnetic inline-block p-4"
+            >Journal</a
+          >
+        </li>
+        <li class="menu-link opacity-0 translate-y-10">
+          <a
+            href="#"
+            class="font-['Playfair_Display'] text-6xl md:text-8xl text-[#FBF5DD] hover:text-[#E7E1B1] transition-colors magnetic inline-block p-4"
+            >Contact</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <main
+      class="relative z-50 bg-[#0a0f0d] mb-[60vh] rounded-b-[40px] shadow-[0_30px_60px_rgba(0,0,0,0.9)]">
+      <section class="w-full relative">
+        <div class="parent relative top-0 left-0 w-full">
+          <div
+            class="canvas-container w-full h-screen relative overflow-hidden">
+            <canvas
+              id="frame"
+              class="w-full h-screen object-cover absolute inset-0 z-0"></canvas>
+            <div
+              class="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(0,0,0,0.2)] z-10"></div>
+
+            <div
+              class="story-container absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+              <div
+                class="story-step step-1 absolute inset-0 flex flex-col items-center justify-center text-center opacity-0">
+                <h1 class="massive-text text-[#FBF5DD] drop-shadow-2xl">
+                  BORN IN<br />THE SOIL.
+                </h1>
+              </div>
+
+              <div
+                class="story-step step-2 absolute inset-0 flex flex-col items-center justify-center text-center opacity-0">
+                <h1 class="massive-text text-[#FBF5DD] drop-shadow-2xl">
+                  NURTURED<br />BY TIME.
+                </h1>
+                <div
+                  class="glass-card mt-8 p-10 max-w-[500px] rounded-3xl backdrop-blur-xl bg-[#FBF5DD]/5 border border-[#FBF5DD]/10 shadow-2xl">
+                  <p
+                    class="subtitle text-[#E7E1B1] text-sm tracking-widest uppercase mb-4">
+                    Hand-Selected Beans
+                  </p>
+                  <p
+                    class="desc text-white/90 text-lg md:text-xl leading-[1.8] max-w-2xl">
+                    Grown at high altitudes, every cherry is carefully chosen to
+                    ensure a rich, complex profile.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                class="story-step step-3 absolute inset-0 flex items-center justify-center overflow-hidden opacity-0">
+                <div
+                  class="absolute w-[700px] h-[700px] bg-green-500/20 blur-[180px] rounded-full animate-pulse glow-orb"></div>
+
+                <div
+                  class="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-4 p-8 bento-grid pointer-events-none">
+                  <div
+                    class="col-span-3 row-span-4 glass-card rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl">
+                    <img
+                      src="https://i.pinimg.com/736x/ae/dd/0a/aedd0a44a89d19f6be16bdff578f4a44.jpg"
+                      class="absolute inset-0 w-full h-full object-cover"
+                      alt="Coffee" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                  </div>
+                  <div
+                    class="col-start-10 col-span-3 row-span-5 glass-card rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl">
+                    <img
+                      src="https://i.pinimg.com/1200x/ab/aa/c5/abaac5dcf335e17149e913c5178db4be.jpg"
+                      class="absolute inset-0 w-full h-full object-cover"
+                      alt="Coffee" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                  </div>
+                  <div
+                    class="col-start-1 row-start-6 col-span-2 row-span-3 glass-card rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl">
+                    <img
+                      src="https://i.pinimg.com/736x/c0/34/1b/c0341be49e10d8e519b0ea1cc49a6d14.jpg"
+                      class="absolute inset-0 w-full h-full object-cover"
+                      alt="Coffee" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                  </div>
+                  <div
+                    class="col-start-9 row-start-8 col-span-3 row-span-4 glass-card rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl">
+                    <img
+                      src="https://i.pinimg.com/1200x/64/47/d1/6447d1367d44a41f6b93dbf7940c48c6.jpg"
+                      class="absolute inset-0 w-full h-full object-cover"
+                      alt="Coffee" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                  </div>
+                  <div
+                    class="col-start-3 row-start-10 col-span-3 row-span-3 glass-card rounded-3xl overflow-hidden border border-white/10 relative shadow-2xl">
+                    <img
+                      src="https://i.pinimg.com/736x/f2/02/db/f202dba5b9b0f660f6b169ced58f8aeb.jpg"
+                      class="absolute inset-0 w-full h-full object-cover"
+                      alt="Coffee" />
+                    <div class="absolute inset-0 bg-black/30"></div>
+                  </div>
+                </div>
+
+                <div
+                  class="relative z-10 text-center max-w-7xl px-6 step-3-content">
+                  <span
+                    class="tracking-[0.5em] uppercase text-[#FBF5DD]/60 text-sm block mb-6"
+                    >Crafted Since 1987</span
+                  >
+                  <h1
+                    class="massive-text text-[#FBF5DD] text-[clamp(5rem,12vw,14rem)] font-black leading-[0.85] drop-shadow-[0_0_50px_rgba(255,255,255,0.2)]">
+                    BREWED FOR<br />THE BOLD
+                  </h1>
+                  <p
+                    class="max-w-2xl mx-auto mt-8 text-lg text-[#FBF5DD]/70 leading-relaxed">
+                    Every bean tells a story of craftsmanship, passion and
+                    relentless pursuit of perfection.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="next-section relative w-full -mt-[100px] z-30">
+        <div
+          class="overlap-card bg-[#FBF5DD] min-h-[80vh] rounded-t-[40px] px-[5vw] py-[10vh] shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+          <h2
+            class="font-['Playfair_Display'] text-5xl md:text-7xl text-center text-[#0D530E] mb-20">
+            The Reserve Collection
+          </h2>
+          <div class="flex flex-wrap justify-center gap-8">
+            <div
+              class="neo-card flex-1 min-w-[300px] bg-[#FBF5DD] p-12 rounded-[30px] text-center shadow-[20px_20px_60px_#d5d0bc,-20px_-20px_60px_#ffffff]">
+              <h3
+                class="font-['Playfair_Display'] text-3xl text-[#306D29] mb-4">
+                Dark Roast
+              </h3>
+              <p class="text-[#0D530E] font-['Outfit'] text-lg">
+                Intense, smoky, and full-bodied.
+              </p>
+            </div>
+            <div
+              class="neo-card flex-1 min-w-[300px] bg-[#FBF5DD] p-12 rounded-[30px] text-center shadow-[20px_20px_60px_#d5d0bc,-20px_-20px_60px_#ffffff]">
+              <h3
+                class="font-['Playfair_Display'] text-3xl text-[#306D29] mb-4">
+                Medium Roast
+              </h3>
+              <p class="text-[#0D530E] font-['Outfit'] text-lg">
+                Balanced, smooth, with caramel notes.
+              </p>
+            </div>
+            <div
+              class="neo-card flex-1 min-w-[300px] bg-[#FBF5DD] p-12 rounded-[30px] text-center shadow-[20px_20px_60px_#d5d0bc,-20px_-20px_60px_#ffffff]">
+              <h3
+                class="font-['Playfair_Display'] text-3xl text-[#306D29] mb-4">
+                Light Roast
+              </h3>
+              <p class="text-[#0D530E] font-['Outfit'] text-lg">
+                Bright, crisp, and floral.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="horizontal-scroll-wrapper relative w-full h-screen overflow-hidden z-40 bg-[#0D530E]">
+        <div class="horizontal-track flex h-screen w-[300vw]">
+          <div
+            class="panel w-screen h-screen relative flex items-center justify-center bg-[#0D530E] flex-shrink-0 px-8">
+            <div class="absolute z-30 text-center pointer-events-none w-full">
+              <h2
+                class="font-['Playfair_Display'] font-black text-[#FBF5DD] text-[15vw] leading-[0.8] tracking-tighter drop-shadow-2xl">
+                THE MATCHA
+              </h2>
+              <p
+                class="font-['Outfit'] text-[#E7E1B1] text-xl tracking-[0.4em] uppercase mt-4 drop-shadow-lg">
+                Pure & Organic
+              </p>
+            </div>
+            <div
+              class="gallery-item absolute top-[10%] left-[8%] w-[22vw] h-[40vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/90/94/ed/9094edabdb00b97446cb4d117ec2e72e.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Origin</h3>
+                <p>Cultivated in pristine shade.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[10%] left-[25%] w-[18vw] h-[35vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/2a/18/16/2a1816de5ab0c50c812bf15f7b77607b.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Harvest</h3>
+                <p>Hand-picked precision.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute top-[15%] right-[25%] w-[20vw] h-[45vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/a0/73/15/a073154c288db4caa779382bf31e609c.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Process</h3>
+                <p>Traditional stone-grinding.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[12%] right-[5%] w-[24vw] h-[38vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/b6/fd/6e/b6fd6edcc4fa7839e3b2354d65dcd659.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Essence</h3>
+                <p>Vibrant & ceremonial.</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="panel w-screen h-screen relative flex items-center justify-center bg-[#2C1A12] flex-shrink-0 px-8">
+            <div class="absolute z-30 text-center pointer-events-none w-full">
+              <h2
+                class="font-['Playfair_Display'] font-black text-[#FBF5DD] text-[15vw] leading-[0.8] tracking-tighter drop-shadow-2xl">
+                THE COFFEE
+              </h2>
+              <p
+                class="font-['Outfit'] text-[#E7E1B1] text-xl tracking-[0.4em] uppercase mt-4 drop-shadow-lg">
+                Rich & Roasted
+              </p>
+            </div>
+            <div
+              class="gallery-item absolute top-[12%] left-[12%] w-[20vw] h-[45vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/de/5f/3f/de5f3f12c01010853124f3832c6013a8.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Roast</h3>
+                <p>Deep and robust notes.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[15%] left-[35%] w-[18vw] h-[38vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/61/5a/15/615a15a29af47d6da06a778997dd5242.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Pour</h3>
+                <p>The perfect extraction.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute top-[8%] right-[30%] w-[16vw] h-[30vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/fc/0c/43/fc0c43aa7ba5a77f17f552dc979d4b3d.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Aroma</h3>
+                <p>Awakening the senses.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[10%] right-[8%] w-[22vw] h-[40vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/06/d5/38/06d538126042c1db6a9efacc3f4dbe12.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Texture</h3>
+                <p>Velvety and smooth.</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="panel w-screen h-screen relative flex items-center justify-center bg-[#182B14] flex-shrink-0 px-8">
+            <div class="absolute z-30 text-center pointer-events-none w-full">
+              <h2
+                class="font-['Playfair_Display'] font-black text-[#FBF5DD] text-[12vw] leading-[0.8] tracking-tighter drop-shadow-2xl">
+                AUTHENTICITY
+              </h2>
+              <p
+                class="font-['Outfit'] text-[#E7E1B1] text-xl tracking-[0.4em] uppercase mt-4 drop-shadow-lg">
+                Rooted in Heritage
+              </p>
+            </div>
+            <div
+              class="gallery-item absolute top-[15%] left-[5%] w-[18vw] h-[40vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/27/a5/31/27a531bcaa89c725a2bfba0a9630b05e.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Soil</h3>
+                <p>Nurtured by earth.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[8%] left-[28%] w-[20vw] h-[35vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/af/08/85/af0885398638044ccb46ca17d155d575.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Hands</h3>
+                <p>Generational craft.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute top-[10%] right-[25%] w-[22vw] h-[45vh] z-20">
+              <img
+                src="https://i.pinimg.com/1200x/0e/2e/2b/0e2e2b77533787a3b4c269bc69b9acb7.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Legacy</h3>
+                <p>Preserving the wild.</p>
+              </div>
+            </div>
+            <div
+              class="gallery-item absolute bottom-[15%] right-[5%] w-[16vw] h-[38vh] z-20">
+              <img
+                src="https://i.pinimg.com/736x/1a/16/d7/1a16d794d788c60a17447911d2345ad4.jpg"
+                class="w-full h-full object-cover rounded-2xl shadow-2xl" />
+              <div class="hover-content">
+                <h3>Spirit</h3>
+                <p>Untamed profiles.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="relative w-full py-32 bg-[#0a0f0d] overflow-hidden z-40 border-t border-[#FBF5DD]/10">
+        <h2
+          class="font-['Playfair_Display'] text-[6vw] text-[#FBF5DD] text-center mb-20 drop-shadow-2xl">
+          Echoes of the Bold
+        </h2>
+        <div class="w-full flex flex-col gap-10">
+          <div class="track-wrapper w-full overflow-hidden flex">
+            <div class="track track-left flex gap-8 px-4 w-max">
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The most profound cup of coffee I have ever experienced. It
+                  truly awakens the soul."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— James H.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "A masterclass in roasting. You can taste the altitude and the
+                  care in every single sip."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Sarah M.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The matcha is incredibly vibrant. No bitterness, just pure,
+                  organic energy."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Elena R.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "I have abandoned all other blends. This is the only reserve I
+                  keep in my home."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Marcus T.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Unmatched authenticity. The earthy notes transport you
+                  directly to the mountains."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Chloe W.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Visually stunning packaging, but the flavor profile is what
+                  truly sets it apart."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— David K.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The dark roast is smoky perfection. Bold, unapologetic, and
+                  incredibly smooth."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Anya L.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "An absolute luxury. From the aroma to the finish, it is a
+                  sensory journey."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Thomas B.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The most profound cup of coffee I have ever experienced. It
+                  truly awakens the soul."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— James H.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "A masterclass in roasting. You can taste the altitude and the
+                  care in every single sip."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Sarah M.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The matcha is incredibly vibrant. No bitterness, just pure,
+                  organic energy."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Elena R.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "I have abandoned all other blends. This is the only reserve I
+                  keep in my home."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Marcus T.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Unmatched authenticity. The earthy notes transport you
+                  directly to the mountains."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Chloe W.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Visually stunning packaging, but the flavor profile is what
+                  truly sets it apart."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— David K.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The dark roast is smoky perfection. Bold, unapologetic, and
+                  incredibly smooth."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Anya L.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "An absolute luxury. From the aroma to the finish, it is a
+                  sensory journey."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Thomas B.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="track-wrapper w-full overflow-hidden flex">
+            <div class="track track-right flex gap-8 px-4 w-max">
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "A beautiful morning ritual. The medium roast has the perfect
+                  caramel undertones."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Sophie C.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "You can genuinely feel the craftsmanship. It’s more than
+                  coffee; it’s art."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Liam V.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Bold without being overwhelming. The perfect balance I’ve
+                  been searching for."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Ethan W.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The ceremonial matcha is flawlessly smooth. A true testament
+                  to its origin."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Maya P.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Exquisite quality. Opening the bag alone is an unforgettable
+                  experience."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Julian D.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Light, floral, and crisp. The light roast completely elevated
+                  my pour-over game."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Isabella R.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "I gift this to all my clients. It represents pure,
+                  unadulterated quality."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Carter F.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Nature captured perfectly in a cup. You simply cannot go back
+                  to anything else."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Naomi S.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "A beautiful morning ritual. The medium roast has the perfect
+                  caramel undertones."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Sophie C.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "You can genuinely feel the craftsmanship. It’s more than
+                  coffee; it’s art."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Liam V.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Bold without being overwhelming. The perfect balance I’ve
+                  been searching for."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Ethan W.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "The ceremonial matcha is flawlessly smooth. A true testament
+                  to its origin."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Maya P.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Exquisite quality. Opening the bag alone is an unforgettable
+                  experience."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Julian D.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Light, floral, and crisp. The light roast completely elevated
+                  my pour-over game."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Isabella R.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "I gift this to all my clients. It represents pure,
+                  unadulterated quality."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Carter F.</span
+                >
+              </div>
+              <div
+                class="review-card flex-shrink-0 w-[350px] p-8 rounded-[32px] flex flex-col gap-4">
+                <div class="flex text-[#E7E1B1] text-xl">★★★★★</div>
+                <p class="font-['Outfit'] text-[#FBF5DD]/80 leading-relaxed">
+                  "Nature captured perfectly in a cup. You simply cannot go back
+                  to anything else."
+                </p>
+                <span
+                  class="font-['Playfair_Display'] text-[#FBF5DD] font-bold mt-auto tracking-widest uppercase"
+                  >— Naomi S.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div
+        class="w-full bg-[#0a0f0d] py-16 border-t border-b border-white/10 overflow-hidden relative z-40">
+        <div class="marquee-track flex whitespace-nowrap items-center w-fit">
+          <h2
+            class="marquee-outline font-['Playfair_Display'] text-[8vw] font-black tracking-widest px-8">
+            SUSTAINABLY SOURCED ✦ SINGLE ORIGIN ✦ HAND ROASTED ✦
+          </h2>
+          <h2
+            class="marquee-outline font-['Playfair_Display'] text-[8vw] font-black tracking-widest px-8">
+            SUSTAINABLY SOURCED ✦ SINGLE ORIGIN ✦ HAND ROASTED ✦
+          </h2>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="fixed bottom-0 left-0 w-full min-h-[60vh] bg-[#FBF5DD] text-[#0D530E] flex flex-col items-center justify-center z-0 p-12">
+      <h2
+        class="font-['Playfair_Display'] text-[8vw] font-black leading-none text-center mb-8">
+        Botanica.
+      </h2>
+      <div
+        class="flex gap-12 font-['Outfit'] font-medium text-lg uppercase tracking-widest">
+        <span
+          class="cursor-pointer hover:opacity-50 transition-opacity magnetic inline-block p-4"
+          >Shop</span
+        >
+        <span
+          class="cursor-pointer hover:opacity-50 transition-opacity magnetic inline-block p-4"
+          >Story</span
+        >
+        <span
+          class="cursor-pointer hover:opacity-50 transition-opacity magnetic inline-block p-4"
+          >Journal</span
+        >
+        <span
+          class="cursor-pointer hover:opacity-50 transition-opacity magnetic inline-block p-4"
+          >Contact</span
+        >
+      </div>
+      <p
+        class="absolute bottom-8 text-sm opacity-50 font-['Outfit'] uppercase tracking-widest">
+        © 2026 Premium Reserve.
+      </p>
+    </footer>
+
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,240 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  line-height: 1.5;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background-color: #08080a;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(255, 0, 128, 0.06) 0, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(0, 204, 255, 0.06) 0, transparent 40%),
+    radial-gradient(at 50% 50%, rgba(15, 15, 20, 1) 0, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 1.5vh;
+}
+
+.gallery-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.gallery-header .sub-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #ff007f;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 0.2rem;
+}
+
+.gallery-header .main-title {
+  font-family: "Syne", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+}
+
+.gallery-header .main-title span {
+  background: linear-gradient(135deg, #00ccff, #ff007f);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gallery-header .description {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.main-div-container {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  grid-template-areas:
+    "box1  box1  box2  box2  box3"
+    "box1  box1  box4  box5  box5"
+    "box6  box7  box4  box5  box5"
+    "box8  box8  box4  box9  box9"
+    "box8  box8  box10 box10 box10";
+}
+
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition:
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.4s ease;
+  cursor: pointer;
+}
+
+.bento-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 14, 0.95) 0%,
+    rgba(10, 10, 14, 0.3) 60%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+  color: #ffffff;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.overlay h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 1px;
+}
+
+.overlay p {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bento-item:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 204, 255, 0.1);
+  border-color: rgba(0, 204, 255, 0.3);
+}
+
+.bento-item:hover img {
+  transform: scale(1.05) rotate(0.3deg);
+}
+
+.bento-item:hover .overlay {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .main-div-container {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(7, minmax(0, 1fr));
+    grid-template-areas:
+      "box1 box1 box3"
+      "box1 box1 box6"
+      "box2 box2 box7"
+      "box4 box5 box5"
+      "box4 box5 box5"
+      "box8 box8 box9"
+      "box10 box10 box10";
+  }
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow: auto;
+    height: auto;
+  }
+  .gallery-wrapper {
+    height: auto;
+    padding: 20px 10px;
+  }
+  .main-div-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: none;
+  }
+  .bento-item {
+    grid-area: auto !important;
+    height: 180px;
+  }
+  .box-1,
+  .box-5,
+  .box-8,
+  .box-10 {
+    grid-column: span 2;
+  }
+}
+
+.box-1 {
+  grid-area: box1;
+}
+.box-2 {
+  grid-area: box2;
+}
+.box-3 {
+  grid-area: box3;
+}
+.box-4 {
+  grid-area: box4;
+}
+.box-5 {
+  grid-area: box5;
+}
+.box-6 {
+  grid-area: box6;
+}
+.box-7 {
+  grid-area: box7;
+}
+.box-8 {
+  grid-area: box8;
+}
+.box-9 {
+  grid-area: box9;
+}
+.box-10 {
+  grid-area: box10;
+}
