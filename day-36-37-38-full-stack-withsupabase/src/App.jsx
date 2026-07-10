@@ -7,10 +7,31 @@ import { GanttView } from './components/views/GanttView';
 import { CommandPalette } from './components/CommandPalette';
 import { ExportModal } from './components/modals/ExportModal';
 import { PdfViewerPanel } from './components/PdfViewerPanel';
+import { LandingPage } from './components/LandingPage';
 import { usePlannerStore } from './store/usePlannerStore';
 
 function App() {
-  const { viewMode, setTemporaryTool, revertTool, activePdfUrl } = usePlannerStore();
+  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl } = usePlannerStore();
+
+  useEffect(() => {
+    if ('launchQueue' in window) {
+      window.launchQueue.setConsumer(async (launchParams) => {
+        if (!launchParams.files || !launchParams.files.length) return;
+        
+        for (const fileHandle of launchParams.files) {
+          if (fileHandle.name.endsWith('.zaforge')) {
+            try {
+              const file = await fileHandle.getFile();
+              const text = await file.text();
+              usePlannerStore.getState().importWorkspace(text);
+            } catch (err) {
+              console.error("Failed to read .zaforge file from OS launchQueue:", err);
+            }
+          }
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -36,6 +57,10 @@ function App() {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [setTemporaryTool, revertTool]);
+
+  if (route === 'landing') {
+    return <LandingPage />;
+  }
 
   return (
     <div className="w-screen h-screen overflow-hidden bg-canvas text-dark relative flex flex-col">

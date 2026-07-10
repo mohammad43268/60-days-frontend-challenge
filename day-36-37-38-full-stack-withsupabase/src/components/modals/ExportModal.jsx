@@ -4,7 +4,7 @@ import { X, FileJson, Table, FileText, Image as ImageIcon, Download } from 'luci
 import * as htmlToImage from 'html-to-image';
 
 export const ExportModal = () => {
-  const { isExportModalOpen, closeExportModal, cards, connections, viewport, viewMode } = usePlannerStore();
+  const { isExportModalOpen, closeExportModal, exportWorkspace, cards, connections, viewport, viewMode } = usePlannerStore();
 
   if (!isExportModalOpen) return null;
 
@@ -18,14 +18,8 @@ export const ExportModal = () => {
     URL.revokeObjectURL(url);
   };
 
-  const exportSpatial = () => {
-    const payload = {
-      app: "SpatialOS",
-      version: "2.5.0",
-      exportedAt: new Date().toISOString(),
-      workspace: { nodes: cards, connections, viewport, viewMode }
-    };
-    downloadFile(`workspace-${Date.now()}.spatial`, JSON.stringify(payload, null, 2), 'application/json');
+  const exportZaforge = () => {
+    exportWorkspace();
     closeExportModal();
   };
 
@@ -154,7 +148,7 @@ export const ExportModal = () => {
         </div>
         
         <div className="p-6">
-          <p className="text-gray-500 text-sm mb-6">Choose a format to export your active workspace. These universal formats allow you to open your Kortex data in external applications.</p>
+          <p className="text-gray-500 text-sm mb-6">Choose a format to export your active workspace. These universal formats allow you to open your Zaforge data in external applications.</p>
           
           <div className="space-y-3">
             {/* Obsidian */}
@@ -201,14 +195,14 @@ export const ExportModal = () => {
               </div>
             </button>
 
-            {/* Kortex Native */}
-            <button onClick={exportSpatial} className="w-full flex items-center px-4 py-3 border border-gray-200 rounded-xl hover:border-orange-300 hover:bg-orange-50 transition-colors group text-left mt-4 bg-gray-50">
+            {/* Zaforge Native */}
+            <button onClick={exportZaforge} className="w-full flex items-center px-4 py-3 border border-gray-200 rounded-xl hover:border-orange-300 hover:bg-orange-50 transition-colors group text-left mt-4 bg-gray-50">
               <div className="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform shadow-sm">
                 <Download className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <div className="font-semibold text-gray-800">Kortex Workspace</div>
-                <div className="text-xs text-gray-500">.spatial - Native backup file to load back into Kortex</div>
+                <div className="font-semibold text-gray-800">Zaforge Workspace</div>
+                <div className="text-xs text-gray-500">.zaforge - Native backup file to load back into Zaforge</div>
               </div>
             </button>
           </div>

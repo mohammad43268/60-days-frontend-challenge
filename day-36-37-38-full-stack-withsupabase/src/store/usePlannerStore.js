@@ -72,8 +72,14 @@ export const usePlannerStore = create((set, get) => {
     previousTool: null,
     selectedCardIds: [],
     viewMode: 'canvas', // 'canvas' | 'table' | 'gantt'
+    route: 'landing', // 'landing' | 'app'
+    theme: 'dark',
+    smartShapesEnabled: true,
     isExportModalOpen: false,
 
+    setRoute: (route) => set({ route }),
+    toggleSmartShapes: () => set((state) => ({ smartShapesEnabled: !state.smartShapesEnabled })),
+    
     openExportModal: () => set({ isExportModalOpen: true }),
     closeExportModal: () => set({ isExportModalOpen: false }),
 
@@ -224,9 +230,9 @@ export const usePlannerStore = create((set, get) => {
       set((state) => ({ drawings: [...state.drawings, drawing] }));
     },
     
-    updateDrawing: (id, points) => {
+    updateDrawing: (id, updates) => {
       set((state) => ({
-        drawings: state.drawings.map(d => d.id === id ? { ...d, points } : d)
+        drawings: state.drawings.map(d => d.id === id ? { ...d, ...updates } : d)
       }));
     },
     
@@ -360,19 +366,55 @@ export const usePlannerStore = create((set, get) => {
           { id: 'con1', source: 'c1', target: 'c2', sourcePort: 'right', targetPort: 'left', type: 'blocks' },
           { id: 'con2', source: 'c1', target: 'c3', sourcePort: 'right', targetPort: 'left', type: 'blocks' }
         ];
+      } else if (preset === 'marketing') {
+        newCards = [
+          { id: 'm1', type: 'note', x: 100, y: 300, width: 300, color: 'rose', content: 'Holiday Campaign 2026', metadata: { align: 'text-center', fontSize: 24, fontColor: '#fda4af' } },
+          { id: 'm2', type: 'task', x: 500, y: 150, width: 300, color: 'orange', content: [{id:'1', text:'Social Media Ads', done:false}], metadata: { assignee: 'Sarah', budget: '$5000' } },
+          { id: 'm3', type: 'task', x: 500, y: 450, width: 300, color: 'blue', content: [{id:'1', text:'Email Newsletter', done:false}], metadata: { assignee: 'Tom', budget: '$1200' } },
+          { id: 'm4', type: 'image', x: 900, y: 150, width: 300, content: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff', metadata: { caption: 'Hero Image Concept' } }
+        ];
+        newConnections = [
+          { id: 'c_m1_m2', source: 'm1', target: 'm2', sourcePort: 'right', targetPort: 'left', type: 'depends_on' },
+          { id: 'c_m1_m3', source: 'm1', target: 'm3', sourcePort: 'right', targetPort: 'left', type: 'depends_on' },
+          { id: 'c_m2_m4', source: 'm2', target: 'm4', sourcePort: 'right', targetPort: 'left', type: 'references' }
+        ];
+      } else if (preset === 'mindmap') {
+        newCards = [
+          { id: 'mm1', type: 'note', x: 500, y: 300, width: 250, color: 'indigo', content: 'AI Strategy', metadata: { align: 'text-center', fontSize: 20 } },
+          { id: 'mm2', type: 'note', x: 200, y: 100, width: 200, color: 'teal', content: 'Data Collection', metadata: {} },
+          { id: 'mm3', type: 'note', x: 800, y: 100, width: 200, color: 'purple', content: 'Model Training', metadata: {} },
+          { id: 'mm4', type: 'note', x: 200, y: 500, width: 200, color: 'emerald', content: 'Evaluation', metadata: {} },
+          { id: 'mm5', type: 'note', x: 800, y: 500, width: 200, color: 'rose', content: 'Deployment', metadata: {} }
+        ];
+        newConnections = [
+          { id: 'c_mm1_mm2', source: 'mm1', target: 'mm2', sourcePort: 'top', targetPort: 'bottom', type: 'related' },
+          { id: 'c_mm1_mm3', source: 'mm1', target: 'mm3', sourcePort: 'top', targetPort: 'bottom', type: 'related' },
+          { id: 'c_mm1_mm4', source: 'mm1', target: 'mm4', sourcePort: 'bottom', targetPort: 'top', type: 'related' },
+          { id: 'c_mm1_mm5', source: 'mm1', target: 'mm5', sourcePort: 'bottom', targetPort: 'top', type: 'related' }
+        ];
+      } else if (preset === 'storyboard') {
+        newCards = [
+          { id: 'sb1', type: 'image', x: 100, y: 200, width: 300, content: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4', metadata: { caption: 'Scene 1: Introduction' } },
+          { id: 'sb2', type: 'image', x: 500, y: 200, width: 300, content: 'https://images.unsplash.com/photo-1516280440502-861f6ebbe402', metadata: { caption: 'Scene 2: Conflict' } },
+          { id: 'sb3', type: 'image', x: 900, y: 200, width: 300, content: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1', metadata: { caption: 'Scene 3: Resolution' } }
+        ];
+        newConnections = [
+          { id: 'c_sb1_sb2', source: 'sb1', target: 'sb2', sourcePort: 'right', targetPort: 'left', type: 'related' },
+          { id: 'c_sb2_sb3', source: 'sb2', target: 'sb3', sourcePort: 'right', targetPort: 'left', type: 'related' }
+        ];
       }
       
       set({ cards: newCards, connections: newConnections, viewport: { x: 0, y: 0, scale: 1 }, selectedCardIds: [] });
     },
 
-    exportWorkspace: (customFileName = 'my-workspace.spatial') => {
+    exportWorkspace: () => {
       const { cards, connections, viewport, viewMode } = get();
       const payload = {
-        app: "SpatialOS",
-        version: "2.5.0",
+        app: "Zaforge OS",
+        version: "3.0.0",
         exportedAt: new Date().toISOString(),
         workspace: {
-          nodes: cards,
+          cards: cards,
           connections: connections,
           viewport: viewport,
           viewMode: viewMode
@@ -383,7 +425,7 @@ export const usePlannerStore = create((set, get) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = customFileName;
+      a.download = `workspace-${Date.now()}.zaforge`;
       a.click();
       URL.revokeObjectURL(url);
     },
@@ -391,20 +433,35 @@ export const usePlannerStore = create((set, get) => {
     importWorkspace: (jsonString) => {
       try {
         const data = JSON.parse(jsonString);
-        if (data && data.workspace && Array.isArray(data.workspace.nodes) && Array.isArray(data.workspace.connections)) {
+        if (data && data.app === "Zaforge OS" && data.workspace && Array.isArray(data.workspace.cards) && Array.isArray(data.workspace.connections)) {
           saveHistory();
           set({
-            cards: data.workspace.nodes,
+            cards: data.workspace.cards,
             connections: data.workspace.connections,
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: []
           });
           return { success: true };
+        } else if (data && data.app === "SpatialOS" && data.workspace) {
+           // backwards compatibility
+           saveHistory();
+           set({
+             cards: data.workspace.nodes || data.workspace.cards || [],
+             connections: data.workspace.connections || [],
+             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
+             viewMode: data.workspace.viewMode || 'canvas',
+             selectedCardIds: []
+           });
+           return { success: true };
         } else {
-          alert("Invalid workspace file format.");
+          console.error("Invalid Zaforge workspace file format.");
+          alert("Invalid Zaforge workspace file format. Please ensure you are importing a valid .zaforge file.");
+          return { success: false, error: "Invalid format" };
         }
       } catch (err) {
+        console.error("Failed to parse Zaforge file:", err);
+        alert("Failed to parse file. The file may be corrupted.");
         return { success: false, error: err.message };
       }
     }

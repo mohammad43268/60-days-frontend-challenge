@@ -4,6 +4,7 @@ import { Draggable } from 'gsap/Draggable';
 import { usePlannerStore, getVisibleCards } from '../store/usePlannerStore';
 import { Card } from './Card';
 import { Settings, Trash2 } from 'lucide-react';
+import { recognizeShape } from '../utils/shapeRecognizer';
 
 gsap.registerPlugin(Draggable);
 
@@ -148,10 +149,20 @@ export const Canvas = () => {
   }, [viewport, activeTool, updateViewport]);
 
   const getPortCoords = (node, stateCard, port) => {
-    const w = node ? node.offsetWidth : (stateCard.width || 250);
-    const h = node ? node.offsetHeight : (stateCard.height || 200);
-    const x = node ? (gsap.getProperty(node, "x") || stateCard.x) : stateCard.x;
-    const y = node ? (gsap.getProperty(node, "y") || stateCard.y) : stateCard.y;
+    const w = (node && node.offsetWidth > 0) ? node.offsetWidth : (stateCard.width || 250);
+    const h = (node && node.offsetHeight > 0) ? node.offsetHeight : (stateCard.height || 200);
+    
+    let x = stateCard.x;
+    let y = stateCard.y;
+    
+    // Only use live GSAP coordinates during an active drag to prevent 
+    // uninitialized transforms from breaking wires on file load.
+    if (isDraggingCardRef.current && node) {
+      const gx = gsap.getProperty(node, "x");
+      const gy = gsap.getProperty(node, "y");
+      if (typeof gx === 'number') x = gx;
+      if (typeof gy === 'number') y = gy;
+    }
     
     switch(port) {
       case 'top': return { x: x + w/2, y };
@@ -190,9 +201,12 @@ export const Canvas = () => {
         const tNode = cardRefs.current[conn.target];
         const p1 = getPortCoords(sNode, sourceCard, conn.sourcePort);
         const p2 = getPortCoords(tNode, targetCard, conn.targetPort);
-        const path = pathRefs.current[conn.id];
-        if (path) {
-          path.setAttribute('d', calculateBezier(p1, p2, conn.sourcePort, conn.targetPort));
+        const newD = calculateBezier(p1, p2, conn.sourcePort, conn.targetPort);
+        const paths = pathRefs.current[conn.id];
+        if (paths && Array.isArray(paths)) {
+          paths.forEach(p => {
+            if (p) p.setAttribute('d', newD);
+          });
         }
       }
     });
@@ -205,6 +219,12 @@ export const Canvas = () => {
   // Global Redraw Trigger: Sync wires if positional data changes outside of GSAP drag
   useEffect(() => {
     if (!isDraggingCardRef.current) {
+      activeCards.forEach(card => {
+        const node = document.getElementById(card.id);
+        if (node) {
+          gsap.set(node, { x: card.x, y: card.y });
+        }
+      });
       updatePaths();
     }
   }, [activeCards, updatePaths]);
@@ -312,7 +332,8 @@ export const Canvas = () => {
   });
 
   const [connecting, setConnecting] = useState(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const connectingPathRef = useRef(null);
+  const currentConnectingRef = useRef(null);
 
   const setDraggablesEnabled = (enabled) => {
     if (wrapperRef.current) {
@@ -333,10 +354,19 @@ export const Canvas = () => {
     const port = target?.closest?.('.port');
     if (port && activeTool === 'connect') {
       e.stopPropagation();
-      setConnecting({ sourceId: port.dataset.cardId, sourcePort: port.dataset.port });
+      currentConnectingRef.current = { sourceId: port.dataset.cardId, sourcePort: port.dataset.port };
       isConnectingRef.current = true;
       const rect = wrapperRef.current.getBoundingClientRect();
-      setMousePos({ x: (e.clientX - rect.left) / viewport.scale, y: (e.clientY - rect.top) / viewport.scale });
+      const x = (e.clientX - rect.left) / viewport.scale;
+      const y = (e.clientY - rect.top) / viewport.scale;
+      
+      if (connectingPathRef.current) {
+        connectingPathRef.current.style.display = 'block';
+        const sourceCard = activeCards.find(c => c.id === newConnecting.sourceId);
+        const p1 = getPortCoords(cardRefs.current[newConnecting.sourceId], sourceCard, newConnecting.sourcePort);
+        connectingPathRef.current.setAttribute('d', calculateBezier(p1, { x, y }, newConnecting.sourcePort, 'center'));
+      }
+      
       setDraggablesEnabled(false);
       return;
     }
@@ -380,9 +410,16 @@ export const Canvas = () => {
   };
 
   const handlePointerMove = (e) => {
-    if (activeTool === 'connect' && connecting) {
+    if (activeTool === 'connect' && currentConnectingRef.current) {
       const rect = wrapperRef.current.getBoundingClientRect();
-      setMousePos({ x: (e.clientX - rect.left) / viewport.scale, y: (e.clientY - rect.top) / viewport.scale });
+      const mouseX = (e.clientX - rect.left) / viewport.scale;
+      const mouseY = (e.clientY - rect.top) / viewport.scale;
+      
+      if (connectingPathRef.current) {
+        const sourceCard = activeCards.find(c => c.id === currentConnectingRef.current.sourceId);
+        const p1 = getPortCoords(cardRefs.current[currentConnectingRef.current.sourceId], sourceCard, currentConnectingRef.current.sourcePort);
+        connectingPathRef.current.setAttribute('d', calculateBezier(p1, { x: mouseX, y: mouseY }, currentConnectingRef.current.sourcePort, 'center'));
+      }
     } else if (isLassoing.current) {
       const rect = wrapperRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / viewport.scale;
@@ -406,7 +443,7 @@ export const Canvas = () => {
         const drawing = drawings.find(d => d.id === currentDrawingIdRef.current);
         if (drawing) {
           // Throttling or simplification could go here, but for now we push
-          updateDrawing(currentDrawingIdRef.current, [...drawing.points, { x, y }]);
+          updateDrawing(currentDrawingIdRef.current, { points: [...drawing.points, { x, y }] });
         }
       }
     }
@@ -415,18 +452,29 @@ export const Canvas = () => {
   const handlePointerUp = (e) => {
     const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
     const port = target?.closest?.('.port');
-    if (port && connecting && activeTool === 'connect') {
+    if (activeTool === 'connect' && currentConnectingRef.current) {
       e.stopPropagation();
-      if (connecting.sourceId !== port.dataset.cardId) {
-        addConnection(connecting.sourceId, port.dataset.cardId, connecting.sourcePort, port.dataset.port, 'related', '');
-      }
-    }
-    if (connecting) {
-      setConnecting(null);
       isConnectingRef.current = false;
+      if (port && currentConnectingRef.current.sourceId !== port.dataset.cardId) {
+        addConnection(currentConnectingRef.current.sourceId, port.dataset.cardId, currentConnectingRef.current.sourcePort, port.dataset.port, 'related', '');
+      }
+      setConnecting(null);
+      currentConnectingRef.current = null;
+      if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
       setDraggablesEnabled(true);
+      return;
     }
     if (activeTool === 'draw' && isDrawing) {
+      if (currentDrawingIdRef.current) {
+        const store = usePlannerStore.getState();
+        const drawing = store.drawings.find(d => d.id === currentDrawingIdRef.current);
+        if (drawing && drawing.points.length >= 5 && store.smartShapesEnabled) {
+          const shapeData = recognizeShape(drawing.points);
+          if (shapeData) {
+            store.updateDrawing(currentDrawingIdRef.current, { shapeData });
+          }
+        }
+      }
       setIsDrawing(false);
       currentDrawingIdRef.current = null;
       setDraggablesEnabled(true);
@@ -461,11 +509,11 @@ export const Canvas = () => {
 
   const getConnectionStyle = (type) => {
     switch(type) {
-      case 'blocks': return { stroke: '#EF4444', strokeWidth: '4', markerEnd: 'url(#arrow-blocks)' };
-      case 'depends_on': return { stroke: '#F59E0B', strokeWidth: '3', strokeDasharray: '8,4', markerEnd: 'url(#arrow-depends)' };
-      case 'references': return { stroke: '#3B82F6', strokeWidth: '2', strokeDasharray: '2,4', markerEnd: 'url(#circle-references)' };
-      case 'owned_by': return { stroke: '#10B981', strokeWidth: '5', markerEnd: 'url(#square-owned)' };
-      default: return { stroke: '#F97316', strokeWidth: '2', markerEnd: 'url(#arrow-default)' };
+      case 'blocks': return { color: '#EF4444', pulseWidth: '4', dashArray: '6 14', glow: 'drop-shadow(0 0 8px rgba(239,68,68,0.8))' };
+      case 'depends_on': return { color: '#EAB308', pulseWidth: '3', dashArray: '10 10', glow: 'drop-shadow(0 0 8px rgba(234,179,8,0.8))' };
+      case 'references': return { color: '#06B6D4', pulseWidth: '2', dashArray: '4 8', glow: 'drop-shadow(0 0 8px rgba(6,182,212,0.8))' };
+      case 'owned_by': return { color: '#10B981', pulseWidth: '5', dashArray: '15 15', glow: 'drop-shadow(0 0 8px rgba(16,185,129,0.8))' };
+      default: return { color: '#F97316', pulseWidth: '2', dashArray: '8 8', glow: 'drop-shadow(0 0 8px rgba(249,115,22,0.8))' };
     }
   };
 
@@ -490,10 +538,10 @@ export const Canvas = () => {
     
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-      if (file.name.endsWith('.spatial') || file.name.endsWith('.json')) {
+      if (file.name.endsWith('.zaforge') || file.name.endsWith('.spatial') || file.name.endsWith('.json')) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          importWorkspace(event.target.result);
+          usePlannerStore.getState().importWorkspace(event.target.result);
         };
         reader.readAsText(file);
       }
@@ -516,7 +564,7 @@ export const Canvas = () => {
           <div className="bg-white px-8 py-6 rounded-2xl shadow-2xl flex flex-col items-center gap-4 transform scale-110">
             <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-3xl">📂</div>
             <h2 className="text-xl font-bold text-gray-800">Drop workspace file here to load</h2>
-            <p className="text-sm text-gray-500">Supports .spatial and .json files</p>
+            <p className="text-sm text-gray-500">Supports .zaforge files</p>
           </div>
         </div>
       )}
@@ -539,45 +587,121 @@ export const Canvas = () => {
         <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-[5]">
           {drawings.map(d => {
             if (!d.points || d.points.length === 0) return null;
-            const pathData = `M ${d.points.map(p => `${p.x},${p.y}`).join(' L ')}`;
-            return (
-              <path
-                key={d.id}
-                d={pathData}
-                fill="none"
-                stroke={d.color}
-                strokeWidth={d.width}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity={d.type === 'highlighter' ? 0.4 : 1}
-              />
-            );
+            
+            const isNeon = d.type === 'neon' || d.isNeon;
+            const opacity = d.type === 'highlighter' ? 0.4 : 1;
+            const neonStyle = isNeon ? { filter: 'drop-shadow(0 0 2px currentColor) drop-shadow(0 0 6px currentColor)' } : {};
+            const coreProps = isNeon ? { stroke: "white", strokeWidth: Math.max(1, d.width / 2.5), style: {} } : null;
+
+            const renderShape = (overrideProps = {}, keySuffix = '') => {
+              if (d.shapeData) {
+                const s = d.shapeData;
+                if (s.type === 'circle') {
+                  return <circle key={`${d.id}${keySuffix}`} cx={s.cx} cy={s.cy} r={s.r} fill="none" stroke={d.color} strokeWidth={d.width} opacity={opacity} style={neonStyle} {...overrideProps} />;
+                } else if (s.type === 'rectangle') {
+                  return <rect key={`${d.id}${keySuffix}`} x={s.x} y={s.y} width={s.w} height={s.h} fill="none" stroke={d.color} strokeWidth={d.width} rx="8" opacity={opacity} style={neonStyle} {...overrideProps} />;
+                } else if (s.type === 'line') {
+                  return <line key={`${d.id}${keySuffix}`} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke={d.color} strokeWidth={d.width} strokeLinecap="round" opacity={opacity} style={neonStyle} {...overrideProps} />;
+                } else if (s.type === 'ellipse') {
+                  return <ellipse key={`${d.id}${keySuffix}`} cx={s.cx} cy={s.cy} rx={s.rx} ry={s.ry} fill="none" stroke={d.color} strokeWidth={d.width} opacity={opacity} style={neonStyle} {...overrideProps} />;
+                } else if (s.type === 'polygon') {
+                  const pts = s.points.map(p => `${p.x},${p.y}`).join(' ');
+                  return <polygon key={`${d.id}${keySuffix}`} points={pts} fill="none" stroke={d.color} strokeWidth={d.width} strokeLinejoin="round" opacity={opacity} style={neonStyle} {...overrideProps} />;
+                }
+              }
+              
+              let pathData = `M ${d.points[0].x},${d.points[0].y}`;
+              for (let i = 1; i < d.points.length - 1; i++) {
+                const xc = (d.points[i].x + d.points[i + 1].x) / 2;
+                const yc = (d.points[i].y + d.points[i + 1].y) / 2;
+                pathData += ` Q ${d.points[i].x},${d.points[i].y} ${xc},${yc}`;
+              }
+              if (d.points.length > 1) {
+                pathData += ` L ${d.points[d.points.length - 1].x},${d.points[d.points.length - 1].y}`;
+              }
+              
+              return (
+                <path
+                  key={`${d.id}${keySuffix}`}
+                  d={pathData}
+                  fill="none"
+                  stroke={d.color}
+                  strokeWidth={d.width}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  opacity={opacity}
+                  style={neonStyle}
+                  {...overrideProps}
+                />
+              );
+            };
+
+            if (isNeon) {
+              return (
+                <g key={d.id} style={{ color: d.color }}>
+                  {renderShape({})}
+                  {renderShape(coreProps, '-core')}
+                </g>
+              );
+            }
+            
+            return renderShape({});
           })}
         </svg>
 
         <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-10">
           <defs>
-            <marker id="arrow-blocks" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#EF4444" /></marker>
-            <marker id="arrow-depends" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E0B" /></marker>
-            <marker id="circle-references" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><circle cx="5" cy="5" r="4" fill="#3B82F6" /></marker>
-            <marker id="square-owned" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><rect x="1" y="1" width="8" height="8" fill="#10B981" /></marker>
             <marker id="arrow-default" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316" /></marker>
           </defs>
           {activeConnections.map(conn => {
             const style = getConnectionStyle(conn.type);
+            const pathData = (pathRefs.current[conn.id] && pathRefs.current[conn.id][0]) 
+              ? pathRefs.current[conn.id][0].getAttribute('d') 
+              : '';
+            const isActive = activeConnectionMenu?.id === conn.id;
+            
             return (
-              <g key={conn.id} className="pointer-events-auto cursor-pointer hover:opacity-70 transition-opacity" onClick={(e) => { e.stopPropagation(); setActiveConnectionMenu({ id: conn.id, x: e.clientX, y: e.clientY }); }}>
-                <path d={pathRefs.current[conn.id]?.getAttribute('d') || ''} fill="none" stroke="transparent" strokeWidth="20" />
-                <path ref={el => pathRefs.current[conn.id] = el} fill="none" stroke={style.stroke} strokeWidth={style.strokeWidth} strokeDasharray={style.strokeDasharray} markerEnd={style.markerEnd} />
+              <g key={conn.id} className="pointer-events-auto cursor-pointer group" onClick={(e) => { e.stopPropagation(); setActiveConnectionMenu({ id: conn.id, x: e.clientX, y: e.clientY }); }}>
+                {/* 1. Invisible Ultra-thick hit box for easy clicking */}
+                <path 
+                  ref={el => { if (!pathRefs.current[conn.id]) pathRefs.current[conn.id] = []; pathRefs.current[conn.id][0] = el; }}
+                  d={pathData} 
+                  fill="none" 
+                  stroke="transparent" 
+                  strokeWidth="30" 
+                />
+                
+                {/* 2. Base wire (subtle background line) */}
+                <path 
+                  ref={el => { if (!pathRefs.current[conn.id]) pathRefs.current[conn.id] = []; pathRefs.current[conn.id][1] = el; }}
+                  d={pathData} 
+                  fill="none" 
+                  stroke={style.color} 
+                  strokeWidth={style.pulseWidth} 
+                  opacity={isActive ? "0.6" : "0.2"} 
+                  className="transition-opacity group-hover:opacity-40"
+                />
+                
+                {/* 3. Animated Energy Pulse overlay */}
+                <path 
+                  ref={el => { if (!pathRefs.current[conn.id]) pathRefs.current[conn.id] = []; pathRefs.current[conn.id][2] = el; }}
+                  d={pathData} 
+                  fill="none" 
+                  stroke={style.color} 
+                  strokeWidth={style.pulseWidth} 
+                  strokeDasharray={style.dashArray}
+                  style={{ filter: isActive ? style.glow : 'none' }}
+                  className={`animate-dash-flow transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_5px_currentColor]'}`}
+                  strokeLinecap="round"
+                />
               </g>
             );
           })}
-          {connecting && (
-            <path
-              d={calculateBezier(getPortCoords(cardRefs.current[connecting.sourceId], activeCards.find(c => c.id === connecting.sourceId), connecting.sourcePort), mousePos, connecting.sourcePort, 'center')}
-              fill="none" stroke="#F97316" strokeWidth="2" strokeDasharray="5,5" markerEnd="url(#arrow-default)"
-            />
-          )}
+          <path
+            ref={connectingPathRef}
+            fill="none" stroke="#F97316" strokeWidth="2" strokeDasharray="5 5" className="animate-dash-flow opacity-80" markerEnd="url(#arrow-default)"
+            style={{ display: 'none' }}
+          />
         </svg>
 
         {visibleCards.map(card => (<Card key={card.id} card={card} />))}
@@ -617,15 +741,41 @@ export const Canvas = () => {
         </div>
       )}
 
-      {activeConnectionMenu && (
-        <div className="connection-menu absolute z-50 bg-[#2A2A35] border border-white/10 rounded-xl shadow-2xl p-2 flex flex-col gap-1 w-48" style={{ left: activeConnectionMenu.x, top: activeConnectionMenu.y }}>
-          <button onClick={() => { usePlannerStore.getState().updateConnection(activeConnectionMenu.id, { type: 'blocks' }); setActiveConnectionMenu(null); }} className="flex items-center px-2 py-1.5 text-sm text-gray-200 hover:bg-white/5 rounded-md"><span className="w-3 h-3 rounded-full bg-[#EF4444] mr-2"></span> Blocks</button>
-          <button onClick={() => { usePlannerStore.getState().updateConnection(activeConnectionMenu.id, { type: 'depends_on' }); setActiveConnectionMenu(null); }} className="flex items-center px-2 py-1.5 text-sm text-gray-200 hover:bg-white/5 rounded-md"><span className="w-3 h-3 rounded-full bg-[#F59E0B] mr-2"></span> Depends On</button>
-          <button onClick={() => { usePlannerStore.getState().updateConnection(activeConnectionMenu.id, { type: 'references' }); setActiveConnectionMenu(null); }} className="flex items-center px-2 py-1.5 text-sm text-gray-200 hover:bg-white/5 rounded-md"><span className="w-3 h-3 rounded-full bg-[#3B82F6] mr-2"></span> References</button>
-          <button onClick={() => { usePlannerStore.getState().updateConnection(activeConnectionMenu.id, { type: 'owned_by' }); setActiveConnectionMenu(null); }} className="flex items-center px-2 py-1.5 text-sm text-gray-200 hover:bg-white/5 rounded-md"><span className="w-3 h-3 rounded-full bg-[#10B981] mr-2"></span> Owned By</button>
-          <button onClick={() => { usePlannerStore.getState().deleteConnection(activeConnectionMenu.id); setActiveConnectionMenu(null); }} className="flex items-center px-2 py-1.5 text-sm text-red-400 hover:bg-red-500/10 rounded-md"><Trash2 className="w-4 h-4 mr-2" /> Delete</button>
-        </div>
-      )}
+      {activeConnectionMenu && (() => {
+        const conn = activeConnections.find(c => c.id === activeConnectionMenu.id);
+        const currType = conn ? conn.type : null;
+        
+        const renderMenuBtn = (type, label, colorHex) => {
+          const isActive = currType === type;
+          return (
+            <button 
+              onClick={() => { usePlannerStore.getState().updateConnection(activeConnectionMenu.id, { type }); setActiveConnectionMenu(null); }} 
+              className={`flex items-center px-3 py-2 text-xs font-semibold tracking-wide rounded-lg transition-all ${isActive ? 'bg-white/10 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full mr-3 shadow-sm ${isActive ? 'shadow-[0_0_8px_currentColor]' : ''}`} style={{ backgroundColor: colorHex, color: colorHex }}></span>
+              {label}
+            </button>
+          );
+        };
+        
+        return (
+          <div className="connection-menu absolute z-50 bg-black/60 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] p-2 flex flex-col gap-0.5 w-48 pointer-events-auto" style={{ left: activeConnectionMenu.x, top: activeConnectionMenu.y }} onPointerDown={e => e.stopPropagation()}>
+            <div className="px-3 py-2 mb-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-white/5">Connection Type</div>
+            {renderMenuBtn('blocks', 'Blocks', '#EF4444')}
+            {renderMenuBtn('depends_on', 'Depends On', '#EAB308')}
+            {renderMenuBtn('references', 'References', '#06B6D4')}
+            {renderMenuBtn('owned_by', 'Owned By', '#10B981')}
+            <div className="h-px bg-white/5 my-1"></div>
+            <button 
+              onClick={() => { usePlannerStore.getState().deleteConnection(activeConnectionMenu.id); setActiveConnectionMenu(null); }} 
+              className="flex items-center px-3 py-2 text-xs font-semibold tracking-wide rounded-lg text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-all mt-1"
+            >
+              <Trash2 className="w-4 h-4 mr-2" /> 
+              Delete Wire
+            </button>
+          </div>
+        );
+      })()}
     </div>
   );
 };

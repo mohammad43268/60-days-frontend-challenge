@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { usePlannerStore } from '../store/usePlannerStore';
-import { MousePointer2, Hand, Type, CheckSquare, Image as ImageIcon, Code, Bookmark, Sparkles, Link as LinkIcon, Trash2, Volume2, FileText, Wrench, X, Share, FolderOpen, PenTool, Highlighter, Eraser as EraserIcon } from 'lucide-react';
+import { MousePointer2, Hand, Type, CheckSquare, Image as ImageIcon, Code, Bookmark, Sparkles, Link as LinkIcon, Trash2, Volume2, FileText, Wrench, X, Share, FolderOpen, PenTool, Highlighter, Eraser as EraserIcon, Save, Wand2, Zap } from 'lucide-react';
 
 const tools = [
   { id: 'cursor', icon: MousePointer2, label: 'Select' },
@@ -8,6 +8,7 @@ const tools = [
   { id: 'connect', icon: LinkIcon, label: 'Connect' },
   { divider: true },
   { id: 'pen', icon: PenTool, label: 'Draw' },
+  { id: 'neon', icon: Zap, label: 'Neon Pen' },
   { id: 'highlighter', icon: Highlighter, label: 'Highlight' },
   { id: 'eraser', icon: EraserIcon, label: 'Erase' },
   { divider: true },
@@ -22,7 +23,7 @@ const tools = [
 ];
 
 export const Toolbar = () => {
-  const { activeTool, setActiveTool, selectedCardIds, deleteSelectedCards, openExportModal, importWorkspace, activeDrawingTool, setDrawingTool, drawingColor, setDrawingColor, drawingWidth, setDrawingWidth } = usePlannerStore();
+  const { activeTool, setActiveTool, selectedCardIds, deleteSelectedCards, openExportModal, exportWorkspace, importWorkspace, activeDrawingTool, setDrawingTool, drawingColor, setDrawingColor, drawingWidth, setDrawingWidth, smartShapesEnabled, toggleSmartShapes } = usePlannerStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -30,7 +31,7 @@ export const Toolbar = () => {
   const widths = [2, 4, 8, 12];
 
   const handleToolClick = (toolId) => {
-    if (['pen', 'highlighter', 'eraser'].includes(toolId)) {
+    if (['pen', 'highlighter', 'eraser', 'neon'].includes(toolId)) {
       setDrawingTool(toolId);
       setActiveTool('draw');
     } else {
@@ -78,26 +79,34 @@ export const Toolbar = () => {
 
       {/* Drawing Sub-Toolbar */}
       {activeTool === 'draw' && activeDrawingTool !== 'eraser' && (
-        <div className="fixed bottom-[110px] md:bottom-[90px] left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-xl border border-gray-200 z-50">
+        <div className={`fixed bottom-[110px] md:bottom-[90px] left-1/2 -translate-x-1/2 flex items-center gap-4 px-4 py-2 rounded-2xl shadow-xl border z-50 transition-colors ${activeDrawingTool === 'neon' ? 'bg-[#161618]/90 border-cyan-900/50 backdrop-blur-xl' : 'bg-white/90 border-gray-200 backdrop-blur-md'}`}>
           <div className="flex items-center gap-2">
-            {colors.map(color => (
+            <button
+              onClick={toggleSmartShapes}
+              title={`Smart Shapes: ${smartShapesEnabled ? 'ON' : 'OFF'}`}
+              className={`p-1.5 rounded-lg transition-all flex items-center justify-center ${smartShapesEnabled ? (activeDrawingTool === 'neon' ? 'bg-cyan-900/50 text-cyan-400' : 'bg-orange-100 text-orange-500') : 'text-gray-400 hover:bg-white/10'}`}
+            >
+              <Wand2 size={18} />
+            </button>
+            <div className={`w-px h-6 ${activeDrawingTool === 'neon' ? 'bg-gray-700' : 'bg-gray-200'}`}></div>
+            {(activeDrawingTool === 'neon' ? ['#FF6B00', '#00F0FF', '#FF007F', '#39FF14', '#F600FF', '#FFFF00', '#FFFFFF'] : colors).map(color => (
               <button
                 key={color}
                 onClick={() => setDrawingColor(color)}
-                className={`w-6 h-6 rounded-full border-2 transition-transform ${drawingColor === color ? 'scale-125 border-gray-400' : 'border-transparent hover:scale-110'}`}
-                style={{ backgroundColor: color }}
+                className={`w-6 h-6 rounded-full border-2 transition-transform ${drawingColor === color ? 'scale-125 border-gray-400' : 'border-transparent hover:scale-110'} ${activeDrawingTool === 'neon' && drawingColor === color ? 'shadow-[0_0_10px_currentColor]' : ''}`}
+                style={{ backgroundColor: color, color: color }}
               />
             ))}
           </div>
-          <div className="w-px h-6 bg-gray-200"></div>
+          <div className={`w-px h-6 ${activeDrawingTool === 'neon' ? 'bg-gray-700' : 'bg-gray-200'}`}></div>
           <div className="flex items-center gap-2">
             {widths.map(w => (
               <button
                 key={w}
                 onClick={() => setDrawingWidth(w)}
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${drawingWidth === w ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${drawingWidth === w ? (activeDrawingTool === 'neon' ? 'bg-white/10' : 'bg-gray-200') : 'hover:bg-white/5'}`}
               >
-                <div className="bg-gray-800 rounded-full" style={{ width: w, height: w }}></div>
+                <div className={`rounded-full ${activeDrawingTool === 'neon' ? 'bg-gray-200' : 'bg-gray-800'}`} style={{ width: w, height: w }}></div>
               </button>
             ))}
           </div>
@@ -105,26 +114,28 @@ export const Toolbar = () => {
       )}
 
       {/* Toolbar Container */}
-      <div className={`fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 md:translate-x-[-50%] flex-wrap justify-center md:flex-nowrap items-center gap-1.5 md:gap-1.5 bg-white/90 backdrop-blur-md p-3 md:p-2 rounded-2xl md:rounded-2xl shadow-2xl md:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-200 z-50 transition-all ${mobileOpen ? 'flex w-[90vw] sm:w-[80vw]' : 'hidden md:flex md:w-auto'}`}>
+      <div className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 rounded-t-[3rem] px-8 pt-4 pb-6 shadow-2xl border-t border-x border-white/10 transition-all ${mobileOpen ? 'flex w-[90vw] sm:w-auto flex-wrap justify-center gap-4' : 'hidden md:flex md:w-auto items-center gap-4'}`}>
         {tools.map((tool, idx) => {
           if (tool.divider) {
-            return <div key={`div-${idx}`} className="hidden md:block w-px h-8 bg-gray-200 mx-2"></div>;
+            return <div key={`div-${idx}`} className="hidden md:block w-px h-6 bg-white/10 mx-1"></div>;
           }
           const Icon = tool.icon;
           const isActive = activeTool === tool.id || (activeTool === 'draw' && activeDrawingTool === tool.id);
-          
-          // Highlight AI button slightly differently
+          // Highlight AI and Neon buttons slightly differently
           const isAI = tool.id === 'ai';
+          const isNeon = tool.id === 'neon';
           
           return (
             <button
               key={tool.id}
               onClick={() => handleToolClick(tool.id)}
               title={tool.label}
-              className={`p-3 md:p-2.5 rounded-xl transition-all duration-200 flex-grow md:flex-grow-0 flex items-center justify-center ${
-                isActive 
-                  ? (isAI ? 'bg-orange-100 text-orange-600 border border-orange-200 shadow-sm' : 'bg-orange-500 text-white shadow-sm border border-orange-600') 
-                  : (isAI ? 'text-orange-500 hover:bg-orange-50 bg-white/50' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800 border border-transparent bg-white/50 md:bg-transparent')
+              className={`p-2 rounded-full transition-all duration-200 hover:-translate-y-1 flex items-center justify-center ${
+                isActive && isNeon
+                  ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(0,240,255,0.8)]'
+                  : isActive 
+                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' 
+                    : (isAI ? 'text-orange-400 hover:text-orange-300' : isNeon ? 'text-cyan-400 hover:text-cyan-300' : 'text-gray-400 hover:text-white')
               }`}
             >
               <Icon size={18} />
@@ -132,27 +143,35 @@ export const Toolbar = () => {
           );
         })}
         
-        <div className="hidden md:block w-px h-8 bg-gray-200 mx-2"></div>
+        <div className="hidden md:block w-px h-6 bg-white/10 mx-1"></div>
         
         <button
           onClick={handleDelete}
           title="Delete Selected"
           disabled={selectedCardIds.length === 0}
-          className={`p-3 md:p-2.5 rounded-xl transition-all duration-200 flex-grow md:flex-grow-0 flex items-center justify-center ${
+          className={`p-2 rounded-full transition-all duration-200 hover:-translate-y-1 flex items-center justify-center ${
             selectedCardIds.length > 0 
-              ? 'text-red-500 hover:bg-red-50 border border-transparent hover:border-red-200 bg-white/50 md:bg-transparent' 
-              : 'text-gray-300 cursor-not-allowed border border-transparent bg-white/50 md:bg-transparent'
+              ? 'text-red-400 hover:text-red-300' 
+              : 'text-gray-600 cursor-not-allowed'
           }`}
         >
           <Trash2 size={18} />
         </button>
 
-        <div className="hidden md:block w-px h-8 bg-gray-200 mx-2"></div>
+        <div className="hidden md:block w-px h-6 bg-white/10 mx-1"></div>
+
+        <button
+          onClick={exportWorkspace}
+          title="Export .zaforge"
+          className="p-2 rounded-full transition-all duration-200 hover:-translate-y-1 flex items-center justify-center text-purple-400 hover:text-purple-300"
+        >
+          <Save size={18} />
+        </button>
 
         <button
           onClick={openExportModal}
-          title="Export / Share"
-          className="p-3 md:p-2.5 rounded-xl transition-all duration-200 flex-grow md:flex-grow-0 flex items-center justify-center text-blue-500 hover:bg-blue-50 border border-transparent hover:border-blue-200 bg-white/50 md:bg-transparent"
+          title="Share/Export Image"
+          className="p-2 rounded-full transition-all duration-200 hover:-translate-y-1 flex items-center justify-center text-blue-400 hover:text-blue-300"
         >
           <Share size={18} />
         </button>
@@ -160,14 +179,14 @@ export const Toolbar = () => {
         <button
           onClick={() => fileInputRef.current?.click()}
           title="Open Workspace"
-          className="p-3 md:p-2.5 rounded-xl transition-all duration-200 flex-grow md:flex-grow-0 flex items-center justify-center text-green-500 hover:bg-green-50 border border-transparent hover:border-green-200 bg-white/50 md:bg-transparent"
+          className="p-2 rounded-full transition-all duration-200 hover:-translate-y-1 flex items-center justify-center text-green-400 hover:text-green-300"
         >
           <FolderOpen size={18} />
         </button>
         
         <input 
           type="file" 
-          accept=".spatial,.json" 
+          accept=".zaforge,.spatial,.json" 
           className="hidden" 
           ref={fileInputRef} 
           onChange={handleImport} 
