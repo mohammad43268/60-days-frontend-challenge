@@ -362,9 +362,9 @@ export const Canvas = () => {
       
       if (connectingPathRef.current) {
         connectingPathRef.current.style.display = 'block';
-        const sourceCard = activeCards.find(c => c.id === newConnecting.sourceId);
-        const p1 = getPortCoords(cardRefs.current[newConnecting.sourceId], sourceCard, newConnecting.sourcePort);
-        connectingPathRef.current.setAttribute('d', calculateBezier(p1, { x, y }, newConnecting.sourcePort, 'center'));
+        const sourceCard = activeCards.find(c => c.id === currentConnectingRef.current.sourceId);
+        const p1 = getPortCoords(cardRefs.current[currentConnectingRef.current.sourceId], sourceCard, currentConnectingRef.current.sourcePort);
+        connectingPathRef.current.setAttribute('d', calculateBezier(p1, { x, y }, currentConnectingRef.current.sourcePort, 'center'));
       }
       
       setDraggablesEnabled(false);

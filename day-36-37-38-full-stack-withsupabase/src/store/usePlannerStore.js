@@ -410,7 +410,7 @@ export const usePlannerStore = create((set, get) => {
     exportWorkspace: () => {
       const { cards, connections, viewport, viewMode } = get();
       const payload = {
-        app: "Zaforge OS",
+        app: "Zaforge",
         version: "3.0.0",
         exportedAt: new Date().toISOString(),
         workspace: {
@@ -433,7 +433,7 @@ export const usePlannerStore = create((set, get) => {
     importWorkspace: (jsonString) => {
       try {
         const data = JSON.parse(jsonString);
-        if (data && data.app === "Zaforge OS" && data.workspace && Array.isArray(data.workspace.cards) && Array.isArray(data.workspace.connections)) {
+        if (data && (data.app === "Zaforge" || data.app === "Zaforge OS") && data.workspace && Array.isArray(data.workspace.cards) && Array.isArray(data.workspace.connections)) {
           saveHistory();
           set({
             cards: data.workspace.cards,

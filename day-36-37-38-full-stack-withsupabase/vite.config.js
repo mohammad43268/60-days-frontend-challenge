@@ -14,17 +14,18 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        name: 'Zaforge OS',
+        name: 'Zaforge',
         short_name: 'Zaforge',
-        description: 'Zaforge Desktop Application',
+        description: 'Zaforge Spatial Canvas',
         theme_color: '#FAFAFA',
         background_color: '#FFFFFF',
         display: 'standalone',
         icons: [
           {
-            src: '/zaforge-icon.svg',
+            src: '/logo.png',
             sizes: '192x192 512x512',
-            type: 'image/svg+xml'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ],
         file_handlers: [
@@ -35,9 +36,9 @@ export default defineConfig({
             },
             icons: [
               {
-                src: '/zaforge-icon.svg',
+                src: '/logo.png',
                 sizes: '512x512',
-                type: 'image/svg+xml'
+                type: 'image/png'
               }
             ]
           }

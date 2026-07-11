@@ -57,11 +57,8 @@ export const Header = () => {
     <div className="absolute top-0 left-0 right-0 h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-3 md:px-6 shadow-2xl">
       
       {/* Brand */}
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-white shadow-[0_0_15px_rgba(249,115,22,0.5)]">
-          <Hexagon className="w-5 h-5 fill-white" />
-        </div>
-        <span className="font-bold text-lg text-white tracking-tight hidden md:block drop-shadow-md">Zaforge</span>
+      <div className="flex items-center">
+        <img src="/logo.png" alt="Zaforge" className="h-6 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity cursor-pointer" />
       </div>
 
       {/* View Switcher */}
