@@ -1,17 +1,60 @@
-import React, { useEffect } from 'react';
-import { Canvas } from './components/Canvas';
-import { Toolbar } from './components/Toolbar';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
-import { TableView } from './components/views/TableView';
-import { GanttView } from './components/views/GanttView';
+import { Toolbar } from './components/Toolbar';
 import { CommandPalette } from './components/CommandPalette';
 import { ExportModal } from './components/modals/ExportModal';
-import { PdfViewerPanel } from './components/PdfViewerPanel';
-import { LandingPage } from './components/LandingPage';
 import { usePlannerStore } from './store/usePlannerStore';
+import { supabase } from './lib/supabase';
+
+// Lazy load heavy views
+const LandingPage = lazy(() => import('./components/LandingPage').then(module => ({ default: module.LandingPage })));
+const Canvas = lazy(() => import('./components/Canvas').then(module => ({ default: module.Canvas })));
+const TableView = lazy(() => import('./components/views/TableView').then(module => ({ default: module.TableView })));
+const GanttView = lazy(() => import('./components/views/GanttView').then(module => ({ default: module.GanttView })));
+const PdfViewerPanel = lazy(() => import('./components/PdfViewerPanel').then(module => ({ default: module.PdfViewerPanel })));
+
+const SuspenseFallback = () => (
+  <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#050505] text-[#F97316]">
+    <div className="relative flex items-center justify-center w-20 h-20">
+      <div className="absolute inset-0 border-t-2 border-r-2 border-[#F97316] rounded-full animate-spin"></div>
+      <div className="absolute inset-2 border-b-2 border-l-2 border-[#F97316]/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+      <div className="text-[10px] tracking-widest font-bold font-mono">SYS</div>
+    </div>
+    <div className="mt-8 text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono animate-pulse">
+      Loading Assets...
+    </div>
+  </div>
+);
 
 function App() {
-  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl } = usePlannerStore();
+  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl, setUser, setRoute, user, loadWorkspaceData, isHydrated } = usePlannerStore();
+
+  useEffect(() => {
+    // Check active session on load
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user && route === 'landing') {
+        setRoute('app');
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user && route === 'landing') {
+        setRoute('app');
+      } else if (!session?.user && route === 'app') {
+        setRoute('landing');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setUser, route, setRoute]);
+
+  useEffect(() => {
+    if (user && route === 'app') {
+      loadWorkspaceData(user.id);
+    }
+  }, [user, route, loadWorkspaceData]);
 
   useEffect(() => {
     if ('launchQueue' in window) {
@@ -59,7 +102,26 @@ function App() {
   }, [setTemporaryTool, revertTool]);
 
   if (route === 'landing') {
-    return <LandingPage />;
+    return (
+      <Suspense fallback={<SuspenseFallback />}>
+        <LandingPage />
+      </Suspense>
+    );
+  }
+
+  if (route === 'app' && !isHydrated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-[#050505] text-[#F97316]">
+        <div className="relative flex items-center justify-center w-20 h-20 mb-8">
+          <div className="absolute inset-0 border-t-2 border-r-2 border-[#F97316] rounded-full animate-spin"></div>
+          <div className="absolute inset-2 border-b-2 border-l-2 border-[#F97316]/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+          <div className="text-[10px] tracking-widest font-bold font-mono">DB</div>
+        </div>
+        <div className="text-lg tracking-widest font-bold font-mono animate-pulse">
+          SYNCING ZAFORGE CORE...
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -68,9 +130,11 @@ function App() {
       
       <div className="flex-1 relative w-full h-full flex">
         <div className={`relative h-full transition-all duration-300 ${activePdfUrl && viewMode === 'canvas' ? 'w-1/2 border-r border-gray-200' : 'w-full'}`}>
-          {viewMode === 'canvas' && <Canvas />}
-          {viewMode === 'table' && <TableView />}
-          {viewMode === 'gantt' && <GanttView />}
+          <Suspense fallback={<SuspenseFallback />}>
+            {viewMode === 'canvas' && <Canvas />}
+            {viewMode === 'table' && <TableView />}
+            {viewMode === 'gantt' && <GanttView />}
+          </Suspense>
         </div>
         
         {activePdfUrl && viewMode === 'canvas' && (
@@ -85,7 +149,9 @@ function App() {
               </button>
             </div>
             <div className="flex-1 relative bg-gray-100 z-10">
-              <PdfViewerPanel />
+              <Suspense fallback={<SuspenseFallback />}>
+                <PdfViewerPanel />
+              </Suspense>
             </div>
           </div>
         )}

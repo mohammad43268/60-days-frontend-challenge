@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { usePlannerStore } from '../store/usePlannerStore';
-import { Undo, Redo, Layout, TableProperties, CalendarDays, Lightbulb, Hexagon, Download } from 'lucide-react';
+import { Undo, Redo, Layout, TableProperties, CalendarDays, Lightbulb, Hexagon, Download, LogOut, Home } from 'lucide-react';
 import { TemplateModal } from './TemplateModal';
+import { supabase } from '../lib/supabase';
 
 export const Header = () => {
-  const { undo, redo, past, future, viewMode, setViewMode, loadTemplate } = usePlannerStore();
+  const { undo, redo, past, future, viewMode, setViewMode, loadTemplate, setRoute } = usePlannerStore();
   const [isTemplateMenuOpen, setIsTemplateMenuOpen] = useState(false);
   const templateMenuRef = useRef(null);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -54,19 +55,22 @@ export const Header = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-3 md:px-6 shadow-2xl">
+    <div className="absolute top-0 left-0 right-0 h-14 md:h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-1.5 md:px-6 shadow-2xl overflow-x-auto custom-scrollbar">
       
       {/* Brand */}
-      <div className="flex items-center">
-        <img src="/logo.png" alt="Zaforge" className="h-6 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity cursor-pointer" />
+      <div 
+        className="flex items-center shrink-0 mr-1 md:mr-0 cursor-pointer group"
+        onClick={() => setRoute('landing')}
+        title="Return to Landing Page"
+      >
+        <img src="/logo.png" alt="Zaforge" className="h-5 md:h-6 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity" />
       </div>
 
       {/* View Switcher */}
-      {/* View Switcher */}
-      <div className="flex items-center space-x-1 md:space-x-1 bg-black/60 border border-white/10 p-1 rounded-xl shadow-inner">
+      <div className="flex items-center space-x-0.5 md:space-x-1 bg-black/60 border border-white/10 p-0.5 md:p-1 rounded-xl shadow-inner shrink-0">
         <button 
           onClick={() => setViewMode('canvas')}
-          className={`flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'canvas' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
+          className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'canvas' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="Spatial Canvas"
         >
           <Layout className="w-4 h-4 md:mr-2" />
@@ -74,7 +78,7 @@ export const Header = () => {
         </button>
         <button 
           onClick={() => setViewMode('table')}
-          className={`flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'table' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
+          className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'table' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="SaaS Table"
         >
           <TableProperties className="w-4 h-4 md:mr-2" />
@@ -82,7 +86,7 @@ export const Header = () => {
         </button>
         <button 
           onClick={() => setViewMode('gantt')}
-          className={`flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'gantt' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
+          className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'gantt' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="Gantt Timeline"
         >
           <CalendarDays className="w-4 h-4 md:mr-2" />
@@ -91,29 +95,39 @@ export const Header = () => {
       </div>
 
       {/* Tools */}
-      <div className="flex items-center space-x-2 md:space-x-4">
+      <div className="flex items-center space-x-1 md:space-x-4 shrink-0 pl-1 md:pl-0">
         
-
-
         <div className="h-6 w-px bg-white/10 hidden md:block" />
 
         {/* Install PWA */}
         {deferredPrompt && (
           <button 
             onClick={handleInstallClick}
-            className="flex items-center px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30 rounded-lg text-sm font-medium transition-all shadow-sm"
+            className="flex items-center space-x-2 bg-gradient-to-r from-orange-500/20 to-amber-500/20 hover:from-orange-500/40 hover:to-amber-500/40 border border-orange-500/30 text-orange-400 p-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-all duration-300"
             title="Install App"
           >
-            <Download className="w-4 h-4 md:mr-2" />
-            <span className="hidden md:inline tracking-wide">Install Zaforge</span>
+            <Download className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="hidden md:inline">Install App</span>
           </button>
         )}
+
+        <button 
+          onClick={async () => {
+            await supabase.auth.signOut();
+            setRoute('landing');
+          }}
+          className="p-1.5 md:p-2 text-red-400/70 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20"
+          title="Sign Out"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
+
 
         {/* Templates */}
         <div>
           <button 
             onClick={() => setIsTemplateMenuOpen(true)}
-            className="flex items-center px-3 py-1.5 bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500/30 rounded-lg text-sm font-medium transition-all hover:shadow-[0_0_15px_rgba(249,115,22,0.3)]"
+            className="flex items-center px-2 md:px-3 py-1.5 bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500/30 rounded-lg text-sm font-medium transition-all hover:shadow-[0_0_15px_rgba(249,115,22,0.3)]"
             title="Templates"
           >
             <Lightbulb className="w-4 h-4 md:mr-2" />
@@ -126,21 +140,21 @@ export const Header = () => {
           />
         </div>
 
-        <div className="h-6 w-px bg-white/10" />
+        <div className="h-6 w-px bg-white/10 hidden sm:block" />
 
         {/* Undo/Redo */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-0.5 md:space-x-1">
           <button 
             onClick={undo}
             disabled={past.length === 0}
-            className={`p-2 rounded-lg transition-all ${past.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}
+            className={`p-1.5 md:p-2 rounded-lg transition-all ${past.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}
           >
             <Undo className="w-4 h-4" />
           </button>
           <button 
             onClick={redo}
             disabled={future.length === 0}
-            className={`p-2 rounded-lg transition-all ${future.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}
+            className={`p-1.5 md:p-2 rounded-lg transition-all ${future.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}
           >
             <Redo className="w-4 h-4" />
           </button>

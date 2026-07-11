@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { supabase } from '../lib/supabase';
+import { queueUpsert, queueDelete, queueDeletes } from '../lib/syncEngine';
 
 const initialCards = [
   {
@@ -58,6 +60,54 @@ export const usePlannerStore = create((set, get) => {
     connections: initialConnections,
     past: [],
     future: [],
+    
+    user: null,
+    setUser: (user) => set({ user }),
+    workspaceId: null,
+    isHydrated: false,
+    
+    setBoardData: (data) => set({
+      cards: data.cards || [],
+      connections: data.connections || [],
+      drawings: data.drawings || [],
+      isHydrated: true
+    }),
+    
+    loadWorkspaceData: async (userId) => {
+      if (!userId) return;
+      try {
+        const { data: workspaces, error: wsError } = await supabase
+          .from('workspaces')
+          .select('id')
+          .eq('owner_id', userId)
+          .limit(1);
+          
+        if (wsError || !workspaces?.length) {
+          console.error('Workspace fetch error:', wsError);
+          return;
+        }
+        
+        const workspaceId = workspaces[0].id;
+        set({ workspaceId });
+        
+        const [cardsRes, connRes, drawRes] = await Promise.all([
+          supabase.from('cards').select('*').eq('workspace_id', workspaceId),
+          supabase.from('connections').select('*').eq('workspace_id', workspaceId),
+          supabase.from('drawings').select('*').eq('workspace_id', workspaceId),
+        ]);
+        
+        if (!cardsRes.error && !connRes.error && !drawRes.error) {
+          get().setBoardData({
+            cards: cardsRes.data || [],
+            connections: connRes.data || [],
+            drawings: drawRes.data || []
+          });
+          set({ past: [], future: [] });
+        }
+      } catch (err) {
+        console.error('Failed to load workspace data:', err);
+      }
+    },
     
     drawings: [], // array of { id, type: 'pen'|'highlighter', points: [{x,y}], color, width }
     activeDrawingTool: null, // 'pen' | 'highlighter' | 'eraser' | null
@@ -121,54 +171,70 @@ export const usePlannerStore = create((set, get) => {
           collapsed: false,
           color: 'default'
         };
+        queueUpsert('cards', newCard, state.workspaceId);
         return { cards: [...state.cards, newCard] };
       });
     },
 
     updateCardPosition: (id, x, y) => {
-      // Don't save history on every single mouse move, let's just do it directly for performance, 
-      // or we can handle it carefully. For simplicity, we just update. (Ideally saveHistory happens onDragStart)
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, x, y } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, x, y } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
     
-    // Explicitly call this when a drag ENDS to commit the position to history
     commitCardPosition: () => saveHistory(),
 
     updateCardSize: (id, width, height) => {
       saveHistory();
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, width, height } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, width, height } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
 
     updateCardContent: (id, content) => {
       saveHistory();
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, content } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, content } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
 
     changeNodeColor: (id, color) => {
       saveHistory();
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, color } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, color } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
 
     updateCardMetadata: (id, metaUpdates) => {
       saveHistory();
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, metadata: { ...c.metadata, ...metaUpdates } } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, metadata: { ...c.metadata, ...metaUpdates } } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
 
     toggleCardCollapse: (id) => {
       saveHistory();
-      set((state) => ({
-        cards: state.cards.map(c => c.id === id ? { ...c, collapsed: !c.collapsed } : c)
-      }));
+      set((state) => {
+        const newCards = state.cards.map(c => c.id === id ? { ...c, collapsed: !c.collapsed } : c);
+        const card = newCards.find(c => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
     },
 
     deleteSelectedCards: () => {
@@ -177,6 +243,11 @@ export const usePlannerStore = create((set, get) => {
         const idsToDelete = state.selectedCardIds;
         if (idsToDelete.length === 0) return state;
         
+        queueDeletes('cards', idsToDelete, state.workspaceId);
+        
+        const connsToDelete = state.connections.filter(conn => idsToDelete.includes(conn.source) || idsToDelete.includes(conn.target)).map(c => c.id);
+        if (connsToDelete.length > 0) queueDeletes('connections', connsToDelete, state.workspaceId);
+
         return {
           cards: state.cards.filter(c => !idsToDelete.includes(c.id)),
           connections: state.connections.filter(conn => !idsToDelete.includes(conn.source) && !idsToDelete.includes(conn.target)),
@@ -187,23 +258,29 @@ export const usePlannerStore = create((set, get) => {
 
     addConnection: (source, target, sourcePort, targetPort, type = 'related', label = '') => {
       saveHistory();
-      set((state) => ({
-        connections: [...state.connections, { id: `conn-${Date.now()}`, source, target, sourcePort, targetPort, type, label }]
-      }));
+      set((state) => {
+        const newConn = { id: `conn-${Date.now()}`, source, target, sourcePort, targetPort, type, label };
+        queueUpsert('connections', newConn, state.workspaceId);
+        return { connections: [...state.connections, newConn] };
+      });
     },
 
     updateConnection: (id, updates) => {
       saveHistory();
-      set((state) => ({
-        connections: state.connections.map(c => c.id === id ? { ...c, ...updates } : c)
-      }));
+      set((state) => {
+        const newConnections = state.connections.map(c => c.id === id ? { ...c, ...updates } : c);
+        const conn = newConnections.find(c => c.id === id);
+        if (conn) queueUpsert('connections', conn, state.workspaceId);
+        return { connections: newConnections };
+      });
     },
     
     deleteConnection: (id) => {
       saveHistory();
-      set((state) => ({
-        connections: state.connections.filter(c => c.id !== id)
-      }));
+      set((state) => {
+        queueDelete('connections', id, state.workspaceId);
+        return { connections: state.connections.filter(c => c.id !== id) };
+      });
     },
 
     setActiveTool: (tool) => set({ activeTool: tool, previousTool: null }),
@@ -218,7 +295,6 @@ export const usePlannerStore = create((set, get) => {
       return { activeTool: state.previousTool, previousTool: null };
     }),
 
-
     setActivePdfUrl: (url) => set({ activePdfUrl: url }),
 
     setDrawingTool: (tool) => set({ activeDrawingTool: tool }),
@@ -227,20 +303,27 @@ export const usePlannerStore = create((set, get) => {
     
     addDrawing: (drawing) => {
       saveHistory();
-      set((state) => ({ drawings: [...state.drawings, drawing] }));
+      set((state) => {
+        queueUpsert('drawings', drawing, state.workspaceId);
+        return { drawings: [...state.drawings, drawing] };
+      });
     },
     
     updateDrawing: (id, updates) => {
-      set((state) => ({
-        drawings: state.drawings.map(d => d.id === id ? { ...d, ...updates } : d)
-      }));
+      set((state) => {
+        const newDrawings = state.drawings.map(d => d.id === id ? { ...d, ...updates } : d);
+        const drawing = newDrawings.find(d => d.id === id);
+        if (drawing) queueUpsert('drawings', drawing, state.workspaceId);
+        return { drawings: newDrawings };
+      });
     },
     
     deleteDrawings: (ids) => {
       saveHistory();
-      set((state) => ({
-        drawings: state.drawings.filter(d => !ids.includes(d.id))
-      }));
+      set((state) => {
+        queueDeletes('drawings', ids, state.workspaceId);
+        return { drawings: state.drawings.filter(d => !ids.includes(d.id)) };
+      });
     },
 
     generateAIResponse: async (cardId, prompt) => {

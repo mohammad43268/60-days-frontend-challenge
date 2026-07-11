@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['zaforge-icon.svg'],
+      includeAssets: ['logo.png', 'pwa-192x192.png', 'pwa-512x512.png'],
       devOptions: {
         enabled: true
       },
@@ -17,13 +17,19 @@ export default defineConfig({
         name: 'Zaforge',
         short_name: 'Zaforge',
         description: 'Zaforge Spatial Canvas',
-        theme_color: '#FAFAFA',
-        background_color: '#FFFFFF',
+        theme_color: '#050505',
+        background_color: '#050505',
         display: 'standalone',
         icons: [
           {
-            src: '/logo.png',
-            sizes: '192x192 512x512',
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any maskable'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
           }
@@ -36,7 +42,7 @@ export default defineConfig({
             },
             icons: [
               {
-                src: '/logo.png',
+                src: '/pwa-512x512.png',
                 sizes: '512x512',
                 type: 'image/png'
               }
@@ -46,4 +52,19 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('three') || id.includes('@react-three')) return 'three-vendor';
+            if (id.includes('gsap')) return 'gsap-vendor';
+            if (id.includes('react') || id.includes('react-dom')) return 'react-vendor';
+            if (id.includes('lucide') || id.includes('zustand')) return 'ui-vendor';
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
 import gsap from 'gsap';
 import { usePlannerStore } from '../store/usePlannerStore';
 import { Trash2, GripHorizontal, Settings, MoreHorizontal, Copy, Check, Link2, ExternalLink, ImagePlus, FileText, Code, Maximize2, Minimize2, Paperclip, DollarSign, AlignLeft, AlignCenter, AlignRight, Play, UploadCloud, Link as LinkIcon, Volume2, Bold, Italic, Underline, Palette, MessageSquare, ArrowUp, ArrowDown, Sparkles } from 'lucide-react';
@@ -6,7 +6,7 @@ import { Trash2, GripHorizontal, Settings, MoreHorizontal, Copy, Check, Link2, E
 let globalAppLoaded = false;
 setTimeout(() => { globalAppLoaded = true; }, 1000);
 
-export const Card = ({ card }) => {
+export const Card = memo(({ card }) => {
   const { updateCardContent, updateCardMetadata, selectedCardIds, toggleCardSelection, clearSelection, activeTool, updateCardSize, connections, cards, toggleCardCollapse } = usePlannerStore();
   const isSelected = selectedCardIds.includes(card.id);
   const showPorts = activeTool === 'connect' || isSelected;
@@ -1073,4 +1073,6 @@ export const Card = ({ card }) => {
       </div>
     </div>
   );
-};
+});
+
+Card.displayName = 'Card';
