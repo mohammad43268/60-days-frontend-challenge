@@ -82,8 +82,10 @@ export const usePlannerStore = create((set, get) => {
           .eq('owner_id', userId)
           .limit(1);
           
+        // FAILSAFE: If no workspace exists yet (brand new user), unlock the UI with an empty board
         if (wsError || !workspaces?.length) {
-          console.error('Workspace fetch error:', wsError);
+          console.warn('No workspace found for user, initializing empty board.');
+          get().setBoardData({ cards: [], connections: [], drawings: [] });
           return;
         }
         
@@ -103,9 +105,14 @@ export const usePlannerStore = create((set, get) => {
             drawings: drawRes.data || []
           });
           set({ past: [], future: [] });
+        } else {
+          // FAILSAFE: If data fetch fails, still unlock UI
+          get().setBoardData({ cards: [], connections: [], drawings: [] });
         }
       } catch (err) {
         console.error('Failed to load workspace data:', err);
+        // FAILSAFE: Always unlock the UI on critical error
+        get().setBoardData({ cards: [], connections: [], drawings: [] });
       }
     },
     
