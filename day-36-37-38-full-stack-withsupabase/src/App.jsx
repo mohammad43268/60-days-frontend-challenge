@@ -38,11 +38,11 @@ function App() {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       if (session?.user && route === 'landing') {
         setRoute('app');
-      } else if (!session?.user && route === 'app') {
+      } else if (event === 'SIGNED_OUT' && route === 'app') {
         setRoute('landing');
       }
     });
@@ -53,8 +53,10 @@ function App() {
   useEffect(() => {
     if (user && route === 'app') {
       loadWorkspaceData(user.id);
+    } else if (!user && route === 'app' && !isHydrated) {
+      usePlannerStore.getState().setBoardData({});
     }
-  }, [user, route, loadWorkspaceData]);
+  }, [user, route, loadWorkspaceData, isHydrated]);
 
   useEffect(() => {
     if ('launchQueue' in window) {
