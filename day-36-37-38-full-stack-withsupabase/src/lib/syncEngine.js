@@ -1,5 +1,11 @@
 import { supabase } from './supabase';
 
+// * ARCHITECTURE: Synchronization Engine
+// NOTE: This module batches rapid consecutive updates into a single Supabase request 
+// to prevent rate limiting and optimize network traffic.
+// ! CRITICAL: Always ensure `workspaceId` is present before queuing an upsert.
+// TODO: Implement IndexedDB offline-first caching for progressive web app resilience.
+
 let syncTimeout = null;
 let pendingUpserts = { cards: new Map(), connections: new Map(), drawings: new Map() };
 let pendingDeletes = { cards: new Set(), connections: new Set(), drawings: new Set() };

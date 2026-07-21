@@ -114,6 +114,7 @@ export const Header = () => {
         <button 
           onClick={async () => {
             await supabase.auth.signOut();
+            usePlannerStore.getState().setUser(null);
             setRoute('landing');
           }}
           className="p-1.5 md:p-2 text-red-400/70 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors border border-transparent hover:border-red-400/20"

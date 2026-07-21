@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
 import { Toolbar } from './components/Toolbar';
 import { CommandPalette } from './components/CommandPalette';
@@ -28,35 +28,41 @@ const SuspenseFallback = () => (
 
 function App() {
   const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl, setUser, setRoute, user, loadWorkspaceData, isHydrated } = usePlannerStore();
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
-    // Check active session on load
+    // Initialize Supabase Auth
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session?.user && route === 'landing') {
+      if (session?.user) {
         setRoute('app');
+      } else {
+        setIsAuthLoading(false);
       }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user && route === 'landing') {
+      if (event === 'SIGNED_IN' && session?.user) {
         setRoute('app');
-      } else if (event === 'SIGNED_OUT' && route === 'app') {
-        setRoute('landing');
+      } else if (event === 'SIGNED_OUT' || !session) {
+        setIsAuthLoading(false);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [setUser, route, setRoute]);
+  }, [setUser, setRoute]);
 
   useEffect(() => {
     if (user && route === 'app') {
-      loadWorkspaceData(user.id);
-    } else if (!user && route === 'app' && !isHydrated) {
-      usePlannerStore.getState().setBoardData({});
+      // Fix Hydration Race Condition: Only set false after fetch completes
+      loadWorkspaceData(user.id).then(() => {
+        setIsAuthLoading(false);
+      });
+    } else if (!user) {
+      setIsAuthLoading(false);
     }
-  }, [user, route, loadWorkspaceData, isHydrated]);
+  }, [user, route, loadWorkspaceData]);
 
   useEffect(() => {
     if ('launchQueue' in window) {
@@ -103,10 +109,18 @@ function App() {
     };
   }, [setTemporaryTool, revertTool]);
 
-  if (route === 'landing') {
+  if (isAuthLoading) {
+    return (
+      <div className="w-screen h-screen bg-[#050505] flex items-center justify-center text-white font-mono text-sm tracking-widest">
+        AUTHENTICATING SYSTEM...
+      </div>
+    );
+  }
+
+  if (route === 'landing' || (route === 'app' && !user)) {
     return (
       <Suspense fallback={<SuspenseFallback />}>
-        <LandingPage />
+        <LandingPage setRoute={setRoute} />
       </Suspense>
     );
   }

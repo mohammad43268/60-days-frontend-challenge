@@ -6,8 +6,13 @@ import { Trash2, GripHorizontal, Settings, MoreHorizontal, Copy, Check, Link2, E
 let globalAppLoaded = false;
 setTimeout(() => { globalAppLoaded = true; }, 1000);
 
+// * COMPONENT: Card
+// NOTE: Represents an individual polymorphic node on the canvas.
+// TODO: Consider extracting inner store subscriptions (cards, connections) into shallow selectors 
+// to optimize re-renders when dragging 100+ nodes.
 export const Card = memo(({ card }) => {
   const { updateCardContent, updateCardMetadata, selectedCardIds, toggleCardSelection, clearSelection, activeTool, updateCardSize, connections, cards, toggleCardCollapse } = usePlannerStore();
+
   const isSelected = selectedCardIds.includes(card.id);
   const showPorts = activeTool === 'connect' || isSelected;
   const [showColorPicker, setShowColorPicker] = useState(false);

@@ -2,6 +2,13 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { queueUpsert, queueDelete, queueDeletes } from '../lib/syncEngine';
 
+// * ARCHITECTURE: Zustand Global State Store
+// NOTE: This file manages the entire state of the Zaforge application, including 
+// the canvas elements (cards, connections, drawings), tool states, and user sessions.
+// TODO: Consider splitting this massive store into slices (e.g. authSlice, canvasSlice, uiSlice) 
+// for better maintainability as the application grows.
+
+
 const initialCards = [
   {
     id: 'card-1',

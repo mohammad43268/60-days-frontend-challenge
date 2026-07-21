@@ -7,6 +7,10 @@ import { supabase } from '../lib/supabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// * COMPONENT: LandingPage
+// NOTE: This handles the primary marketing page and the authentication modal flow.
+// ? GSAP is used heavily here for scroll-triggered animations and hero physics.
+// TODO: Consider moving GSAP timelines into custom hooks for cleaner component logic.
 export const LandingPage = () => {
   const setRoute = usePlannerStore(state => state.setRoute);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -15,6 +19,7 @@ export const LandingPage = () => {
   const [authMessage, setAuthMessage] = useState('');
   const [authSuccess, setAuthSuccess] = useState(false);
   
+  // * AUTHENTICATION: Magic Link Flow
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     if (!email) return;
