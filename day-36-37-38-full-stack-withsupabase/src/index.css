@@ -10,7 +10,7 @@
     --color-surface: #161618;
     --color-border: #27272A;
     --color-text: #FAFAFA;
-    --color-dots: rgba(255, 255, 255, 0.1);
+    --color-dots: rgba(255, 255, 255, 0.04);
   }
 
   body {

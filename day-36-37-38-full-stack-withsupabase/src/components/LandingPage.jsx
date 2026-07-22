@@ -296,7 +296,7 @@ export const LandingPage = () => {
           className="absolute top-[75%] md:top-[78%] w-full flex flex-col justify-center items-center gap-6 z-40 pointer-events-auto px-4"
         >
           <button 
-            onClick={() => setRoute('app')}
+            onClick={(e) => { e.preventDefault(); setRoute('app'); }}
             className="group relative px-6 py-3 md:px-10 md:py-4 bg-white text-black rounded-full hover:scale-105 transition-all duration-500 overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.2)]"
           >
             <span className="relative z-10 flex items-center justify-center gap-3 text-xs md:text-sm tracking-widest font-bold uppercase" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>

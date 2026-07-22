@@ -55,7 +55,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 h-14 md:h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-1.5 md:px-6 shadow-2xl overflow-x-auto custom-scrollbar">
+    <div className="absolute top-0 left-0 right-0 h-14 md:h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-2 md:px-6 shadow-2xl overflow-x-auto custom-scrollbar">
       
       {/* Brand */}
       <div 
@@ -67,7 +67,7 @@ export const Header = () => {
       </div>
 
       {/* View Switcher */}
-      <div className="flex items-center space-x-0.5 md:space-x-1 bg-black/60 border border-white/10 p-0.5 md:p-1 rounded-xl shadow-inner shrink-0">
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-0.5 md:space-x-1 bg-black/60 border border-white/10 p-0.5 md:p-1 rounded-xl shadow-inner shrink-0">
         <button 
           onClick={() => setViewMode('canvas')}
           className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'canvas' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}

@@ -32,37 +32,32 @@ function App() {
 
   useEffect(() => {
     // Initialize Supabase Auth
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
+        setUser(session.user);
+        await loadWorkspaceData(session.user.id);
         setRoute('app');
+        setIsAuthLoading(false);
       } else {
+        setUser(null);
         setIsAuthLoading(false);
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      if (event === 'SIGNED_IN' && session?.user) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        await loadWorkspaceData(session.user.id);
         setRoute('app');
+        setIsAuthLoading(false);
       } else if (event === 'SIGNED_OUT' || !session) {
+        setUser(null);
         setIsAuthLoading(false);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [setUser, setRoute]);
-
-  useEffect(() => {
-    if (user && route === 'app') {
-      // Fix Hydration Race Condition: Only set false after fetch completes
-      loadWorkspaceData(user.id).then(() => {
-        setIsAuthLoading(false);
-      });
-    } else if (!user) {
-      setIsAuthLoading(false);
-    }
-  }, [user, route, loadWorkspaceData]);
+  }, [setUser, setRoute, loadWorkspaceData]);
 
   useEffect(() => {
     if ('launchQueue' in window) {
@@ -111,73 +106,67 @@ function App() {
 
   if (isAuthLoading) {
     return (
-      <div className="w-screen h-screen bg-[#050505] flex items-center justify-center text-white font-mono text-sm tracking-widest">
-        AUTHENTICATING SYSTEM...
+      <div className="w-screen h-screen bg-[#050505] flex items-center justify-center text-[#F97316] font-mono tracking-widest text-sm">
+        SYNCING ZAFORGE CORE...
       </div>
     );
   }
 
-  if (route === 'landing' || (route === 'app' && !user)) {
-    return (
+  // Safe Route Guarding
+  if (route === 'app') {
+    // If they somehow hit the app route but have no user, render the LandingPage directly
+    if (!user) return (
       <Suspense fallback={<SuspenseFallback />}>
         <LandingPage setRoute={setRoute} />
       </Suspense>
     );
-  }
 
-  if (route === 'app' && !isHydrated) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-[#050505] text-[#F97316]">
-        <div className="relative flex items-center justify-center w-20 h-20 mb-8">
-          <div className="absolute inset-0 border-t-2 border-r-2 border-[#F97316] rounded-full animate-spin"></div>
-          <div className="absolute inset-2 border-b-2 border-l-2 border-[#F97316]/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-          <div className="text-[10px] tracking-widest font-bold font-mono">DB</div>
+      <div className="w-screen h-screen overflow-hidden bg-canvas text-dark relative flex flex-col">
+        <Header />
+        
+        <div className="flex-1 relative w-full h-full flex">
+          <div className={`relative h-full transition-all duration-300 ${activePdfUrl && viewMode === 'canvas' ? 'w-1/2 border-r border-gray-200' : 'w-full'}`}>
+            <Suspense fallback={<SuspenseFallback />}>
+              {viewMode === 'canvas' && <Canvas />}
+              {viewMode === 'table' && <TableView />}
+              {viewMode === 'gantt' && <GanttView />}
+            </Suspense>
+          </div>
+          
+          {activePdfUrl && viewMode === 'canvas' && (
+            <div className="w-1/2 h-full relative flex flex-col z-50">
+              <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm z-50">
+                <h2 className="font-semibold text-gray-700 text-sm">PDF Split View</h2>
+                <button
+                  onClick={() => usePlannerStore.getState().setActivePdfUrl(null)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow text-xs font-bold uppercase tracking-wider transition-colors"
+                >
+                  Close PDF
+                </button>
+              </div>
+              <div className="flex-1 relative bg-gray-100 z-10">
+                <Suspense fallback={<SuspenseFallback />}>
+                  <PdfViewerPanel />
+                </Suspense>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="text-lg tracking-widest font-bold font-mono animate-pulse">
-          SYNCING ZAFORGE CORE...
-        </div>
+        
+        {viewMode === 'canvas' && <Toolbar />}
+        
+        <CommandPalette />
+        <ExportModal />
       </div>
     );
   }
 
+  // Default fallback
   return (
-    <div className="w-screen h-screen overflow-hidden bg-canvas text-dark relative flex flex-col">
-      <Header />
-      
-      <div className="flex-1 relative w-full h-full flex">
-        <div className={`relative h-full transition-all duration-300 ${activePdfUrl && viewMode === 'canvas' ? 'w-1/2 border-r border-gray-200' : 'w-full'}`}>
-          <Suspense fallback={<SuspenseFallback />}>
-            {viewMode === 'canvas' && <Canvas />}
-            {viewMode === 'table' && <TableView />}
-            {viewMode === 'gantt' && <GanttView />}
-          </Suspense>
-        </div>
-        
-        {activePdfUrl && viewMode === 'canvas' && (
-          <div className="w-1/2 h-full relative flex flex-col z-50">
-            <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm z-50">
-              <h2 className="font-semibold text-gray-700 text-sm">PDF Split View</h2>
-              <button
-                onClick={() => usePlannerStore.getState().setActivePdfUrl(null)}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow text-xs font-bold uppercase tracking-wider transition-colors"
-              >
-                Close PDF
-              </button>
-            </div>
-            <div className="flex-1 relative bg-gray-100 z-10">
-              <Suspense fallback={<SuspenseFallback />}>
-                <PdfViewerPanel />
-              </Suspense>
-            </div>
-          </div>
-        )}
-      </div>
-      
-      {viewMode === 'canvas' && <Toolbar />}
-      
-      <CommandPalette />
-      <ExportModal />
-    </div>
+    <Suspense fallback={<SuspenseFallback />}>
+      <LandingPage setRoute={setRoute} />
+    </Suspense>
   );
 }
 

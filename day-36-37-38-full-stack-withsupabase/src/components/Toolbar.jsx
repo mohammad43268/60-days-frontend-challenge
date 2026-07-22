@@ -68,7 +68,7 @@ export const Toolbar = () => {
   return (
     <>
       {/* Mobile Toggle FAB */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
+      <div className="md:hidden fixed bottom-6 right-6 z-[110]">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="w-14 h-14 bg-orange-500 text-white rounded-full flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:bg-orange-600 transition-colors"
@@ -114,7 +114,7 @@ export const Toolbar = () => {
       )}
 
       {/* Toolbar Container */}
-      <div className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 rounded-t-[3rem] px-8 pt-4 pb-6 shadow-2xl border-t border-x border-white/10 transition-all ${mobileOpen ? 'flex w-[90vw] sm:w-auto flex-wrap justify-center gap-4' : 'hidden md:flex md:w-auto items-center gap-4'}`}>
+      <div className={`fixed left-1/2 -translate-x-1/2 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 shadow-2xl border-white/10 transition-all ${mobileOpen ? 'bottom-24 md:bottom-0 rounded-3xl md:rounded-b-none md:rounded-t-3xl border md:border-b-0 md:border-t md:border-x p-4 md:px-6 md:pt-3 md:pb-4 flex w-[90vw] sm:w-auto md:w-auto flex-wrap md:flex-nowrap justify-center md:items-center gap-3' : 'bottom-0 rounded-t-3xl border-t border-x px-6 pt-3 pb-4 hidden md:flex md:w-auto items-center gap-3'}`}>
         {tools.map((tool, idx) => {
           if (tool.divider) {
             return <div key={`div-${idx}`} className="hidden md:block w-px h-6 bg-white/10 mx-1"></div>;

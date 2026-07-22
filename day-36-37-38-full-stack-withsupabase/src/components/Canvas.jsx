@@ -74,6 +74,7 @@ export const Canvas = () => {
       inertia: true,
       zIndexBoost: false,
       clickableTest: function(e) {
+        if (usePlannerStore.getState().activeTool === 'pan') return false;
         const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
         if (target?.closest?.('.card-node') || target?.closest?.('.port') || target?.closest?.('[data-resize-handle]')) return true;
         return false;
@@ -96,9 +97,11 @@ export const Canvas = () => {
       }
     });
 
-    if (selectedCardIds.length > 0) {
+    if (activeTool === 'pan') {
+      vpDraggable[0].enable();
+    } else if (selectedCardIds.length > 0) {
       vpDraggable[0].disable();
-    } else if (activeTool !== 'pan' && activeTool !== 'cursor') {
+    } else if (activeTool !== 'cursor') {
       vpDraggable[0].disable();
     } else {
       vpDraggable[0].enable();
@@ -573,7 +576,7 @@ export const Canvas = () => {
         ref={gridRef}
         className="absolute inset-0 pointer-events-none" 
         style={{ 
-          backgroundImage: 'radial-gradient(circle at 1px 1px, var(--color-dots) 1.5px, transparent 0)', 
+          backgroundImage: 'radial-gradient(circle at 1px 1px, var(--color-dots) 1px, transparent 0)', 
           backgroundSize: `${40 * viewport.scale}px ${40 * viewport.scale}px`, 
           backgroundPosition: `${viewport.x}px ${viewport.y}px` 
         }}
