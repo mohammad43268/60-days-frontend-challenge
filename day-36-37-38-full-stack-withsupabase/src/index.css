@@ -35,6 +35,26 @@ input, textarea, [contenteditable="true"] {
   border-radius: 4px;
 }
 
+/* Light Neumorphic Scrollbar for Landing Page */
+.landing-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+.landing-scrollbar::-webkit-scrollbar-track {
+  background: #EAECEF;
+  box-shadow: inset 2px 2px 5px #c8cacc, inset -2px -2px 5px #ffffff;
+  border-radius: 10px;
+  margin: 10px;
+}
+.landing-scrollbar::-webkit-scrollbar-thumb {
+  background: #EAECEF;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #c8cacc, -2px -2px 5px #ffffff;
+  border: 2px solid #EAECEF;
+}
+.landing-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
 @keyframes dash-flow {
   to {
     stroke-dashoffset: -20;
