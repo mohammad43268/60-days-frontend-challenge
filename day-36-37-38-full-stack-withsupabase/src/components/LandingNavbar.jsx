@@ -1,49 +1,115 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef } from 'react';
 import { usePlannerStore } from '../store/usePlannerStore';
 import { supabase } from '../lib/supabase';
 import { ArrowRight } from 'lucide-react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
-export const LandingNavbar = forwardRef(({ onLoginClick }, ref) => {
+export const LandingNavbar = forwardRef(({ onLoginClick }, forwardedRef) => {
   const user = usePlannerStore(state => state.user);
   const setRoute = usePlannerStore(state => state.setRoute);
 
-  return (
-    <nav ref={ref} className="fixed top-8 left-1/2 -translate-x-1/2 w-full max-w-5xl z-50 px-4">
-      <div className="flex items-center justify-between bg-[#EAECEF] rounded-full px-8 py-4 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff] border border-white/40">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-[#EAECEF] shadow-[inset_2px_2px_5px_#d1d5db,inset_-2px_-2px_5px_#ffffff] flex items-center justify-center">
-             <img src="/logo.png" alt="Zaforge" className="h-4 w-auto filter opacity-80" />
-          </div>
-          <span className="text-[#1A1A1A] font-medium tracking-[0.25em] text-sm">ZAFORGE</span>
-        </div>
+  const logoRef = useRef(null);
+  const btnRef = useRef(null);
+  const navContainerRef = useRef(null);
+  const navOuterRef = useRef(null);
+  const lastScrollY = useRef(0);
+
+  useGSAP(() => {
+    // 0. Smart Scroll Hide/Show
+    if (navOuterRef.current) {
+      const handleScroll = () => {
+        const currentY = window.scrollY;
         
-        <div>
+        if (currentY > lastScrollY.current && currentY > 100) {
+          gsap.to(navOuterRef.current, { y: -150, duration: 0.5, ease: "power3.inOut" });
+        } else if (currentY < lastScrollY.current) {
+          gsap.to(navOuterRef.current, { y: 0, duration: 0.5, ease: "power3.out" });
+        }
+        
+        lastScrollY.current = currentY;
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    // 1. Magnetic Effect for the Sign In Button
+    if (btnRef.current) {
+      const btn = btnRef.current;
+      const xTo = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3" });
+      const yTo = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3" });
+
+      btn.addEventListener("mousemove", (e) => {
+        const rect = btn.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        const relY = e.clientY - rect.top;
+        xTo((relX - rect.width / 2) * 0.2);
+        yTo((relY - rect.height / 2) * 0.2);
+      });
+
+      btn.addEventListener("mouseleave", () => {
+        xTo(0);
+        yTo(0);
+      });
+    }
+
+    // 2. Logo Hover
+    if (logoRef.current) {
+      const logo = logoRef.current;
+      logo.addEventListener("mouseenter", () => gsap.to(logo, { scale: 1.05, duration: 0.4, ease: "back.out(2)" }));
+      logo.addEventListener("mouseleave", () => gsap.to(logo, { scale: 1, duration: 0.4, ease: "power3.out" }));
+    }
+  });
+
+  return (
+    <nav 
+      ref={(el) => {
+        navOuterRef.current = el;
+        if (typeof forwardedRef === 'function') forwardedRef(el);
+        else if (forwardedRef) forwardedRef.current = el;
+      }} 
+      className="fixed top-6 left-1/2 -translate-x-1/2 w-full max-w-5xl z-50 px-4"
+    >
+      <div 
+        ref={navContainerRef}
+        className="flex items-center justify-between bg-surface/80 backdrop-blur-xl rounded-full px-8 py-4 shadow-xl border border-accent-ink/30 transition-all duration-300 hover:bg-surface"
+      >
+        {/* Minimal Logo */}
+        <div 
+          ref={logoRef}
+          className="flex items-center gap-4 cursor-pointer" 
+          onClick={() => setRoute('canvas')}
+        >
+          <div className="w-10 h-10 rounded-full bg-text-primary flex items-center justify-center shadow-lg overflow-hidden">
+             <div className="w-4 h-4 bg-bg-base transform rotate-45 rounded-sm"></div>
+          </div>
+          <span className="font-display font-bold text-xl tracking-tight text-text-primary uppercase mt-1">ZAFORGE</span>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex items-center gap-6">
+          
           {user ? (
-            <div className="flex items-center gap-6">
-              <span className="text-[10px] text-[#1A1A1A]/50 font-mono tracking-widest hidden md:inline">
-                SYS.USER // {user.user_metadata?.full_name || 'ACTIVE'}
-              </span>
-              <button 
-                onClick={() => setRoute('app')}
-                className="group flex items-center gap-3 bg-[#EAECEF] text-[#1A1A1A] px-6 py-2.5 rounded-full text-xs font-semibold tracking-[0.2em] shadow-[4px_4px_10px_#d1d5db,-4px_-4px_10px_#ffffff] hover:shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] transition-all duration-300 active:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff]"
-              >
-                WORKSPACE
-                <ArrowRight className="w-3 h-3 opacity-70 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
+            <button 
+              onClick={async () => {
+                await supabase.auth.signOut();
+                usePlannerStore.getState().setUser(null);
+              }}
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-surface border border-accent-ink text-text-primary font-body text-sm font-medium uppercase tracking-wider hover:bg-bg-warm transition-colors"
+            >
+              Sign Out
+            </button>
           ) : (
             <button 
-              onClick={() => { if (onLoginClick) onLoginClick(); }}
-              className="group flex items-center gap-3 bg-[#EAECEF] text-[#1A1A1A] px-8 py-3 rounded-full text-xs font-semibold tracking-[0.2em] shadow-[4px_4px_10px_#d1d5db,-4px_-4px_10px_#ffffff] hover:shadow-[inset_4px_4px_8px_#d1d5db,inset_-4px_-4px_8px_#ffffff] transition-all duration-300 active:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff]"
+              ref={btnRef}
+              onClick={onLoginClick}
+              className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-text-primary text-bg-base font-body text-sm font-medium uppercase tracking-wider hover:bg-black transition-colors shadow-lg group"
             >
-              SIGN IN
-              <ArrowRight className="w-3 h-3 opacity-70 group-hover:translate-x-1 transition-transform" />
+              Sign In
             </button>
           )}
+          
         </div>
       </div>
     </nav>
   );
 });
-
-LandingNavbar.displayName = 'LandingNavbar';

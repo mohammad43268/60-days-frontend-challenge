@@ -7,17 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: 'var(--color-canvas)',
-        surface: 'var(--color-surface)',
-        border: 'var(--color-border)',
-        primary: '#FF6B00',
-        'primary-hover': '#E66000',
-        accent: '#FEF3C7',
-        dark: 'var(--color-text)',
-        'dot-color': 'var(--color-dots)'
+        'bg-base': '#FDEFEF',
+        'bg-warm': '#F4DFD0',
+        'surface': '#DAD0C2',
+        'accent-ink': '#CDBBA7',
+        'text-primary': '#1A1512',
+        'text-muted': '#6B5D52'
       },
-      boxShadow: {
-        floating: '0 10px 25px -3px rgba(255, 107, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      fontFamily: {
+        'display': ['Space Grotesk', 'sans-serif'],
+        'body': ['Inter', 'sans-serif'],
       }
     },
   },
