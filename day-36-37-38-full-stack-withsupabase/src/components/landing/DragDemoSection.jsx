@@ -102,7 +102,7 @@ export const DragDemoSection = () => {
 
       <div className="drag-node absolute top-[20%] left-[45%] w-96 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-accent-ink/20 p-2 cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-colors duration-300">
         <img 
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+          src="/projectimg.png" 
           alt="Creative Vision" 
           className="w-full h-40 object-cover rounded-xl pointer-events-none"
         />
@@ -129,13 +129,13 @@ export const DragDemoSection = () => {
 
       <div className="drag-node absolute top-[25%] left-[80%] w-56 h-72 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-accent-ink/20 p-2 flex flex-col cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-colors duration-300">
         <img 
-          src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop" 
+          src="/projectimg1.png" 
           alt="Data Structures" 
           className="w-full flex-grow object-cover rounded-xl pointer-events-none mb-3"
         />
         <div className="px-2 pb-2">
-          <h3 className="font-display font-bold text-md text-text-primary leading-tight mb-1">Data Structures</h3>
-          <p className="font-body text-xs text-text-muted">Visualize JSON trees.</p>
+          <h3 className="font-display font-bold text-md text-text-primary leading-tight mb-1">Docs</h3>
+          <p className="font-body text-xs text-text-muted">Interactive project documentation.</p>
         </div>
       </div>
 
