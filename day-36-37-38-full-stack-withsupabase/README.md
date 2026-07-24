@@ -1,23 +1,29 @@
 # ✦ Zaforge
 > **"A minimalist canvas for infinite thoughts."**
 
-![Zaforge Hero](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop)
+![Zaforge Hero](./public/projectimg.png)
 
-Zaforge is an award-tier, polymorphic node-graph productivity tool. It breaks the boundaries of traditional linear documents by giving you an infinite spatial canvas to structure your ideas, map out complex architectures, and track project timelines. Designed with an ultra-premium UI and hardware-accelerated physics.
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white)](https://greensock.com/)
+
+Zaforge is an award-tier, polymorphic node-graph productivity tool. It breaks the boundaries of traditional linear documents by giving you an infinite spatial canvas to structure your ideas, map out complex architectures, and track project timelines. Designed with an ultra-premium UI, custom typography, and hardware-accelerated physics.
 
 ---
 
 ## 🚀 Core Features
 
 1. **Polymorphic Views**: Your data isn't trapped in one paradigm. Seamlessly switch between three synchronized modes instantly:
-   - **Canvas View**: An infinite spatial node-graph where you can drag, connect, and arrange thoughts organically.
+   - **Spatial Canvas**: An infinite node-graph where you can drag, connect, and arrange thoughts organically.
    - **Table View**: A structured, database-like overview of your nodes for quick data entry and property management.
    - **Gantt View**: A timeline view to track task velocities, start dates, and deadlines.
 2. **Local-First Sync Engine**: Your workflow should never stop for a loading spinner. Zaforge is built with a robust optimistic UI, local caching, and background Supabase replication.
-3. **60 FPS Physics**: Powered by GSAP and Lenis, experience buttery-smooth dragging, inertia, magnetic hovering effects, and native scroll-scrubbing.
+3. **Cinematic 60 FPS Physics**: Powered by GSAP and Lenis, experience buttery-smooth dragging, inertia, magnetic hovering effects, parallax scrolling, and native scroll-scrubbing.
 4. **Rich Nodes**: Support for Notes, Tasks (with interactive subtasks), Images, and inline PDF viewing.
 5. **Command Palette**: A global shortcut system (`Ctrl+K` / `Cmd+K`) to quickly execute actions and navigate the app without touching your mouse.
-6. **PDF Split-View**: Activating a PDF opens a synchronized side-by-side split view, allowing you to read research documents while simultaneously building out your node-graph on the adjacent canvas.
+6. **Premium UI/UX**: Featuring custom Audex typography, abstract scroll-linked SVG animations, and bespoke scrollbars that match the minimalist dark aesthetic.
 
 ---
 
