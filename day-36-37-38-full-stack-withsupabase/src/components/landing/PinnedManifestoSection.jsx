@@ -3,7 +3,6 @@ import React from 'react';
 export const PinnedManifestoSection = () => {
   return (
     <section className="parallax-section relative z-30 w-full min-h-screen bg-[#0A0A0B] text-white flex flex-col items-center justify-center overflow-hidden py-32 -mt-16 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] border-t border-accent-ink/20">
-      
       <div className="absolute inset-0 z-0 opacity-10 flex items-center justify-center pointer-events-none">
         {/* Subtle background glow/gradient */}
         <div className="w-[80vw] h-[80vw] rounded-full bg-accent-ink blur-[100px] opacity-20"></div>
@@ -20,7 +19,6 @@ export const PinnedManifestoSection = () => {
           Zaforge gives you back your space.
         </p>
       </div>
-      
     </section>
   );
 };

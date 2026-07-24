@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 
 // * ARCHITECTURE: Synchronization Engine
-// NOTE: This module batches rapid consecutive updates into a single Supabase request 
+// NOTE: This module batches rapid consecutive updates into a single Supabase request
 // to prevent rate limiting and optimize network traffic.
 // ! CRITICAL: Always ensure `workspaceId` is present before queuing an upsert.
 // TODO: Implement IndexedDB offline-first caching for progressive web app resilience.
@@ -33,12 +33,17 @@ const flushSync = async (workspaceId) => {
     const promises = [];
 
     if (upserts.cards.length > 0) promises.push(supabase.from('cards').upsert(upserts.cards));
-    if (upserts.connections.length > 0) promises.push(supabase.from('connections').upsert(upserts.connections));
-    if (upserts.drawings.length > 0) promises.push(supabase.from('drawings').upsert(upserts.drawings));
+    if (upserts.connections.length > 0)
+      promises.push(supabase.from('connections').upsert(upserts.connections));
+    if (upserts.drawings.length > 0)
+      promises.push(supabase.from('drawings').upsert(upserts.drawings));
 
-    if (deletes.cards.length > 0) promises.push(supabase.from('cards').delete().in('id', deletes.cards));
-    if (deletes.connections.length > 0) promises.push(supabase.from('connections').delete().in('id', deletes.connections));
-    if (deletes.drawings.length > 0) promises.push(supabase.from('drawings').delete().in('id', deletes.drawings));
+    if (deletes.cards.length > 0)
+      promises.push(supabase.from('cards').delete().in('id', deletes.cards));
+    if (deletes.connections.length > 0)
+      promises.push(supabase.from('connections').delete().in('id', deletes.connections));
+    if (deletes.drawings.length > 0)
+      promises.push(supabase.from('drawings').delete().in('id', deletes.drawings));
 
     await Promise.all(promises);
   } catch (err) {
@@ -66,7 +71,7 @@ export const queueDelete = (table, id, workspaceId) => {
 
 export const queueDeletes = (table, ids, workspaceId) => {
   if (!workspaceId) return;
-  ids.forEach(id => {
+  ids.forEach((id) => {
     pendingDeletes[table].add(id);
     pendingUpserts[table].delete(id);
   });

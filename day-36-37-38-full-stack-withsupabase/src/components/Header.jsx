@@ -1,11 +1,35 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { usePlannerStore } from '../store/usePlannerStore';
-import { Undo, Redo, Layout, TableProperties, CalendarDays, Lightbulb, Hexagon, Download, LogOut, Home, Sun, Moon } from 'lucide-react';
+import {
+  Undo,
+  Redo,
+  Layout,
+  TableProperties,
+  CalendarDays,
+  Lightbulb,
+  Hexagon,
+  Download,
+  LogOut,
+  Home,
+  Sun,
+  Moon,
+} from 'lucide-react';
 import { TemplateModal } from './TemplateModal';
 import { supabase } from '../lib/supabase';
 
 export const Header = () => {
-  const { undo, redo, past, future, viewMode, setViewMode, loadTemplate, setRoute, theme, toggleTheme } = usePlannerStore();
+  const {
+    undo,
+    redo,
+    past,
+    future,
+    viewMode,
+    setViewMode,
+    loadTemplate,
+    setRoute,
+    theme,
+    toggleTheme,
+  } = usePlannerStore();
   const [isTemplateMenuOpen, setIsTemplateMenuOpen] = useState(false);
   const templateMenuRef = useRef(null);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -56,19 +80,22 @@ export const Header = () => {
 
   return (
     <div className="absolute top-0 left-0 right-0 p-2 md:p-4 z-50 flex flex-wrap md:flex-nowrap items-start justify-between gap-2 pointer-events-none">
-      
       {/* Brand */}
-      <div 
+      <div
         className="flex items-center shrink-0 cursor-pointer group pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] px-3 md:px-4 h-10 md:h-12 transition-transform hover:scale-105 active:scale-95"
         onClick={() => setRoute('landing')}
         title="Return to Landing Page"
       >
-        <img src="/logo.png" alt="Zaforge" className="h-5 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity" />
+        <img
+          src="/logo.png"
+          alt="Zaforge"
+          className="h-5 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity"
+        />
       </div>
 
       {/* View Switcher */}
       <div className="order-3 md:order-none w-full md:w-auto md:absolute md:left-1/2 md:-translate-x-1/2 flex items-center justify-center space-x-1 pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 p-1 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] shrink-0 h-10 md:h-12 mt-2 md:mt-0">
-        <button 
+        <button
           onClick={() => setViewMode('canvas')}
           className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'canvas' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="Spatial Canvas"
@@ -76,7 +103,7 @@ export const Header = () => {
           <Layout className="w-4 h-4 md:mr-2" />
           <span className="hidden md:inline tracking-wide">Spatial Canvas</span>
         </button>
-        <button 
+        <button
           onClick={() => setViewMode('table')}
           className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'table' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="SaaS Table"
@@ -84,7 +111,7 @@ export const Header = () => {
           <TableProperties className="w-4 h-4 md:mr-2" />
           <span className="hidden md:inline tracking-wide">SaaS Table</span>
         </button>
-        <button 
+        <button
           onClick={() => setViewMode('gantt')}
           className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'gantt' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
           title="Gantt Timeline"
@@ -96,11 +123,10 @@ export const Header = () => {
 
       {/* Tools */}
       <div className="flex items-center space-x-1 md:space-x-2 shrink-0 pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] px-2 h-10 md:h-12">
-        
         <div className="h-4 md:h-6 w-px bg-white/10 hidden md:block mx-1" />
 
         {/* Theme Toggle */}
-        <button 
+        <button
           onClick={toggleTheme}
           className="p-1.5 md:p-2 text-yellow-400/80 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-colors border border-transparent hover:border-yellow-400/20"
           title="Toggle Theme"
@@ -110,7 +136,7 @@ export const Header = () => {
 
         {/* Install PWA */}
         {deferredPrompt && (
-          <button 
+          <button
             onClick={handleInstallClick}
             className="flex items-center space-x-2 bg-gradient-to-r from-orange-500/20 to-amber-500/20 hover:from-orange-500/40 hover:to-amber-500/40 border border-orange-500/30 text-orange-400 p-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold transition-all duration-300"
             title="Install App"
@@ -120,7 +146,7 @@ export const Header = () => {
           </button>
         )}
 
-        <button 
+        <button
           onClick={async () => {
             await supabase.auth.signOut();
             usePlannerStore.getState().setUser(null);
@@ -132,10 +158,9 @@ export const Header = () => {
           <LogOut className="w-4 h-4" />
         </button>
 
-
         {/* Templates */}
         <div>
-          <button 
+          <button
             onClick={() => setIsTemplateMenuOpen(true)}
             className="flex items-center px-2 md:px-3 py-1.5 bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500/30 rounded-lg text-sm font-medium transition-all hover:shadow-[0_0_15px_rgba(249,115,22,0.3)]"
             title="Templates"
@@ -143,25 +168,22 @@ export const Header = () => {
             <Lightbulb className="w-4 h-4 md:mr-2" />
             <span className="hidden md:inline tracking-wide">Templates</span>
           </button>
-          
-          <TemplateModal 
-            isOpen={isTemplateMenuOpen} 
-            onClose={() => setIsTemplateMenuOpen(false)} 
-          />
+
+          <TemplateModal isOpen={isTemplateMenuOpen} onClose={() => setIsTemplateMenuOpen(false)} />
         </div>
 
         <div className="h-6 w-px bg-white/10 hidden sm:block" />
 
         {/* Undo/Redo */}
         <div className="flex items-center space-x-0.5 md:space-x-1">
-          <button 
+          <button
             onClick={undo}
             disabled={past.length === 0}
             className={`p-1.5 md:p-2 rounded-lg transition-all ${past.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}
           >
             <Undo className="w-4 h-4" />
           </button>
-          <button 
+          <button
             onClick={redo}
             disabled={future.length === 0}
             className={`p-1.5 md:p-2 rounded-lg transition-all ${future.length > 0 ? 'text-gray-400 hover:bg-white/10 hover:text-orange-400' : 'text-gray-700 cursor-not-allowed'}`}

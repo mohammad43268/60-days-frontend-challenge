@@ -3,7 +3,8 @@
 function pointLineDistance(point, start, end) {
   const dx = end.x - start.x;
   const dy = end.y - start.y;
-  const dist = Math.abs(dy * point.x - dx * point.y + end.x * start.y - end.y * start.x) / Math.hypot(dx, dy);
+  const dist =
+    Math.abs(dy * point.x - dx * point.y + end.x * start.y - end.y * start.x) / Math.hypot(dx, dy);
   return isNaN(dist) ? 0 : dist;
 }
 
@@ -35,8 +36,11 @@ export const recognizeShape = (points) => {
   const end = points[points.length - 1];
 
   // Bounding box
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  points.forEach(p => {
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+  points.forEach((p) => {
     if (p.x < minX) minX = p.x;
     if (p.y < minY) minY = p.y;
     if (p.x > maxX) maxX = p.x;
@@ -59,7 +63,7 @@ export const recognizeShape = (points) => {
   const dx = end.x - start.x;
   const dy = end.y - start.y;
   const dist = Math.hypot(dx, dy);
-  const isClosed = dist < (diagonal * 0.2) || dist < 40;
+  const isClosed = dist < diagonal * 0.2 || dist < 40;
 
   if (isClosed) {
     let V = simplified;
@@ -78,13 +82,17 @@ export const recognizeShape = (points) => {
     // Square vs Rectangle vs Diamond
     if (V.length === 4) {
       const ratio = Math.min(width, height) / Math.max(width, height);
-      
+
       // Orthogonal check
       let orthogonalCount = 0;
       const edgeThreshold = diagonal * 0.15;
-      points.forEach(p => {
-        if (Math.abs(p.x - minX) < edgeThreshold || Math.abs(p.x - maxX) < edgeThreshold || 
-            Math.abs(p.y - minY) < edgeThreshold || Math.abs(p.y - maxY) < edgeThreshold) {
+      points.forEach((p) => {
+        if (
+          Math.abs(p.x - minX) < edgeThreshold ||
+          Math.abs(p.x - maxX) < edgeThreshold ||
+          Math.abs(p.y - minY) < edgeThreshold ||
+          Math.abs(p.y - maxY) < edgeThreshold
+        ) {
           orthogonalCount++;
         }
       });
@@ -93,7 +101,14 @@ export const recognizeShape = (points) => {
       if (isOrthogonal) {
         if (ratio > 0.82) {
           const size = Math.max(width, height);
-          return { type: 'rectangle', x: cx - size / 2, y: cy - size / 2, w: size, h: size, isSquare: true };
+          return {
+            type: 'rectangle',
+            x: cx - size / 2,
+            y: cy - size / 2,
+            w: size,
+            h: size,
+            isSquare: true,
+          };
         } else {
           return { type: 'rectangle', x: minX, y: minY, w: width, h: height };
         }
@@ -103,7 +118,7 @@ export const recognizeShape = (points) => {
           { x: cx, y: minY },
           { x: maxX, y: cy },
           { x: cx, y: maxY },
-          { x: minX, y: cy }
+          { x: minX, y: cy },
         ];
         return { type: 'polygon', points: diamondPoints };
       }
@@ -112,16 +127,16 @@ export const recognizeShape = (points) => {
     // Curved Loops -> Circle vs Ellipse
     const ratio = Math.min(width, height) / Math.max(width, height);
     if (ratio > 0.85) {
-      const radii = points.map(p => Math.hypot(p.x - cx, p.y - cy));
+      const radii = points.map((p) => Math.hypot(p.x - cx, p.y - cy));
       const avgRadius = radii.reduce((a, b) => a + b, 0) / radii.length;
       let variance = 0;
-      radii.forEach(r => variance += Math.pow(r - avgRadius, 2));
+      radii.forEach((r) => (variance += Math.pow(r - avgRadius, 2)));
       variance /= radii.length;
-      if (Math.sqrt(variance) / avgRadius < 0.20) {
+      if (Math.sqrt(variance) / avgRadius < 0.2) {
         return { type: 'circle', cx, cy, r: avgRadius };
       }
     }
-    
+
     // Fallback to ellipse for all other closed smooth loops
     if (V.length > 4) {
       return { type: 'ellipse', cx, cy, rx: width / 2, ry: height / 2 };

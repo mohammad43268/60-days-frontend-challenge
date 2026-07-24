@@ -7,17 +7,30 @@ import { usePlannerStore } from './store/usePlannerStore';
 import { supabase } from './lib/supabase';
 
 // Lazy load heavy views
-const LandingPage = lazy(() => import('./components/LandingPage').then(module => ({ default: module.LandingPage })));
-const Canvas = lazy(() => import('./components/Canvas').then(module => ({ default: module.Canvas })));
-const TableView = lazy(() => import('./components/views/TableView').then(module => ({ default: module.TableView })));
-const GanttView = lazy(() => import('./components/views/GanttView').then(module => ({ default: module.GanttView })));
-const PdfViewerPanel = lazy(() => import('./components/PdfViewerPanel').then(module => ({ default: module.PdfViewerPanel })));
+const LandingPage = lazy(() =>
+  import('./components/LandingPage').then((module) => ({ default: module.LandingPage }))
+);
+const Canvas = lazy(() =>
+  import('./components/Canvas').then((module) => ({ default: module.Canvas }))
+);
+const TableView = lazy(() =>
+  import('./components/views/TableView').then((module) => ({ default: module.TableView }))
+);
+const GanttView = lazy(() =>
+  import('./components/views/GanttView').then((module) => ({ default: module.GanttView }))
+);
+const PdfViewerPanel = lazy(() =>
+  import('./components/PdfViewerPanel').then((module) => ({ default: module.PdfViewerPanel }))
+);
 
 const SuspenseFallback = () => (
   <div className="w-screen h-screen flex flex-col items-center justify-center bg-[#050505] text-[#F97316]">
     <div className="relative flex items-center justify-center w-20 h-20">
       <div className="absolute inset-0 border-t-2 border-r-2 border-[#F97316] rounded-full animate-spin"></div>
-      <div className="absolute inset-2 border-b-2 border-l-2 border-[#F97316]/50 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+      <div
+        className="absolute inset-2 border-b-2 border-l-2 border-[#F97316]/50 rounded-full animate-spin"
+        style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}
+      ></div>
       <div className="text-[10px] tracking-widest font-bold font-mono">SYS</div>
     </div>
     <div className="mt-8 text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono animate-pulse">
@@ -27,7 +40,19 @@ const SuspenseFallback = () => (
 );
 
 function App() {
-  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl, setUser, setRoute, user, loadWorkspaceData, isHydrated, theme } = usePlannerStore();
+  const {
+    route,
+    viewMode,
+    setTemporaryTool,
+    revertTool,
+    activePdfUrl,
+    setUser,
+    setRoute,
+    user,
+    loadWorkspaceData,
+    isHydrated,
+    theme,
+  } = usePlannerStore();
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +69,9 @@ function App() {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         setUser(session.user);
         await loadWorkspaceData(session.user.id);
@@ -63,7 +90,7 @@ function App() {
     if ('launchQueue' in window) {
       window.launchQueue.setConsumer(async (launchParams) => {
         if (!launchParams.files || !launchParams.files.length) return;
-        
+
         for (const fileHandle of launchParams.files) {
           if (fileHandle.name.endsWith('.zaforge')) {
             try {
@@ -71,7 +98,7 @@ function App() {
               const text = await file.text();
               usePlannerStore.getState().importWorkspace(text);
             } catch (err) {
-              console.error("Failed to read .zaforge file from OS launchQueue:", err);
+              console.error('Failed to read .zaforge file from OS launchQueue:', err);
             }
           }
         }
@@ -82,7 +109,12 @@ function App() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Don't trigger if user is typing in an input, textarea, or contentEditable element
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+      if (
+        e.target.tagName === 'INPUT' ||
+        e.target.tagName === 'TEXTAREA' ||
+        e.target.isContentEditable
+      )
+        return;
       if (e.code === 'Space' && !e.repeat) {
         e.preventDefault(); // prevent scrolling
         setTemporaryTool('pan');
@@ -115,33 +147,40 @@ function App() {
   // Safe Route Guarding
   if (route === 'app') {
     // If they somehow hit the app route but have no user, render the LandingPage directly
-    if (!user) return (
-      <Suspense fallback={<SuspenseFallback />}>
-        <LandingPage setRoute={setRoute} />
-      </Suspense>
-    );
+    if (!user)
+      return (
+        <Suspense fallback={<SuspenseFallback />}>
+          <LandingPage setRoute={setRoute} />
+        </Suspense>
+      );
 
     return (
-      <div className={`w-screen h-screen overflow-hidden relative flex flex-col selection:bg-accent-ink selection:text-text-primary ${theme === 'dark' ? 'bg-[#0A0A0B] text-white' : 'bg-bg-base text-text-primary'}`}>
-        
+      <div
+        className={`w-screen h-screen overflow-hidden relative flex flex-col selection:bg-accent-ink selection:text-text-primary ${theme === 'dark' ? 'bg-[#0A0A0B] text-white' : 'bg-bg-base text-text-primary'}`}
+      >
         {/* Ambient Dot Grid Background */}
-        <div className="absolute inset-0 pointer-events-none" style={{ 
-          backgroundImage: `radial-gradient(${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'var(--accent-ink)'} 1px, transparent 1px)`, 
-          backgroundSize: '40px 40px',
-          opacity: theme === 'dark' ? 0.5 : 0.3 
-        }}></div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'var(--accent-ink)'} 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+            opacity: theme === 'dark' ? 0.5 : 0.3,
+          }}
+        ></div>
 
         <Header />
-        
+
         <div className="flex-1 relative w-full h-full flex">
-          <div className={`relative h-full transition-all duration-300 ${activePdfUrl && viewMode === 'canvas' ? 'w-1/2 border-r border-gray-200' : 'w-full'}`}>
+          <div
+            className={`relative h-full transition-all duration-300 ${activePdfUrl && viewMode === 'canvas' ? 'w-1/2 border-r border-gray-200' : 'w-full'}`}
+          >
             <Suspense fallback={<SuspenseFallback />}>
               {viewMode === 'canvas' && <Canvas />}
               {viewMode === 'table' && <TableView />}
               {viewMode === 'gantt' && <GanttView />}
             </Suspense>
           </div>
-          
+
           {activePdfUrl && viewMode === 'canvas' && (
             <div className="w-1/2 h-full relative flex flex-col z-50">
               <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm z-50">
@@ -161,9 +200,9 @@ function App() {
             </div>
           )}
         </div>
-        
+
         {viewMode === 'canvas' && <Toolbar />}
-        
+
         <CommandPalette />
         <ExportModal />
       </div>
