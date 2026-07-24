@@ -933,7 +933,7 @@ export const Card = memo(({ card }) => {
       onPointerDown={handlePointerDown}
     >
       <div 
-        className={`group relative w-full h-full flex flex-col transition-transform duration-200 ease-out hover:scale-[1.02] rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-border ${innerBgClass} ${isSelected ? 'ring-2 ring-orange-500' : ''}`}
+        className={`group relative w-full h-full flex flex-col transition-all duration-300 ease-out hover:scale-[1.02] rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] border border-white/5 hover:border-white/20 backdrop-blur-xl ${innerBgClass} ${isSelected ? 'ring-2 ring-orange-500 shadow-orange-500/20' : ''}`}
         style={customBgStyle}
       >
         
@@ -962,7 +962,7 @@ export const Card = memo(({ card }) => {
           return (
             <div
               key={pos}
-              className={`port absolute w-3 h-3 bg-white border-2 border-orange-400 rounded-full cursor-crosshair hover:scale-150 transition-opacity opacity-0 group-hover:opacity-100 ${portClasses[pos]} z-20`}
+              className={`port absolute w-3 h-3 bg-white border-2 border-orange-400 rounded-full cursor-crosshair hover:scale-[1.8] hover:bg-orange-400 hover:border-white hover:shadow-[0_0_15px_rgba(249,115,22,0.8)] transition-all opacity-0 group-hover:opacity-100 ${portClasses[pos]} z-20`}
               data-card-id={card.id}
               data-port={pos}
               title={`Connect ${pos}`}

@@ -80,7 +80,7 @@ export const DragDemoSection = () => {
       <div className="relative w-full h-[600px] md:h-full overflow-x-auto overflow-y-hidden custom-scrollbar">
         <div className="relative w-[1000px] md:w-full h-full">
       {/* Draggable Nodes */}
-      <div className="drag-node absolute top-[35%] left-[15%] w-72 bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-colors duration-300">
+      <div className="drag-node absolute top-[35%] left-[15%] w-72 bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-3 h-3 rounded-full bg-red-400"></div>
           <h3 className="font-display font-bold text-lg text-text-primary">Core Architecture</h3>
@@ -90,7 +90,7 @@ export const DragDemoSection = () => {
         </p>
       </div>
 
-      <div className="drag-node absolute top-[65%] left-[25%] w-64 bg-surface/80 backdrop-blur-md rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-colors duration-300">
+      <div className="drag-node absolute top-[65%] left-[25%] w-64 bg-surface/80 backdrop-blur-md rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-3 h-3 rounded-full bg-blue-400"></div>
           <h3 className="font-display font-bold text-lg text-text-primary">Auth Flow</h3>
@@ -100,7 +100,7 @@ export const DragDemoSection = () => {
         </p>
       </div>
 
-      <div className="drag-node absolute top-[20%] left-[45%] w-96 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-accent-ink/20 p-2 cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-colors duration-300">
+      <div className="drag-node absolute top-[20%] left-[45%] w-96 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-accent-ink/20 p-2 cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40">
         <img 
           src="/projectimg.png" 
           alt="Creative Vision" 
@@ -117,7 +117,7 @@ export const DragDemoSection = () => {
         </div>
       </div>
 
-      <div className="drag-node absolute top-[60%] left-[65%] w-72 bg-bg-warm rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-colors duration-300">
+      <div className="drag-node absolute top-[60%] left-[65%] w-72 bg-bg-warm rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-accent-ink/20 p-6 cursor-grab active:cursor-grabbing z-10 hover:border-text-muted transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-3 h-3 rounded-full bg-green-400"></div>
           <h3 className="font-display font-bold text-lg text-text-primary">Performance</h3>
@@ -127,7 +127,7 @@ export const DragDemoSection = () => {
         </p>
       </div>
 
-      <div className="drag-node absolute top-[25%] left-[80%] w-56 h-72 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-accent-ink/20 p-2 flex flex-col cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-colors duration-300">
+      <div className="drag-node absolute top-[25%] left-[80%] w-56 h-72 bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-accent-ink/20 p-2 flex flex-col cursor-grab active:cursor-grabbing z-20 hover:border-text-muted transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40">
         <img 
           src="/projectimg1.png" 
           alt="Data Structures" 
@@ -139,7 +139,7 @@ export const DragDemoSection = () => {
         </div>
       </div>
 
-      <div className="drag-node absolute top-[75%] left-[45%] w-48 bg-[#161618] text-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.2)] border border-white/10 p-5 cursor-grab active:cursor-grabbing z-30 hover:border-white/30 transition-colors duration-300">
+      <div className="drag-node absolute top-[75%] left-[45%] w-48 bg-[#161618] text-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.2)] border border-white/10 p-5 cursor-grab active:cursor-grabbing z-30 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:z-40 hover:border-white/30">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-display font-bold text-md tracking-wide">COMPONENTS</h3>
           <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>

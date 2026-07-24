@@ -60,7 +60,7 @@ export const FlipDemoSection = () => {
           {mockData.map((item, index) => (
             <div 
               key={item.id}
-              className="spatial-card absolute flex-col p-5 w-72 rounded-2xl border border-accent-ink/10 bg-white shadow-[0_15px_40px_rgb(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.2)] transition-shadow cursor-grab active:cursor-grabbing"
+              className="spatial-card absolute flex-col p-5 w-72 rounded-2xl border border-accent-ink/10 bg-white shadow-[0_15px_40px_rgb(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgb(0,0,0,0.2)] transition-all duration-300 hover:scale-[1.03] cursor-grab active:cursor-grabbing hover:z-40"
               style={{
                 top: `${(index % 2) * 180 + 60 + (index > 3 ? 80 : 0)}px`,
                 left: `${(index % 3) * 280 + 30 + (index % 2 * 30)}px`,
