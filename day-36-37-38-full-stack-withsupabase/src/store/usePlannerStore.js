@@ -58,11 +58,20 @@ const initialConnections = [
 export const usePlannerStore = create((set, get) => {
   const saveHistory = () => {
     const { cards, connections, past } = get();
+    // Only save history if there are actual changes (prevent empty states)
+    if (past.length > 0) {
+      const lastState = past[past.length - 1];
+      if (JSON.stringify(lastState.cards) === JSON.stringify(cards) && JSON.stringify(lastState.connections) === JSON.stringify(connections)) {
+        return;
+      }
+    }
     const newPast = [...past, { cards, connections }].slice(-50); // Keep last 50 states
     set({ past: newPast, future: [] });
   };
 
   return {
+    theme: 'light',
+    toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
     cards: initialCards,
     connections: initialConnections,
     past: [],

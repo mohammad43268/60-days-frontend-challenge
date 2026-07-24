@@ -27,7 +27,7 @@ const SuspenseFallback = () => (
 );
 
 function App() {
-  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl, setUser, setRoute, user, loadWorkspaceData, isHydrated } = usePlannerStore();
+  const { route, viewMode, setTemporaryTool, revertTool, activePdfUrl, setUser, setRoute, user, loadWorkspaceData, isHydrated, theme } = usePlannerStore();
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -122,7 +122,15 @@ function App() {
     );
 
     return (
-      <div className="w-screen h-screen overflow-hidden bg-canvas text-dark relative flex flex-col">
+      <div className={`w-screen h-screen overflow-hidden relative flex flex-col selection:bg-accent-ink selection:text-text-primary ${theme === 'dark' ? 'bg-[#0A0A0B] text-white' : 'bg-bg-base text-text-primary'}`}>
+        
+        {/* Ambient Dot Grid Background */}
+        <div className="absolute inset-0 pointer-events-none" style={{ 
+          backgroundImage: `radial-gradient(${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'var(--accent-ink)'} 1px, transparent 1px)`, 
+          backgroundSize: '40px 40px',
+          opacity: theme === 'dark' ? 0.5 : 0.3 
+        }}></div>
+
         <Header />
         
         <div className="flex-1 relative w-full h-full flex">

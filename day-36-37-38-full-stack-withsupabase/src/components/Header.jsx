@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { usePlannerStore } from '../store/usePlannerStore';
-import { Undo, Redo, Layout, TableProperties, CalendarDays, Lightbulb, Hexagon, Download, LogOut, Home } from 'lucide-react';
+import { Undo, Redo, Layout, TableProperties, CalendarDays, Lightbulb, Hexagon, Download, LogOut, Home, Sun, Moon } from 'lucide-react';
 import { TemplateModal } from './TemplateModal';
 import { supabase } from '../lib/supabase';
 
 export const Header = () => {
-  const { undo, redo, past, future, viewMode, setViewMode, loadTemplate, setRoute } = usePlannerStore();
+  const { undo, redo, past, future, viewMode, setViewMode, loadTemplate, setRoute, theme, toggleTheme } = usePlannerStore();
   const [isTemplateMenuOpen, setIsTemplateMenuOpen] = useState(false);
   const templateMenuRef = useRef(null);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -55,19 +55,19 @@ export const Header = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 h-14 md:h-16 bg-black/40 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-2 md:px-6 shadow-2xl overflow-x-auto custom-scrollbar">
+    <div className="absolute top-0 left-0 right-0 p-2 md:p-4 z-50 flex flex-wrap md:flex-nowrap items-start justify-between gap-2 pointer-events-none">
       
       {/* Brand */}
       <div 
-        className="flex items-center shrink-0 mr-1 md:mr-0 cursor-pointer group"
+        className="flex items-center shrink-0 cursor-pointer group pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] px-3 md:px-4 h-10 md:h-12 transition-transform hover:scale-105 active:scale-95"
         onClick={() => setRoute('landing')}
         title="Return to Landing Page"
       >
-        <img src="/logo.png" alt="Zaforge" className="h-5 md:h-6 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity" />
+        <img src="/logo.png" alt="Zaforge" className="h-5 w-auto object-contain filter brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity" />
       </div>
 
       {/* View Switcher */}
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-0.5 md:space-x-1 bg-black/60 border border-white/10 p-0.5 md:p-1 rounded-xl shadow-inner shrink-0">
+      <div className="order-3 md:order-none w-full md:w-auto md:absolute md:left-1/2 md:-translate-x-1/2 flex items-center justify-center space-x-1 pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 p-1 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] shrink-0 h-10 md:h-12 mt-2 md:mt-0">
         <button 
           onClick={() => setViewMode('canvas')}
           className={`flex items-center px-1.5 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${viewMode === 'canvas' ? 'bg-white/10 text-white shadow-[0_0_10px_rgba(255,255,255,0.05)]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
@@ -95,9 +95,18 @@ export const Header = () => {
       </div>
 
       {/* Tools */}
-      <div className="flex items-center space-x-1 md:space-x-4 shrink-0 pl-1 md:pl-0">
+      <div className="flex items-center space-x-1 md:space-x-2 shrink-0 pointer-events-auto bg-[#161618]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] px-2 h-10 md:h-12">
         
-        <div className="h-6 w-px bg-white/10 hidden md:block" />
+        <div className="h-4 md:h-6 w-px bg-white/10 hidden md:block mx-1" />
+
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          className="p-1.5 md:p-2 text-yellow-400/80 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-colors border border-transparent hover:border-yellow-400/20"
+          title="Toggle Theme"
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
 
         {/* Install PWA */}
         {deferredPrompt && (

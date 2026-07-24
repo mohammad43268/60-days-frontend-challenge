@@ -3,12 +3,22 @@ import gsap from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import { usePlannerStore, getVisibleCards } from '../store/usePlannerStore';
 import { Card } from './Card';
-import { Settings, Trash2 } from 'lucide-react';
+import { Settings, Trash2, Sparkles } from 'lucide-react';
 import { recognizeShape } from '../utils/shapeRecognizer';
 
 gsap.registerPlugin(Draggable);
 
 const BUFFER = 500;
+
+const EmptyState = () => (
+  <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-text-muted/60 select-none z-0">
+    <Sparkles className="w-12 h-12 mb-4 opacity-50" />
+    <h2 className="font-display font-bold text-2xl tracking-tight mb-2">The canvas is yours.</h2>
+    <p className="font-body text-sm flex items-center gap-1">
+      Double-click anywhere to spawn a thought, or press <kbd className="font-mono bg-surface/50 px-2 py-1 rounded text-xs">Cmd+K</kbd>
+    </p>
+  </div>
+);
 
 export const Canvas = () => {
   const { 
@@ -706,6 +716,8 @@ export const Canvas = () => {
             style={{ display: 'none' }}
           />
         </svg>
+
+        {cards.length === 0 && drawings.length === 0 && <EmptyState />}
 
         {visibleCards.map(card => (<Card key={card.id} card={card} />))}
 
