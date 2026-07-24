@@ -154,7 +154,7 @@ export const Toolbar = () => {
       {/* Toolbar Container */}
       <div 
         ref={toolsContainerRef}
-        className="fixed left-1/2 -translate-x-1/2 bottom-4 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] border border-white/10 rounded-2xl px-2 md:px-4 py-2 flex w-[95vw] sm:w-[90vw] md:w-auto items-center gap-1 md:gap-2 relative overflow-x-auto custom-scrollbar"
+        className="fixed left-1/2 -translate-x-1/2 bottom-4 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] border border-white/10 rounded-2xl px-2 md:px-4 py-2 flex w-max max-w-[95vw] justify-center items-center gap-1 md:gap-2 relative overflow-x-auto custom-scrollbar"
       >
         {/* Sliding Pill */}
         <div ref={pillRef} className="absolute left-0 top-0 bg-orange-500 rounded-full z-0 shadow-lg shadow-orange-500/20" />

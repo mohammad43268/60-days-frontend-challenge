@@ -11,6 +11,7 @@ import { Loader2 } from 'lucide-react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,6 +74,31 @@ export const LandingPage = () => {
       lenis.destroy();
     };
   }, []);
+
+  useGSAP(() => {
+    // 4. Global Stacked Parallax Effect
+    // This pushes the previous section down and fades it slightly as the new one slides over it
+    const sections = gsap.utils.toArray('.parallax-section');
+    
+    sections.forEach((section, i) => {
+      if (i > 0) {
+        const previousSection = sections[i - 1];
+        
+        gsap.to(previousSection, {
+          y: '30%', // Push down 
+          scale: 0.95, // Shrink slightly to emphasize depth
+          opacity: 0.2, // Fade it into the background
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom', // Start when the top of the NEW section hits the bottom of viewport
+            end: 'top top',      // End when the top of the NEW section hits the top of viewport
+            scrub: true,
+          }
+        });
+      }
+    });
+  }, { scope: containerRef });
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();

@@ -15,7 +15,7 @@ export default {
         'text-muted': '#6B5D52'
       },
       fontFamily: {
-        'display': ['Space Grotesk', 'sans-serif'],
+        'display': ['Audex', 'sans-serif'],
         'body': ['Inter', 'sans-serif'],
       }
     },

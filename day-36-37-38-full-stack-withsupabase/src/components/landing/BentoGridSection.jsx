@@ -48,7 +48,7 @@ export const BentoGridSection = () => {
   }, { scope: containerRef });
 
   return (
-    <section className="relative z-20 w-full min-h-screen bg-bg-base py-32 px-4 sm:px-6 lg:px-8 -mt-16 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.3)] border-t border-accent-ink/20" ref={containerRef}>
+    <section className="parallax-section relative z-40 w-full min-h-screen bg-bg-base py-32 px-4 sm:px-6 lg:px-8 -mt-16 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.2)] border-t border-accent-ink/20" ref={containerRef}>
       <div className="max-w-6xl mx-auto">
         
         <div className="mb-16">

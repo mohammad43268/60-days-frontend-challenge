@@ -2,7 +2,7 @@ import React from 'react';
 
 export const PinnedManifestoSection = () => {
   return (
-    <section className="relative w-full min-h-screen bg-text-primary text-bg-base flex flex-col items-center justify-center overflow-hidden py-32">
+    <section className="parallax-section relative z-30 w-full min-h-screen bg-[#0A0A0B] text-white flex flex-col items-center justify-center overflow-hidden py-32 -mt-16 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] border-t border-accent-ink/20">
       
       <div className="absolute inset-0 z-0 opacity-10 flex items-center justify-center pointer-events-none">
         {/* Subtle background glow/gradient */}

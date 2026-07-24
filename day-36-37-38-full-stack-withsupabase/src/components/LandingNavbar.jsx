@@ -21,10 +21,10 @@ export const LandingNavbar = forwardRef(({ onLoginClick }, forwardedRef) => {
       const handleScroll = () => {
         const currentY = window.scrollY;
         
-        if (currentY > lastScrollY.current && currentY > 100) {
-          gsap.to(navOuterRef.current, { y: -150, duration: 0.5, ease: "power3.inOut" });
+        if (currentY > lastScrollY.current && currentY > 20) {
+          gsap.to(navOuterRef.current, { y: -150, duration: 0.3, ease: "power3.inOut" });
         } else if (currentY < lastScrollY.current) {
-          gsap.to(navOuterRef.current, { y: 0, duration: 0.5, ease: "power3.out" });
+          gsap.to(navOuterRef.current, { y: 0, duration: 0.3, ease: "power3.out" });
         }
         
         lastScrollY.current = currentY;
@@ -79,10 +79,12 @@ export const LandingNavbar = forwardRef(({ onLoginClick }, forwardedRef) => {
           className="flex items-center gap-4 cursor-pointer" 
           onClick={() => setRoute('canvas')}
         >
-          <div className="w-10 h-10 rounded-full bg-text-primary flex items-center justify-center shadow-lg overflow-hidden">
-             <div className="w-4 h-4 bg-bg-base transform rotate-45 rounded-sm"></div>
-          </div>
-          <span className="font-display font-bold text-xl tracking-tight text-text-primary uppercase mt-1">ZAFORGE</span>
+          <span className="font-display font-bold text-2xl tracking-tighter text-text-primary uppercase flex items-center gap-2">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            ZAFORGE
+          </span>
         </div>
 
         {/* Buttons */}

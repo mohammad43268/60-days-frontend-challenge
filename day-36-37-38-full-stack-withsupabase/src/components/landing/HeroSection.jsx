@@ -42,13 +42,16 @@ export const HeroSection = ({ onLoginClick }) => {
     });
 
     // 2. Abstract SVG Node/Graph Illustration (DrawSVG)
-    // Draw in the lines of the SVG
+    // Draw in the lines of the SVG based on scroll progress
     gsap.from('.node-path', {
       drawSVG: '0%',
-      duration: 2.5,
-      ease: 'power3.inOut',
-      stagger: 0.1,
-      delay: 0.5
+      ease: 'none',
+      scrollTrigger: {
+        trigger: heroRef.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1
+      }
     });
 
     // Fade in the connection nodes
@@ -64,7 +67,7 @@ export const HeroSection = ({ onLoginClick }) => {
   }, { scope: heroRef });
 
   return (
-    <section ref={heroRef} className="relative w-full min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+    <section ref={heroRef} className="parallax-section relative z-0 w-full min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-bg-base">
       
       {/* Abstract Animated SVG Graph Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center opacity-30">
@@ -89,8 +92,9 @@ export const HeroSection = ({ onLoginClick }) => {
 
       <div className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center">
         
-        <h1 className="hero-title font-display font-bold text-5xl md:text-[6.5rem] tracking-tighter leading-[1.05] mb-8 text-text-primary uppercase overflow-hidden">
-          A minimalist canvas<br />for infinite thoughts.
+        {/* Animated Headline */}
+        <h1 className="hero-title font-display font-bold text-4xl sm:text-5xl md:text-[6.5rem] tracking-tighter leading-[1.05] mb-8 text-text-primary uppercase overflow-hidden">
+          A Minimalist<br/>Canvas for<br/>Infinite Thoughts.
         </h1>
         
         <p className="hero-fade font-body text-lg md:text-xl text-text-muted mb-16 max-w-2xl mx-auto leading-relaxed">
