@@ -209,10 +209,22 @@ export const Toolbar = () => {
         </div>
       )}
 
+      {/* Mobile Toggle Button */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="md:hidden fixed bottom-4 right-4 z-[105] w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(249,115,22,0.4)] hover:scale-110 active:scale-95 transition-all"
+      >
+        {mobileOpen ? <X size={24} /> : <Wrench size={24} />}
+      </button>
+
       {/* Toolbar Container */}
       <div
         ref={toolsContainerRef}
-        className="fixed left-1/2 -translate-x-1/2 bottom-4 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] border border-white/10 rounded-2xl px-2 md:px-4 py-2 flex w-max max-w-[95vw] justify-center items-center gap-1 md:gap-2 relative overflow-x-auto custom-scrollbar"
+        className={`fixed left-1/2 -translate-x-1/2 md:bottom-4 z-[100] bg-[#161618]/80 backdrop-blur-xl saturate-150 shadow-[0_4px_20px_rgba(0,0,0,0.1),_0_20px_40px_rgba(0,0,0,0.15)] border border-white/10 rounded-2xl px-2 md:px-4 py-2 flex flex-nowrap w-[95vw] md:w-max justify-start md:justify-center items-center gap-1 md:gap-2 transition-all duration-300 origin-bottom overflow-x-auto custom-scrollbar ${
+          mobileOpen 
+            ? 'bottom-20 opacity-100 scale-100 pointer-events-auto' 
+            : 'bottom-4 opacity-0 md:opacity-100 md:scale-100 pointer-events-none md:pointer-events-auto scale-95 translate-y-10 md:translate-y-0'
+        }`}
       >
         {/* Sliding Pill */}
         <div
