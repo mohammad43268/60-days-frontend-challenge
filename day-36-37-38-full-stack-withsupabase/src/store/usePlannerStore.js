@@ -96,6 +96,9 @@ export const usePlannerStore = create((set, get) => {
     past: [],
     future: [],
 
+    activeConnectionStart: null,
+    setActiveConnectionStart: (portData) => set({ activeConnectionStart: portData }),
+
     user: null,
     setUser: (user) => set({ user }),
     workspaceId: null,

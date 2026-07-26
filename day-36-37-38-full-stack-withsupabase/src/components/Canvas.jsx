@@ -417,13 +417,39 @@ export const Canvas = () => {
   const handlePointerDown = (e) => {
     const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
     const port = target?.closest?.('.port');
-    if (port && activeTool === 'connect') {
+    const store = usePlannerStore.getState();
+
+    if (port && (activeTool === 'connect' || activeTool === 'cursor')) {
       e.stopPropagation();
+      
+      const activeStart = store.activeConnectionStart;
+      const clickedCardId = port.dataset.cardId;
+      const clickedPort = port.dataset.port;
+
+      if (activeStart) {
+        if (activeStart.cardId !== clickedCardId) {
+          addConnection(
+            activeStart.cardId,
+            clickedCardId,
+            activeStart.port,
+            clickedPort,
+            'related',
+            ''
+          );
+        }
+        store.setActiveConnectionStart(null);
+        return;
+      }
+
       currentConnectingRef.current = {
-        sourceId: port.dataset.cardId,
-        sourcePort: port.dataset.port,
+        sourceId: clickedCardId,
+        sourcePort: clickedPort,
+        isDrag: false
       };
       isConnectingRef.current = true;
+      
+      store.setActiveConnectionStart({ cardId: clickedCardId, port: clickedPort });
+
       const rect = wrapperRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / viewport.scale;
       const y = (e.clientY - rect.top) / viewport.scale;
@@ -445,6 +471,9 @@ export const Canvas = () => {
       setDraggablesEnabled(false);
       return;
     }
+
+    store.setActiveConnectionStart(null);
+
     if (target?.closest?.('.card-node') || target?.closest?.('.connection-menu')) return;
     if (activeConnectionMenu) setActiveConnectionMenu(null);
     if (['note', 'task', 'image', 'code', 'bookmark', 'audio', 'pdf', 'ai'].includes(activeTool)) {
@@ -485,7 +514,8 @@ export const Canvas = () => {
   };
 
   const handlePointerMove = (e) => {
-    if (activeTool === 'connect' && currentConnectingRef.current) {
+    if (currentConnectingRef.current) {
+      currentConnectingRef.current.isDrag = true;
       const rect = wrapperRef.current.getBoundingClientRect();
       const mouseX = (e.clientX - rect.left) / viewport.scale;
       const mouseY = (e.clientY - rect.top) / viewport.scale;
@@ -541,22 +571,32 @@ export const Canvas = () => {
   const handlePointerUp = (e) => {
     const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
     const port = target?.closest?.('.port');
-    if (activeTool === 'connect' && currentConnectingRef.current) {
+    const store = usePlannerStore.getState();
+    
+    if (currentConnectingRef.current) {
       e.stopPropagation();
       isConnectingRef.current = false;
-      if (port && currentConnectingRef.current.sourceId !== port.dataset.cardId) {
-        addConnection(
-          currentConnectingRef.current.sourceId,
-          port.dataset.cardId,
-          currentConnectingRef.current.sourcePort,
-          port.dataset.port,
-          'related',
-          ''
-        );
+      
+      if (currentConnectingRef.current.isDrag) {
+        if (port && currentConnectingRef.current.sourceId !== port.dataset.cardId) {
+          addConnection(
+            currentConnectingRef.current.sourceId,
+            port.dataset.cardId,
+            currentConnectingRef.current.sourcePort,
+            port.dataset.port,
+            'related',
+            ''
+          );
+        }
+        store.setActiveConnectionStart(null);
+        setConnecting(null);
+        currentConnectingRef.current = null;
+        if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
+      } else {
+        if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
+        currentConnectingRef.current = null;
       }
-      setConnecting(null);
-      currentConnectingRef.current = null;
-      if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
+      
       setDraggablesEnabled(true);
       return;
     }

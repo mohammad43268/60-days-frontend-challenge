@@ -60,6 +60,7 @@ export const Card = memo(({ card }) => {
     connections,
     cards,
     toggleCardCollapse,
+    activeConnectionStart,
   } = usePlannerStore();
 
   const isSelected = selectedCardIds.includes(card.id);
@@ -1309,7 +1310,11 @@ export const Card = memo(({ card }) => {
             return (
               <div
                 key={pos}
-                className={`port absolute w-3 h-3 bg-white border-2 border-orange-400 rounded-full cursor-crosshair hover:scale-[1.8] hover:bg-orange-400 hover:border-white hover:shadow-[0_0_15px_rgba(249,115,22,0.8)] transition-all opacity-0 group-hover:opacity-100 ${portClasses[pos]} z-20`}
+                className={`port absolute w-3 h-3 border-2 rounded-full cursor-crosshair hover:scale-[1.8] hover:bg-orange-400 hover:border-white hover:shadow-[0_0_15px_rgba(249,115,22,0.8)] transition-all before:absolute before:-inset-5 before:content-[''] ${portClasses[pos]} z-20 ${
+                  activeConnectionStart?.cardId === card.id && activeConnectionStart?.port === pos
+                    ? 'scale-[1.8] bg-orange-400 border-white shadow-[0_0_20px_rgba(249,115,22,1)] opacity-100 md:!opacity-100 animate-pulse'
+                    : 'bg-white border-orange-400 opacity-100 md:opacity-0 md:group-hover:opacity-100'
+                }`}
                 data-card-id={card.id}
                 data-port={pos}
                 title={`Connect ${pos}`}
