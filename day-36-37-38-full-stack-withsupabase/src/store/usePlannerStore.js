@@ -137,6 +137,10 @@ export const usePlannerStore = create((set, get) => {
           supabase.from('drawings').select('*').eq('workspace_id', workspaceId),
         ]);
 
+        if (connRes.error) {
+          console.error("SUPABASE CONNECTION ERROR (FETCH):", connRes.error);
+        }
+
         if (!cardsRes.error && !connRes.error && !drawRes.error) {
           get().setBoardData({
             cards: cardsRes.data || [],
@@ -323,8 +327,36 @@ export const usePlannerStore = create((set, get) => {
           type,
           label,
         };
-        queueUpsert('connections', newConn, state.workspaceId);
+        
+        // Immediate background save bypassing debounced sync engine for reliability
+        if (state.workspaceId) {
+          const dbConn = {
+            id: newConn.id,
+            source: newConn.source,
+            target: newConn.target,
+            type: newConn.type,
+            label: newConn.label,
+            workspace_id: state.workspaceId
+          };
+          
+          supabase.from('connections').upsert(dbConn).then(({ error }) => {
+            if (error) console.error("SUPABASE CONNECTION ERROR:", error);
+          });
+        }
+        
         return { connections: [...state.connections, newConn] };
+      });
+    },
+
+    deleteConnection: (id) => {
+      saveHistory();
+      set((state) => {
+        if (state.workspaceId) {
+          supabase.from('connections').delete().eq('id', id).then(({ error }) => {
+            if (error) console.error("SUPABASE DELETE CONNECTION ERROR:", error);
+          });
+        }
+        return { connections: state.connections.filter((c) => c.id !== id) };
       });
     },
 
