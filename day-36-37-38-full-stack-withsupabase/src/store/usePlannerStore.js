@@ -140,7 +140,11 @@ export const usePlannerStore = create((set, get) => {
         if (!cardsRes.error && !connRes.error && !drawRes.error) {
           get().setBoardData({
             cards: cardsRes.data || [],
-            connections: connRes.data || [],
+            connections: (connRes.data || []).map(c => ({
+              ...c,
+              sourcePort: c.source_port || c.sourcePort,
+              targetPort: c.target_port || c.targetPort
+            })),
             drawings: drawRes.data || [],
           });
           set({ past: [], future: [] });
