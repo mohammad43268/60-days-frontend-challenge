@@ -142,8 +142,15 @@ export const usePlannerStore = create((set, get) => {
         }
 
         if (!cardsRes.error && !connRes.error && !drawRes.error) {
+          const fetchedCards = cardsRes.data || [];
+          const safeCards = fetchedCards.map(c => ({
+            ...c,
+            width: c.width || 280,
+            height: c.height || 200
+          }));
+
           get().setBoardData({
-            cards: cardsRes.data || [],
+            cards: safeCards,
             connections: connRes.data || [],
             drawings: drawRes.data || [],
           });
@@ -216,7 +223,8 @@ export const usePlannerStore = create((set, get) => {
           type,
           x,
           y,
-          width: 250,
+          width: 280,
+          height: 200, // Force this so the database never holds null!
           content: type === 'task' ? [] : type === 'image' ? '' : 'New Node',
           metadata: {},
           collapsed: false,

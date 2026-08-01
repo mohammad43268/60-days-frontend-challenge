@@ -188,11 +188,11 @@ export const Canvas = () => {
   }, [viewport, activeTool, updateViewport]);
 
   const getPortCoords = (node, stateCard, port) => {
-    const w = node && node.offsetWidth > 0 ? node.offsetWidth : parseFloat(stateCard.width) || 250;
-    const h = node && node.offsetHeight > 0 ? node.offsetHeight : parseFloat(stateCard.height) || 200;
+    const w = node && node.offsetWidth > 0 ? node.offsetWidth : stateCard.width || 250;
+    const h = node && node.offsetHeight > 0 ? node.offsetHeight : stateCard.height || 200;
 
-    let x = parseFloat(stateCard.x) || 0;
-    let y = parseFloat(stateCard.y) || 0;
+    let x = stateCard.x;
+    let y = stateCard.y;
 
     // Only use live GSAP coordinates during an active drag to prevent
     // uninitialized transforms from breaking wires on file load.
