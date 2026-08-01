@@ -188,11 +188,12 @@ export const Canvas = () => {
   }, [viewport, activeTool, updateViewport]);
 
   const getPortCoords = (node, stateCard) => {
-    const w = node && node.offsetWidth > 0 ? node.offsetWidth : parseFloat(stateCard.width) || 250;
-    const h = node && node.offsetHeight > 0 ? node.offsetHeight : parseFloat(stateCard.height) || 200;
+    // Bulletproof fallbacks to prevent NaN in SVG paths if db returns null
+    const w = Number(stateCard.width) || 280;
+    const h = Number(stateCard.height) || 200;
 
-    let x = parseFloat(stateCard.x) || 0;
-    let y = parseFloat(stateCard.y) || 0;
+    let x = Number(stateCard.x) || 0;
+    let y = Number(stateCard.y) || 0;
 
     // Only use live GSAP coordinates during an active drag to prevent
     // uninitialized transforms from breaking wires on file load.
@@ -204,7 +205,7 @@ export const Canvas = () => {
     }
 
     // Force anchor beautifully at the center of the card
-    return { x: x + w / 2, y: y + h / 2 };
+    return { x: x + (w / 2), y: y + (h / 2) };
   };
 
   const calculateBezier = (p1, p2) => {
