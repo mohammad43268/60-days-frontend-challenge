@@ -142,8 +142,15 @@ export const usePlannerStore = create((set, get) => {
         }
 
         if (!cardsRes.error && !connRes.error && !drawRes.error) {
+          const fetchedCards = cardsRes.data || [];
+          const sanitizedCards = fetchedCards.map(card => ({
+            ...card,
+            width: card.width || 280,
+            height: card.height || 200
+          }));
+
           get().setBoardData({
-            cards: cardsRes.data || [],
+            cards: sanitizedCards,
             connections: connRes.data || [],
             drawings: drawRes.data || [],
           });
@@ -216,7 +223,8 @@ export const usePlannerStore = create((set, get) => {
           type,
           x,
           y,
-          width: 250,
+          width: 280,
+          height: 200,
           content: type === 'task' ? [] : type === 'image' ? '' : 'New Node',
           metadata: {},
           collapsed: false,

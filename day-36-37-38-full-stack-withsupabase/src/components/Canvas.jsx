@@ -187,13 +187,12 @@ export const Canvas = () => {
     };
   }, [viewport, activeTool, updateViewport]);
 
-  const getPortCoords = (node, stateCard) => {
-    // Bulletproof fallbacks to prevent NaN in SVG paths if db returns null
-    const w = Number(stateCard.width) || 280;
-    const h = Number(stateCard.height) || 200;
+  const getPortCoords = (node, stateCard, port) => {
+    const w = node && node.offsetWidth > 0 ? node.offsetWidth : parseFloat(stateCard.width) || 250;
+    const h = node && node.offsetHeight > 0 ? node.offsetHeight : parseFloat(stateCard.height) || 200;
 
-    let x = Number(stateCard.x) || 0;
-    let y = Number(stateCard.y) || 0;
+    let x = parseFloat(stateCard.x) || 0;
+    let y = parseFloat(stateCard.y) || 0;
 
     // Only use live GSAP coordinates during an active drag to prevent
     // uninitialized transforms from breaking wires on file load.
@@ -204,13 +203,47 @@ export const Canvas = () => {
       if (typeof gy === 'number') y = gy;
     }
 
-    // Force anchor beautifully at the center of the card
-    return { x: x + (w / 2), y: y + (h / 2) };
+    switch (port) {
+      case 'top':
+        return { x: x + w / 2, y };
+      case 'right':
+        return { x: x + w, y: y + h / 2 };
+      case 'bottom':
+        return { x: x + w / 2, y: y + h };
+      case 'left':
+        return { x, y: y + h / 2 };
+      case 'center':
+        return { x: x + w / 2, y: y + h / 2 };
+      default:
+        return { x: x + w / 2, y: y + h / 2 };
+    }
   };
 
-  const calculateBezier = (p1, p2) => {
-    // For center-to-center connections, a straight line or direct bezier is cleanest
-    return `M ${p1.x},${p1.y} L ${p2.x},${p2.y}`;
+  const calculateBezier = (p1, p2, port1, port2) => {
+    const offset = 100;
+    const getControlPoint = (p, port) => {
+      let cp = { ...p };
+      switch (port) {
+        case 'top':
+          cp.y -= offset;
+          break;
+        case 'right':
+          cp.x += offset;
+          break;
+        case 'bottom':
+          cp.y += offset;
+          break;
+        case 'left':
+          cp.x -= offset;
+          break;
+        case 'center':
+          break;
+      }
+      return cp;
+    };
+    const cp1 = getControlPoint(p1, port1);
+    const cp2 = getControlPoint(p2, port2);
+    return `M ${p1.x},${p1.y} C ${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${p2.x},${p2.y}`;
   };
 
   const updatePaths = useCallback(() => {
