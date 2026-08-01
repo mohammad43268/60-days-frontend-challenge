@@ -142,6 +142,8 @@ export const usePlannerStore = create((set, get) => {
             cards: cardsRes.data || [],
             connections: (connRes.data || []).map(c => ({
               ...c,
+              source: c.source_card_id || c.source,
+              target: c.target_card_id || c.target,
               sourcePort: c.source_port || c.sourcePort,
               targetPort: c.target_port || c.targetPort
             })),

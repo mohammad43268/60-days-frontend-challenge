@@ -18,8 +18,8 @@ const flushSync = async (workspaceId) => {
     cards: Array.from(pendingUpserts.cards.values()),
     connections: Array.from(pendingUpserts.connections.values()).map(c => ({
       id: c.id,
-      source: c.source,
-      target: c.target,
+      source_card_id: c.source,
+      target_card_id: c.target,
       source_port: c.sourcePort,
       target_port: c.targetPort,
       type: c.type,
@@ -42,8 +42,14 @@ const flushSync = async (workspaceId) => {
     const promises = [];
 
     if (upserts.cards.length > 0) promises.push(supabase.from('cards').upsert(upserts.cards));
-    if (upserts.connections.length > 0)
-      promises.push(supabase.from('connections').upsert(upserts.connections));
+    if (upserts.connections.length > 0) {
+      promises.push(
+        supabase.from('connections').upsert(upserts.connections).then((res) => {
+          if (res.error) console.error("Supabase Connection Error:", res.error);
+          return res;
+        })
+      );
+    }
     if (upserts.drawings.length > 0)
       promises.push(supabase.from('drawings').upsert(upserts.drawings));
 
