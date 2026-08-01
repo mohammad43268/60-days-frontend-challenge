@@ -20,9 +20,8 @@ async function run() {
       id: 'test-conn-12345',
       source: 'c1',
       target: 'c2',
-      sourcePort: 'right',
-      targetPort: 'left',
       type: 'related',
+      label: 'test',
       workspace_id: '00000000-0000-0000-0000-000000000000'
     })
   });

@@ -7,6 +7,7 @@ import { supabase } from './supabase';
 // TODO: Implement IndexedDB offline-first caching for progressive web app resilience.
 
 let syncTimeout = null;
+let lastWorkspaceId = null;
 let pendingUpserts = { cards: new Map(), connections: new Map(), drawings: new Map() };
 let pendingDeletes = { cards: new Set(), connections: new Set(), drawings: new Set() };
 
@@ -66,6 +67,7 @@ const flushSync = async (workspaceId) => {
 
 export const queueUpsert = (table, item, workspaceId) => {
   if (!workspaceId) return;
+  lastWorkspaceId = workspaceId;
   pendingUpserts[table].set(item.id, { ...item, workspace_id: workspaceId });
   pendingDeletes[table].delete(item.id);
 
@@ -75,6 +77,7 @@ export const queueUpsert = (table, item, workspaceId) => {
 
 export const queueDelete = (table, id, workspaceId) => {
   if (!workspaceId) return;
+  lastWorkspaceId = workspaceId;
   pendingDeletes[table].add(id);
   pendingUpserts[table].delete(id);
 
@@ -84,6 +87,7 @@ export const queueDelete = (table, id, workspaceId) => {
 
 export const queueDeletes = (table, ids, workspaceId) => {
   if (!workspaceId) return;
+  lastWorkspaceId = workspaceId;
   ids.forEach((id) => {
     pendingDeletes[table].add(id);
     pendingUpserts[table].delete(id);
@@ -92,3 +96,20 @@ export const queueDeletes = (table, ids, workspaceId) => {
   if (syncTimeout) clearTimeout(syncTimeout);
   syncTimeout = setTimeout(() => flushSync(workspaceId), 800);
 };
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && lastWorkspaceId) {
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+        syncTimeout = null;
+      }
+      flushSync(lastWorkspaceId);
+    }
+  });
+  window.addEventListener('beforeunload', () => {
+    if (lastWorkspaceId) {
+      flushSync(lastWorkspaceId);
+    }
+  });
+}
