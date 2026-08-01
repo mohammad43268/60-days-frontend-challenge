@@ -18,10 +18,8 @@ const flushSync = async (workspaceId) => {
     cards: Array.from(pendingUpserts.cards.values()),
     connections: Array.from(pendingUpserts.connections.values()).map(c => ({
       id: c.id,
-      source_card_id: c.source,
-      target_card_id: c.target,
-      source_port: c.sourcePort,
-      target_port: c.targetPort,
+      source: c.source,
+      target: c.target,
       type: c.type,
       label: c.label,
       workspace_id: c.workspace_id,

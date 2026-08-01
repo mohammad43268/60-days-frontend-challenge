@@ -17,19 +17,23 @@ async function run() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      id: 'test-123',
+      id: 'test-conn-12345',
       source: 'c1',
       target: 'c2',
       sourcePort: 'right',
       targetPort: 'left',
       type: 'related',
-      label: '',
-      workspace_id: 'test-workspace'
+      workspace_id: '00000000-0000-0000-0000-000000000000'
     })
   });
-  const data = await res.json();
-  console.log("Status:", res.status);
-  console.log("Error Response:", JSON.stringify(data, null, 2));
+  
+  if (res.status !== 201 && res.status !== 204) {
+    const data = await res.json();
+    console.log("Status:", res.status);
+    console.log("Error Response:", JSON.stringify(data, null, 2));
+  } else {
+    console.log("Success! Status:", res.status);
+  }
 }
 
 run();
