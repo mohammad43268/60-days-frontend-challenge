@@ -17,14 +17,7 @@ const flushSync = async (workspaceId) => {
   // Snapshot and clear the queues
   const upserts = {
     cards: Array.from(pendingUpserts.cards.values()),
-    connections: Array.from(pendingUpserts.connections.values()).map(c => ({
-      id: c.id,
-      source: c.source,
-      target: c.target,
-      type: c.type,
-      label: c.label,
-      workspace_id: c.workspace_id,
-    })),
+    connections: Array.from(pendingUpserts.connections.values()),
     drawings: Array.from(pendingUpserts.drawings.values()),
   };
   const deletes = {

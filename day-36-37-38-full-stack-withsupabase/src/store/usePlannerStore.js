@@ -338,17 +338,11 @@ export const usePlannerStore = create((set, get) => {
         
         // Immediate background save bypassing debounced sync engine for reliability
         if (state.workspaceId) {
-          const dbConn = {
-            id: newConn.id,
-            source: newConn.source,
-            target: newConn.target,
-            type: newConn.type,
-            label: newConn.label,
+          supabase.from('connections').upsert({
+            ...newConn,
             workspace_id: state.workspaceId
-          };
-          
-          supabase.from('connections').upsert(dbConn).then(({ error }) => {
-            if (error) console.error("SUPABASE CONNECTION ERROR:", error);
+          }).then((res) => {
+            if (res.error) console.error("Immediate Supabase Connection Error:", res.error);
           });
         }
         
