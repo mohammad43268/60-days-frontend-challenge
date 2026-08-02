@@ -251,8 +251,8 @@ export const Canvas = () => {
       const sourceCard = activeCards.find((c) => c.id === conn.source);
       const targetCard = activeCards.find((c) => c.id === conn.target);
       if (sourceCard && targetCard) {
-        const sNode = cardRefs.current[conn.source];
-        const tNode = cardRefs.current[conn.target];
+        const sNode = document.getElementById(conn.source);
+        const tNode = document.getElementById(conn.target);
         const p1 = getPortCoords(sNode, sourceCard, conn.sourcePort);
         const p2 = getPortCoords(tNode, targetCard, conn.targetPort);
         const newD = calculateBezier(p1, p2, conn.sourcePort, conn.targetPort);

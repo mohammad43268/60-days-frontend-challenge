@@ -149,9 +149,16 @@ export const usePlannerStore = create((set, get) => {
             height: c.height || 200
           }));
 
+          const fetchedConns = connRes.data || [];
+          const safeConns = fetchedConns.map(c => ({
+            ...c,
+            sourcePort: c.sourcePort || 'right',
+            targetPort: c.targetPort || 'left'
+          }));
+
           get().setBoardData({
             cards: safeCards,
-            connections: connRes.data || [],
+            connections: safeConns,
             drawings: drawRes.data || [],
           });
           set({ past: [], future: [] });
