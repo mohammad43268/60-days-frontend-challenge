@@ -33,7 +33,14 @@ const flushSync = async (workspaceId) => {
   try {
     const promises = [];
 
-    if (upserts.cards.length > 0) promises.push(supabase.from('cards').upsert(upserts.cards));
+    if (upserts.cards.length > 0) {
+      promises.push(
+        supabase.from('cards').upsert(upserts.cards).then((res) => {
+          if (res.error) console.error("SUPABASE CARDS UPSERT ERROR (DATABASE SCHEMA MISMATCH LIKELY):", res.error, upserts.cards);
+          return res;
+        })
+      );
+    }
     if (upserts.connections.length > 0) {
       promises.push(
         supabase.from('connections').upsert(upserts.connections).then((res) => {

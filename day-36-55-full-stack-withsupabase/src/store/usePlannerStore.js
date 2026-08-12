@@ -101,7 +101,12 @@ export const usePlannerStore = create((set, get) => {
 
     user: null,
     setUser: (user) => set({ user }),
-    workspaceId: null,
+    activeWorkspaceId: null,
+    setActiveWorkspace: (id) => {
+      localStorage.setItem('zaforge_active_workspace', id);
+      set({ activeWorkspaceId: id });
+    },
+    clearStore: () => set({ cards: [], connections: [], drawings: [], past: [], future: [] }),
     isHydrated: false,
 
     setBoardData: (data) =>
@@ -115,26 +120,45 @@ export const usePlannerStore = create((set, get) => {
     loadWorkspaceData: async (userId) => {
       if (!userId) return;
       try {
-        const { data: workspaces, error: wsError } = await supabase
-          .from('workspaces')
-          .select('id')
-          .eq('owner_id', userId)
-          .limit(1);
+        const cachedId = localStorage.getItem('zaforge_active_workspace');
+        let activeId = null;
 
-        // FAILSAFE: If no workspace exists yet (brand new user), unlock the UI with an empty board
-        if (wsError || !workspaces?.length) {
-          console.warn('No workspace found for user, initializing empty board.');
-          get().setBoardData({ cards: [], connections: [], drawings: [] });
-          return;
+        if (cachedId) {
+          const { data: cachedWorkspace, error: cacheErr } = await supabase
+            .from('workspaces')
+            .select('id')
+            .eq('id', cachedId)
+            .eq('owner_id', userId)
+            .single();
+          
+          if (!cacheErr && cachedWorkspace) {
+            activeId = cachedWorkspace.id;
+          }
         }
 
-        const workspaceId = workspaces[0].id;
-        set({ workspaceId });
+        if (!activeId) {
+          const { data: workspaces, error: wsError } = await supabase
+            .from('workspaces')
+            .select('id')
+            .eq('owner_id', userId)
+            .order('created_at', { ascending: true })
+            .limit(1);
+
+          if (wsError || !workspaces?.length) {
+            console.warn('No workspace found for user, initializing empty board.');
+            get().clearStore();
+            get().setBoardData({ cards: [], connections: [], drawings: [] });
+            return;
+          }
+          activeId = workspaces[0].id;
+        }
+
+        get().setActiveWorkspace(activeId);
 
         const [cardsRes, connRes, drawRes] = await Promise.all([
-          supabase.from('cards').select('*').eq('workspace_id', workspaceId),
-          supabase.from('connections').select('*').eq('workspace_id', workspaceId),
-          supabase.from('drawings').select('*').eq('workspace_id', workspaceId),
+          supabase.from('cards').select('*').eq('workspace_id', activeId),
+          supabase.from('connections').select('*').eq('workspace_id', activeId),
+          supabase.from('drawings').select('*').eq('workspace_id', activeId),
         ]);
 
         if (connRes.error) {
@@ -237,7 +261,7 @@ export const usePlannerStore = create((set, get) => {
           collapsed: false,
           color: 'default',
         };
-        queueUpsert('cards', newCard, state.workspaceId);
+        queueUpsert('cards', newCard, state.activeWorkspaceId);
         return { cards: [...state.cards, newCard] };
       });
     },
@@ -246,7 +270,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, x, y } : c));
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -258,7 +282,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, ...updates } : c));
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -268,7 +292,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, width, height } : c));
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -278,7 +302,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, content } : c));
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -288,7 +312,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, color } : c));
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -300,7 +324,7 @@ export const usePlannerStore = create((set, get) => {
           c.id === id ? { ...c, metadata: { ...c.metadata, ...metaUpdates } } : c
         );
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -312,7 +336,7 @@ export const usePlannerStore = create((set, get) => {
           c.id === id ? { ...c, collapsed: !c.collapsed } : c
         );
         const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.workspaceId);
+        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
         return { cards: newCards };
       });
     },
@@ -323,12 +347,12 @@ export const usePlannerStore = create((set, get) => {
         const idsToDelete = state.selectedCardIds;
         if (idsToDelete.length === 0) return state;
 
-        queueDeletes('cards', idsToDelete, state.workspaceId);
+        queueDeletes('cards', idsToDelete, state.activeWorkspaceId);
 
         const connsToDelete = state.connections
           .filter((conn) => idsToDelete.includes(conn.source) || idsToDelete.includes(conn.target))
           .map((c) => c.id);
-        if (connsToDelete.length > 0) queueDeletes('connections', connsToDelete, state.workspaceId);
+        if (connsToDelete.length > 0) queueDeletes('connections', connsToDelete, state.activeWorkspaceId);
 
         return {
           cards: state.cards.filter((c) => !idsToDelete.includes(c.id)),
@@ -354,10 +378,10 @@ export const usePlannerStore = create((set, get) => {
         };
         
         // Immediate background save bypassing debounced sync engine for reliability
-        if (state.workspaceId) {
+        if (state.activeWorkspaceId) {
           supabase.from('connections').upsert({
             ...newConn,
-            workspace_id: state.workspaceId
+            workspace_id: state.activeWorkspaceId
           }).then((res) => {
             if (res.error) console.error("Immediate Supabase Connection Error:", res.error);
           });
@@ -370,7 +394,7 @@ export const usePlannerStore = create((set, get) => {
     deleteConnection: (id) => {
       saveHistory();
       set((state) => {
-        if (state.workspaceId) {
+        if (state.activeWorkspaceId) {
           supabase.from('connections').delete().eq('id', id).then(({ error }) => {
             if (error) console.error("SUPABASE DELETE CONNECTION ERROR:", error);
           });
@@ -386,7 +410,7 @@ export const usePlannerStore = create((set, get) => {
           c.id === id ? { ...c, ...updates } : c
         );
         const conn = newConnections.find((c) => c.id === id);
-        if (conn) queueUpsert('connections', conn, state.workspaceId);
+        if (conn) queueUpsert('connections', conn, state.activeWorkspaceId);
         return { connections: newConnections };
       });
     },
@@ -394,7 +418,7 @@ export const usePlannerStore = create((set, get) => {
     deleteConnection: (id) => {
       saveHistory();
       set((state) => {
-        queueDelete('connections', id, state.workspaceId);
+        queueDelete('connections', id, state.activeWorkspaceId);
         return { connections: state.connections.filter((c) => c.id !== id) };
       });
     },
@@ -422,7 +446,7 @@ export const usePlannerStore = create((set, get) => {
     addDrawing: (drawing) => {
       saveHistory();
       set((state) => {
-        queueUpsert('drawings', drawing, state.workspaceId);
+        queueUpsert('drawings', drawing, state.activeWorkspaceId);
         return { drawings: [...state.drawings, drawing] };
       });
     },
@@ -431,7 +455,7 @@ export const usePlannerStore = create((set, get) => {
       set((state) => {
         const newDrawings = state.drawings.map((d) => (d.id === id ? { ...d, ...updates } : d));
         const drawing = newDrawings.find((d) => d.id === id);
-        if (drawing) queueUpsert('drawings', drawing, state.workspaceId);
+        if (drawing) queueUpsert('drawings', drawing, state.activeWorkspaceId);
         return { drawings: newDrawings };
       });
     },
@@ -439,7 +463,7 @@ export const usePlannerStore = create((set, get) => {
     deleteDrawings: (ids) => {
       saveHistory();
       set((state) => {
-        queueDeletes('drawings', ids, state.workspaceId);
+        queueDeletes('drawings', ids, state.activeWorkspaceId);
         return { drawings: state.drawings.filter((d) => !ids.includes(d.id)) };
       });
     },
@@ -1077,6 +1101,7 @@ export const usePlannerStore = create((set, get) => {
           Array.isArray(data.workspace.cards) &&
           Array.isArray(data.workspace.connections)
         ) {
+          get().clearStore();
           saveHistory();
           const importedCards = data.workspace.cards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           set({
@@ -1086,7 +1111,7 @@ export const usePlannerStore = create((set, get) => {
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
-          const wsId = get().workspaceId;
+          const wsId = get().activeWorkspaceId;
           if (wsId) {
             importedCards.forEach(c => queueUpsert('cards', c, wsId));
             data.workspace.connections.forEach(c => queueUpsert('connections', c, wsId));
@@ -1094,6 +1119,7 @@ export const usePlannerStore = create((set, get) => {
           return { success: true };
         } else if (data && data.app === 'SpatialOS' && data.workspace) {
           // backwards compatibility
+          get().clearStore();
           saveHistory();
           const oldCards = data.workspace.nodes || data.workspace.cards || [];
           const importedCards = oldCards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
@@ -1105,7 +1131,7 @@ export const usePlannerStore = create((set, get) => {
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
-          const wsId = get().workspaceId;
+          const wsId = get().activeWorkspaceId;
           if (wsId) {
             importedCards.forEach(c => queueUpsert('cards', c, wsId));
             importedConnections.forEach(c => queueUpsert('connections', c, wsId));
