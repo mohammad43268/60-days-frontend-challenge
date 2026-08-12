@@ -243,7 +243,7 @@ export const Card = memo(({ card }) => {
     const node = document.getElementById(card.id);
     if (!node) return;
 
-    const startWidth = parseFloat(node.style.width) || node.offsetWidth || (card.width || 250);
+    const startWidth = parseFloat(node.style.width) || node.offsetWidth || (card.width || 280);
     const startHeight = parseFloat(node.style.height) || node.offsetHeight || (card.height || 200);
 
     const onPointerMove = (moveEvent) => {
@@ -1312,9 +1312,9 @@ export const Card = memo(({ card }) => {
     <div
       id={card.id}
       ref={cardRef}
-      className={`card-node absolute min-w-[200px] ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
+      className={`card-node absolute ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
       style={{
-        width: card.width ? `${card.width}px` : '250px',
+        width: card.width ? `${card.width}px` : '280px',
         height: card.height ? `${card.height}px` : '200px',
         left: 0,
         top: 0,

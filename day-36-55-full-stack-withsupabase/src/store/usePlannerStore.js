@@ -145,8 +145,8 @@ export const usePlannerStore = create((set, get) => {
           const fetchedCards = cardsRes.data || [];
           const safeCards = fetchedCards.map(c => ({
             ...c,
-            width: c.metadata?.width || c.width || 280,
-            height: c.metadata?.height || c.height || 200
+            width: c.width || 280,
+            height: c.height || 200
           }));
 
           const fetchedConns = connRes.data || [];
@@ -233,7 +233,7 @@ export const usePlannerStore = create((set, get) => {
           width: 280,
           height: 200, // Force this so the database never holds null!
           content: type === 'task' ? [] : type === 'image' ? '' : 'New Node',
-          metadata: { width: 280, height: 200 },
+          metadata: {},
           collapsed: false,
           color: 'default',
         };
@@ -256,7 +256,7 @@ export const usePlannerStore = create((set, get) => {
     updateCardSize: (id, width, height) => {
       saveHistory();
       set((state) => {
-        const newCards = state.cards.map((c) => (c.id === id ? { ...c, width, height, metadata: { ...c.metadata, width, height } } : c));
+        const newCards = state.cards.map((c) => (c.id === id ? { ...c, width, height } : c));
         const card = newCards.find((c) => c.id === id);
         if (card) queueUpsert('cards', card, state.workspaceId);
         return { cards: newCards };
