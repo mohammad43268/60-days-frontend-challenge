@@ -1078,24 +1078,38 @@ export const usePlannerStore = create((set, get) => {
           Array.isArray(data.workspace.connections)
         ) {
           saveHistory();
+          const importedCards = data.workspace.cards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           set({
-            cards: data.workspace.cards,
+            cards: importedCards,
             connections: data.workspace.connections,
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
+          const wsId = get().workspaceId;
+          if (wsId) {
+            importedCards.forEach(c => queueUpsert('cards', c, wsId));
+            data.workspace.connections.forEach(c => queueUpsert('connections', c, wsId));
+          }
           return { success: true };
         } else if (data && data.app === 'SpatialOS' && data.workspace) {
           // backwards compatibility
           saveHistory();
+          const oldCards = data.workspace.nodes || data.workspace.cards || [];
+          const importedCards = oldCards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
+          const importedConnections = data.workspace.connections || [];
           set({
-            cards: data.workspace.nodes || data.workspace.cards || [],
-            connections: data.workspace.connections || [],
+            cards: importedCards,
+            connections: importedConnections,
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
+          const wsId = get().workspaceId;
+          if (wsId) {
+            importedCards.forEach(c => queueUpsert('cards', c, wsId));
+            importedConnections.forEach(c => queueUpsert('connections', c, wsId));
+          }
           return { success: true };
         } else {
           console.error('Invalid Zaforge workspace file format.');
