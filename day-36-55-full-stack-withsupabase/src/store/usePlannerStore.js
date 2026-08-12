@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { queueUpsert, queueDelete, queueDeletes } from '../lib/syncEngine';
 
 /**
  * @file usePlannerStore.js
@@ -106,8 +105,53 @@ export const usePlannerStore = create((set, get) => {
       localStorage.setItem('zaforge_active_workspace', id);
       set({ activeWorkspaceId: id });
     },
-    clearStore: () => set({ cards: [], connections: [], drawings: [], past: [], future: [] }),
+    clearStore: () => set({ cards: [], connections: [], drawings: [], past: [], future: [], hasUnsavedChanges: false, pendingDeletions: { cards: [], connections: [], drawings: [] } }),
     isHydrated: false,
+    hasUnsavedChanges: false,
+    pendingDeletions: { cards: [], connections: [], drawings: [] },
+
+    saveWorkspaceToDatabase: async () => {
+      const state = get();
+      if (!state.activeWorkspaceId) return { success: false, error: 'No active workspace' };
+      
+      const wsId = state.activeWorkspaceId;
+      const sanitizedCards = state.cards.map(c => ({ ...c, workspace_id: wsId }));
+      const sanitizedConns = state.connections.map(c => ({ ...c, workspace_id: wsId }));
+      const sanitizedDraws = state.drawings.map(d => ({ ...d, workspace_id: wsId }));
+
+      try {
+        // Handle pending deletions first
+        if (state.pendingDeletions.cards.length > 0) {
+          await supabase.from('cards').delete().in('id', state.pendingDeletions.cards);
+        }
+        if (state.pendingDeletions.connections.length > 0) {
+          await supabase.from('connections').delete().in('id', state.pendingDeletions.connections);
+        }
+        if (state.pendingDeletions.drawings.length > 0) {
+          await supabase.from('drawings').delete().in('id', state.pendingDeletions.drawings);
+        }
+
+        // Bulk upsert current state
+        if (sanitizedCards.length > 0) {
+          const { error } = await supabase.from('cards').upsert(sanitizedCards);
+          if (error) throw new Error(`Cards Upsert Error: ${error.message}`);
+        }
+        if (sanitizedConns.length > 0) {
+          const { error } = await supabase.from('connections').upsert(sanitizedConns);
+          if (error) throw new Error(`Connections Upsert Error: ${error.message}`);
+        }
+        if (sanitizedDraws.length > 0) {
+          const { error } = await supabase.from('drawings').upsert(sanitizedDraws);
+          if (error) throw new Error(`Drawings Upsert Error: ${error.message}`);
+        }
+
+        set({ hasUnsavedChanges: false, pendingDeletions: { cards: [], connections: [], drawings: [] } });
+        return { success: true };
+      } catch (err) {
+        console.error('SUPABASE MANUAL SAVE ERROR:', err);
+        return { success: false, error: err.message };
+      }
+    },
 
     setBoardData: (data) =>
       set({
@@ -261,17 +305,14 @@ export const usePlannerStore = create((set, get) => {
           collapsed: false,
           color: 'default',
         };
-        queueUpsert('cards', newCard, state.activeWorkspaceId);
-        return { cards: [...state.cards, newCard] };
+        return { cards: [...state.cards, newCard], hasUnsavedChanges: true };
       });
     },
 
     updateCardPosition: (id, x, y) => {
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, x, y } : c));
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -281,9 +322,7 @@ export const usePlannerStore = create((set, get) => {
       saveHistory();
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, ...updates } : c));
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -291,9 +330,7 @@ export const usePlannerStore = create((set, get) => {
       saveHistory();
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, width, height } : c));
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -301,9 +338,7 @@ export const usePlannerStore = create((set, get) => {
       saveHistory();
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, content } : c));
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -311,9 +346,7 @@ export const usePlannerStore = create((set, get) => {
       saveHistory();
       set((state) => {
         const newCards = state.cards.map((c) => (c.id === id ? { ...c, color } : c));
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -323,9 +356,7 @@ export const usePlannerStore = create((set, get) => {
         const newCards = state.cards.map((c) =>
           c.id === id ? { ...c, metadata: { ...c.metadata, ...metaUpdates } } : c
         );
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -335,9 +366,7 @@ export const usePlannerStore = create((set, get) => {
         const newCards = state.cards.map((c) =>
           c.id === id ? { ...c, collapsed: !c.collapsed } : c
         );
-        const card = newCards.find((c) => c.id === id);
-        if (card) queueUpsert('cards', card, state.activeWorkspaceId);
-        return { cards: newCards };
+        return { cards: newCards, hasUnsavedChanges: true };
       });
     },
 
@@ -347,12 +376,9 @@ export const usePlannerStore = create((set, get) => {
         const idsToDelete = state.selectedCardIds;
         if (idsToDelete.length === 0) return state;
 
-        queueDeletes('cards', idsToDelete, state.activeWorkspaceId);
-
         const connsToDelete = state.connections
           .filter((conn) => idsToDelete.includes(conn.source) || idsToDelete.includes(conn.target))
           .map((c) => c.id);
-        if (connsToDelete.length > 0) queueDeletes('connections', connsToDelete, state.activeWorkspaceId);
 
         return {
           cards: state.cards.filter((c) => !idsToDelete.includes(c.id)),
@@ -360,6 +386,12 @@ export const usePlannerStore = create((set, get) => {
             (conn) => !idsToDelete.includes(conn.source) && !idsToDelete.includes(conn.target)
           ),
           selectedCardIds: [],
+          hasUnsavedChanges: true,
+          pendingDeletions: {
+            ...state.pendingDeletions,
+            cards: [...state.pendingDeletions.cards, ...idsToDelete],
+            connections: [...state.pendingDeletions.connections, ...connsToDelete]
+          }
         };
       });
     },
@@ -377,29 +409,21 @@ export const usePlannerStore = create((set, get) => {
           label,
         };
         
-        // Immediate background save bypassing debounced sync engine for reliability
-        if (state.activeWorkspaceId) {
-          supabase.from('connections').upsert({
-            ...newConn,
-            workspace_id: state.activeWorkspaceId
-          }).then((res) => {
-            if (res.error) console.error("Immediate Supabase Connection Error:", res.error);
-          });
-        }
-        
-        return { connections: [...state.connections, newConn] };
+        return { connections: [...state.connections, newConn], hasUnsavedChanges: true };
       });
     },
 
     deleteConnection: (id) => {
       saveHistory();
       set((state) => {
-        if (state.activeWorkspaceId) {
-          supabase.from('connections').delete().eq('id', id).then(({ error }) => {
-            if (error) console.error("SUPABASE DELETE CONNECTION ERROR:", error);
-          });
-        }
-        return { connections: state.connections.filter((c) => c.id !== id) };
+        return {
+          connections: state.connections.filter((c) => c.id !== id),
+          hasUnsavedChanges: true,
+          pendingDeletions: {
+            ...state.pendingDeletions,
+            connections: [...state.pendingDeletions.connections, id]
+          }
+        };
       });
     },
 
@@ -409,19 +433,11 @@ export const usePlannerStore = create((set, get) => {
         const newConnections = state.connections.map((c) =>
           c.id === id ? { ...c, ...updates } : c
         );
-        const conn = newConnections.find((c) => c.id === id);
-        if (conn) queueUpsert('connections', conn, state.activeWorkspaceId);
-        return { connections: newConnections };
+        return { connections: newConnections, hasUnsavedChanges: true };
       });
     },
 
-    deleteConnection: (id) => {
-      saveHistory();
-      set((state) => {
-        queueDelete('connections', id, state.activeWorkspaceId);
-        return { connections: state.connections.filter((c) => c.id !== id) };
-      });
-    },
+    // Intentionally empty, handled by the earlier deleteConnection
 
     setActiveTool: (tool) => set({ activeTool: tool, previousTool: null }),
 
@@ -446,25 +462,28 @@ export const usePlannerStore = create((set, get) => {
     addDrawing: (drawing) => {
       saveHistory();
       set((state) => {
-        queueUpsert('drawings', drawing, state.activeWorkspaceId);
-        return { drawings: [...state.drawings, drawing] };
+        return { drawings: [...state.drawings, drawing], hasUnsavedChanges: true };
       });
     },
 
     updateDrawing: (id, updates) => {
       set((state) => {
         const newDrawings = state.drawings.map((d) => (d.id === id ? { ...d, ...updates } : d));
-        const drawing = newDrawings.find((d) => d.id === id);
-        if (drawing) queueUpsert('drawings', drawing, state.activeWorkspaceId);
-        return { drawings: newDrawings };
+        return { drawings: newDrawings, hasUnsavedChanges: true };
       });
     },
 
     deleteDrawings: (ids) => {
       saveHistory();
       set((state) => {
-        queueDeletes('drawings', ids, state.activeWorkspaceId);
-        return { drawings: state.drawings.filter((d) => !ids.includes(d.id)) };
+        return {
+          drawings: state.drawings.filter((d) => !ids.includes(d.id)),
+          hasUnsavedChanges: true,
+          pendingDeletions: {
+            ...state.pendingDeletions,
+            drawings: [...state.pendingDeletions.drawings, ...ids]
+          }
+        };
       });
     },
 
@@ -1105,41 +1124,14 @@ export const usePlannerStore = create((set, get) => {
           saveHistory();
           const importedCards = data.workspace.cards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           
-          const wsId = get().activeWorkspaceId;
-          
-          let sanitizedCards = importedCards;
-          let sanitizedConns = data.workspace.connections;
-          let sanitizedDraws = Array.isArray(data.workspace.drawings) ? data.workspace.drawings : [];
-
-          if (wsId) {
-            sanitizedCards = importedCards.map(c => ({ ...c, workspace_id: wsId }));
-            sanitizedConns = data.workspace.connections.map(c => ({ ...c, workspace_id: wsId }));
-            sanitizedDraws = sanitizedDraws.map(d => ({ ...d, workspace_id: wsId }));
-            
-            if (sanitizedCards.length > 0) {
-              const { data: cData, error: cErr } = await supabase.from('cards').upsert(sanitizedCards);
-              if (cErr) console.error("SUPABASE BULK IMPORT ERROR (CARDS):", cErr);
-              else console.log("BULK IMPORT SUCCESS (CARDS)!", cData);
-            }
-            if (sanitizedConns.length > 0) {
-              const { data: nData, error: nErr } = await supabase.from('connections').upsert(sanitizedConns);
-              if (nErr) console.error("SUPABASE BULK IMPORT ERROR (CONNECTIONS):", nErr);
-              else console.log("BULK IMPORT SUCCESS (CONNECTIONS)!", nData);
-            }
-            if (sanitizedDraws.length > 0) {
-              const { data: dData, error: dErr } = await supabase.from('drawings').upsert(sanitizedDraws);
-              if (dErr) console.error("SUPABASE BULK IMPORT ERROR (DRAWINGS):", dErr);
-              else console.log("BULK IMPORT SUCCESS (DRAWINGS)!", dData);
-            }
-          }
-
           set({
-            cards: sanitizedCards,
-            connections: sanitizedConns,
-            drawings: sanitizedDraws,
+            cards: importedCards,
+            connections: data.workspace.connections,
+            drawings: Array.isArray(data.workspace.drawings) ? data.workspace.drawings : [],
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
+            hasUnsavedChanges: true,
           });
           
           return { success: true };
@@ -1151,33 +1143,14 @@ export const usePlannerStore = create((set, get) => {
           const importedCards = oldCards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           const importedConnections = data.workspace.connections || [];
           
-          const wsId = get().activeWorkspaceId;
-          
-          let sanitizedCards = importedCards;
-          let sanitizedConns = importedConnections;
-          
-          if (wsId) {
-            sanitizedCards = importedCards.map(c => ({ ...c, workspace_id: wsId }));
-            sanitizedConns = importedConnections.map(c => ({ ...c, workspace_id: wsId }));
-            
-            if (sanitizedCards.length > 0) {
-              const { data: cData, error: cErr } = await supabase.from('cards').upsert(sanitizedCards);
-              if (cErr) console.error("SUPABASE BULK IMPORT ERROR (CARDS):", cErr);
-              else console.log("BULK IMPORT SUCCESS (CARDS)!", cData);
-            }
-            if (sanitizedConns.length > 0) {
-              const { data: nData, error: nErr } = await supabase.from('connections').upsert(sanitizedConns);
-              if (nErr) console.error("SUPABASE BULK IMPORT ERROR (CONNECTIONS):", nErr);
-              else console.log("BULK IMPORT SUCCESS (CONNECTIONS)!", nData);
-            }
-          }
-
           set({
-            cards: sanitizedCards,
-            connections: sanitizedConns,
+            cards: importedCards,
+            connections: importedConnections,
+            drawings: [],
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
+            hasUnsavedChanges: true,
           });
           
           return { success: true };

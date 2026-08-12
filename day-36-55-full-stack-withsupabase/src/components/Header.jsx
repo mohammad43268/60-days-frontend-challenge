@@ -13,6 +13,7 @@ import {
   Home,
   Sun,
   Moon,
+  Save,
 } from 'lucide-react';
 import { TemplateModal } from './TemplateModal';
 import { supabase } from '../lib/supabase';
@@ -29,6 +30,8 @@ export const Header = () => {
     setRoute,
     theme,
     toggleTheme,
+    hasUnsavedChanges,
+    saveWorkspaceToDatabase,
   } = usePlannerStore();
   const [isTemplateMenuOpen, setIsTemplateMenuOpen] = useState(false);
   const templateMenuRef = useRef(null);
@@ -157,6 +160,34 @@ export const Header = () => {
         >
           <LogOut className="w-4 h-4" />
         </button>
+
+        <div className="h-6 w-px bg-white/10 hidden sm:block mx-1" />
+
+        {/* Save Workspace */}
+        <button
+          onClick={async () => {
+            if (!hasUnsavedChanges) return;
+            const res = await saveWorkspaceToDatabase();
+            if (res.success) {
+              // Optional: Add toast success here
+              console.log("Workspace Saved!");
+            } else {
+              // Optional: Add toast error here
+              console.error("Workspace Save Failed!", res.error);
+            }
+          }}
+          className={`flex items-center px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
+            hasUnsavedChanges
+              ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.5)] animate-pulse'
+              : 'bg-white/5 text-gray-500 cursor-not-allowed'
+          }`}
+          title="Save Workspace"
+        >
+          <Save className="w-4 h-4 md:mr-2" />
+          <span className="hidden md:inline tracking-wide">Save</span>
+        </button>
+
+        <div className="h-6 w-px bg-white/10 hidden sm:block mx-1" />
 
         {/* Templates */}
         <div>

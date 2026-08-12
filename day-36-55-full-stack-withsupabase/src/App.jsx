@@ -136,6 +136,18 @@ function App() {
     };
   }, [setTemporaryTool, revertTool]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (usePlannerStore.getState().hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
   if (isAuthLoading) {
     return (
       <div className="w-screen h-screen bg-[#050505] flex items-center justify-center text-[#F97316] font-mono tracking-widest text-sm">
