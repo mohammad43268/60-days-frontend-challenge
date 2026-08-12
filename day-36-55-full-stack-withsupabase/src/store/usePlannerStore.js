@@ -1091,7 +1091,7 @@ export const usePlannerStore = create((set, get) => {
       URL.revokeObjectURL(url);
     },
 
-    importWorkspace: (jsonString) => {
+    importWorkspace: async (jsonString) => {
       try {
         const data = JSON.parse(jsonString);
         if (
@@ -1104,6 +1104,18 @@ export const usePlannerStore = create((set, get) => {
           get().clearStore();
           saveHistory();
           const importedCards = data.workspace.cards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
+          
+          const wsId = get().activeWorkspaceId;
+          if (wsId) {
+            const cardsToUpsert = importedCards.map(c => ({ ...c, workspace_id: wsId }));
+            const connsToUpsert = data.workspace.connections.map(c => ({ ...c, workspace_id: wsId }));
+            
+            await Promise.all([
+              cardsToUpsert.length > 0 ? supabase.from('cards').upsert(cardsToUpsert) : Promise.resolve(),
+              connsToUpsert.length > 0 ? supabase.from('connections').upsert(connsToUpsert) : Promise.resolve()
+            ]);
+          }
+
           set({
             cards: importedCards,
             connections: data.workspace.connections,
@@ -1111,11 +1123,7 @@ export const usePlannerStore = create((set, get) => {
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
-          const wsId = get().activeWorkspaceId;
-          if (wsId) {
-            importedCards.forEach(c => queueUpsert('cards', c, wsId));
-            data.workspace.connections.forEach(c => queueUpsert('connections', c, wsId));
-          }
+          
           return { success: true };
         } else if (data && data.app === 'SpatialOS' && data.workspace) {
           // backwards compatibility
@@ -1124,6 +1132,18 @@ export const usePlannerStore = create((set, get) => {
           const oldCards = data.workspace.nodes || data.workspace.cards || [];
           const importedCards = oldCards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           const importedConnections = data.workspace.connections || [];
+          
+          const wsId = get().activeWorkspaceId;
+          if (wsId) {
+            const cardsToUpsert = importedCards.map(c => ({ ...c, workspace_id: wsId }));
+            const connsToUpsert = importedConnections.map(c => ({ ...c, workspace_id: wsId }));
+            
+            await Promise.all([
+              cardsToUpsert.length > 0 ? supabase.from('cards').upsert(cardsToUpsert) : Promise.resolve(),
+              connsToUpsert.length > 0 ? supabase.from('connections').upsert(connsToUpsert) : Promise.resolve()
+            ]);
+          }
+
           set({
             cards: importedCards,
             connections: importedConnections,
@@ -1131,11 +1151,7 @@ export const usePlannerStore = create((set, get) => {
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
           });
-          const wsId = get().activeWorkspaceId;
-          if (wsId) {
-            importedCards.forEach(c => queueUpsert('cards', c, wsId));
-            importedConnections.forEach(c => queueUpsert('connections', c, wsId));
-          }
+          
           return { success: true };
         } else {
           console.error('Invalid Zaforge workspace file format.');
