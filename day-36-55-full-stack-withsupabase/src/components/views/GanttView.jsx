@@ -38,7 +38,7 @@ export const GanttView = () => {
   return (
     <div className="w-full h-full bg-[#161618] text-gray-200 p-8 pt-24 overflow-auto flex gap-6">
       {/* Main Gantt Area */}
-      <div className="flex-1 flex flex-col max-w-5xl">
+      <div className="flex-1 flex flex-col w-full">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
