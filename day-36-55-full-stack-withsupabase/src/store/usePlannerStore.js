@@ -1106,19 +1106,37 @@ export const usePlannerStore = create((set, get) => {
           const importedCards = data.workspace.cards.map(c => ({ ...c, width: c.width || 280, height: c.height || 200 }));
           
           const wsId = get().activeWorkspaceId;
+          
+          let sanitizedCards = importedCards;
+          let sanitizedConns = data.workspace.connections;
+          let sanitizedDraws = Array.isArray(data.workspace.drawings) ? data.workspace.drawings : [];
+
           if (wsId) {
-            const cardsToUpsert = importedCards.map(c => ({ ...c, workspace_id: wsId }));
-            const connsToUpsert = data.workspace.connections.map(c => ({ ...c, workspace_id: wsId }));
+            sanitizedCards = importedCards.map(c => ({ ...c, workspace_id: wsId }));
+            sanitizedConns = data.workspace.connections.map(c => ({ ...c, workspace_id: wsId }));
+            sanitizedDraws = sanitizedDraws.map(d => ({ ...d, workspace_id: wsId }));
             
-            await Promise.all([
-              cardsToUpsert.length > 0 ? supabase.from('cards').upsert(cardsToUpsert) : Promise.resolve(),
-              connsToUpsert.length > 0 ? supabase.from('connections').upsert(connsToUpsert) : Promise.resolve()
-            ]);
+            if (sanitizedCards.length > 0) {
+              const { data: cData, error: cErr } = await supabase.from('cards').upsert(sanitizedCards);
+              if (cErr) console.error("SUPABASE BULK IMPORT ERROR (CARDS):", cErr);
+              else console.log("BULK IMPORT SUCCESS (CARDS)!", cData);
+            }
+            if (sanitizedConns.length > 0) {
+              const { data: nData, error: nErr } = await supabase.from('connections').upsert(sanitizedConns);
+              if (nErr) console.error("SUPABASE BULK IMPORT ERROR (CONNECTIONS):", nErr);
+              else console.log("BULK IMPORT SUCCESS (CONNECTIONS)!", nData);
+            }
+            if (sanitizedDraws.length > 0) {
+              const { data: dData, error: dErr } = await supabase.from('drawings').upsert(sanitizedDraws);
+              if (dErr) console.error("SUPABASE BULK IMPORT ERROR (DRAWINGS):", dErr);
+              else console.log("BULK IMPORT SUCCESS (DRAWINGS)!", dData);
+            }
           }
 
           set({
-            cards: importedCards,
-            connections: data.workspace.connections,
+            cards: sanitizedCards,
+            connections: sanitizedConns,
+            drawings: sanitizedDraws,
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
@@ -1134,19 +1152,29 @@ export const usePlannerStore = create((set, get) => {
           const importedConnections = data.workspace.connections || [];
           
           const wsId = get().activeWorkspaceId;
+          
+          let sanitizedCards = importedCards;
+          let sanitizedConns = importedConnections;
+          
           if (wsId) {
-            const cardsToUpsert = importedCards.map(c => ({ ...c, workspace_id: wsId }));
-            const connsToUpsert = importedConnections.map(c => ({ ...c, workspace_id: wsId }));
+            sanitizedCards = importedCards.map(c => ({ ...c, workspace_id: wsId }));
+            sanitizedConns = importedConnections.map(c => ({ ...c, workspace_id: wsId }));
             
-            await Promise.all([
-              cardsToUpsert.length > 0 ? supabase.from('cards').upsert(cardsToUpsert) : Promise.resolve(),
-              connsToUpsert.length > 0 ? supabase.from('connections').upsert(connsToUpsert) : Promise.resolve()
-            ]);
+            if (sanitizedCards.length > 0) {
+              const { data: cData, error: cErr } = await supabase.from('cards').upsert(sanitizedCards);
+              if (cErr) console.error("SUPABASE BULK IMPORT ERROR (CARDS):", cErr);
+              else console.log("BULK IMPORT SUCCESS (CARDS)!", cData);
+            }
+            if (sanitizedConns.length > 0) {
+              const { data: nData, error: nErr } = await supabase.from('connections').upsert(sanitizedConns);
+              if (nErr) console.error("SUPABASE BULK IMPORT ERROR (CONNECTIONS):", nErr);
+              else console.log("BULK IMPORT SUCCESS (CONNECTIONS)!", nData);
+            }
           }
 
           set({
-            cards: importedCards,
-            connections: importedConnections,
+            cards: sanitizedCards,
+            connections: sanitizedConns,
             viewport: data.workspace.viewport || { x: 0, y: 0, scale: 1 },
             viewMode: data.workspace.viewMode || 'canvas',
             selectedCardIds: [],
