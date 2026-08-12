@@ -532,38 +532,33 @@ export const Canvas = () => {
     switch (type) {
       case 'blocks':
         return {
-          color: '#EF4444',
+          color: '#991B1B',
           pulseWidth: '4',
-          dashArray: '6 14',
-          glow: 'drop-shadow(0 0 8px rgba(239,68,68,0.8))',
+          glow: 'drop-shadow(0 0 12px rgba(153,27,27,0.8))',
         };
       case 'depends_on':
         return {
-          color: '#EAB308',
+          color: '#B45309',
           pulseWidth: '3',
-          dashArray: '10 10',
-          glow: 'drop-shadow(0 0 8px rgba(234,179,8,0.8))',
+          glow: 'drop-shadow(0 0 12px rgba(180,83,9,0.8))',
         };
       case 'references':
         return {
-          color: '#06B6D4',
-          pulseWidth: '2',
-          dashArray: '4 8',
-          glow: 'drop-shadow(0 0 8px rgba(6,182,212,0.8))',
+          color: '#0369A1',
+          pulseWidth: '3',
+          glow: 'drop-shadow(0 0 12px rgba(3,105,161,0.8))',
         };
       case 'owned_by':
         return {
-          color: '#10B981',
+          color: '#047857',
           pulseWidth: '5',
-          dashArray: '15 15',
-          glow: 'drop-shadow(0 0 8px rgba(16,185,129,0.8))',
+          glow: 'drop-shadow(0 0 12px rgba(4,120,87,0.8))',
         };
       default:
         return {
-          color: '#F97316',
-          pulseWidth: '2',
-          dashArray: '8 8',
-          glow: 'drop-shadow(0 0 8px rgba(249,115,22,0.8))',
+          color: '#C2410C',
+          pulseWidth: '3',
+          glow: 'drop-shadow(0 0 12px rgba(194,65,12,0.8))',
         };
     }
   };
@@ -844,8 +839,8 @@ export const Canvas = () => {
                   fill="none"
                   stroke={style.color}
                   strokeWidth={style.pulseWidth}
-                  opacity={isActive ? '0.6' : '0.2'}
-                  className="transition-opacity group-hover:opacity-40"
+                  opacity={isActive ? '0.4' : '0.1'}
+                  className="transition-opacity group-hover:opacity-30"
                 />
 
                 {/* 3. Animated Energy Pulse overlay */}
