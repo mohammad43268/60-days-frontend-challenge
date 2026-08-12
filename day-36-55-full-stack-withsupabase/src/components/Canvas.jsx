@@ -626,6 +626,12 @@ export const Canvas = () => {
         </div>
       )}
 
+      {/* Fog of War Vignette */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-50"
+        style={{ background: 'radial-gradient(circle, transparent 60%, rgba(10,10,11,1) 100%)' }}
+      ></div>
+
       <div
         ref={gridRef}
         className="absolute inset-0 pointer-events-none"
@@ -852,9 +858,9 @@ export const Canvas = () => {
                   fill="none"
                   stroke={style.color}
                   strokeWidth={style.pulseWidth}
-                  strokeDasharray={style.dashArray}
-                  style={{ filter: isActive ? style.glow : 'none' }}
-                  className={`animate-dash-flow transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_5px_currentColor]'}`}
+                  strokeDasharray="8 8"
+                  style={{ filter: isActive ? style.glow : 'none', animation: 'dash-flow 1s linear infinite' }}
+                  className={`transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_5px_currentColor]'}`}
                   strokeLinecap="round"
                 />
               </g>

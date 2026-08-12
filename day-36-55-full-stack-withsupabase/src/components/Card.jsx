@@ -1345,7 +1345,7 @@ export const Card = memo(({ card }) => {
       onPointerDown={handlePointerDown}
     >
       <div
-        className={`group relative w-full h-full flex flex-col transition-all duration-300 ease-out hover:scale-[1.02] rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] border border-white/5 hover:border-white/20 backdrop-blur-xl ${innerBgClass} ${isSelected ? 'ring-2 ring-orange-500 shadow-orange-500/20' : ''}`}
+        className={`group relative w-full h-full flex flex-col transition-all duration-200 ease-out hover:scale-[1.02] rounded-xl backdrop-blur-xl ${innerBgClass} ${isSelected ? 'ring-1 ring-[#F97316] shadow-[0_0_20px_rgba(249,115,22,0.3)] border-transparent z-40' : 'shadow-[0_15px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] border border-white/5 hover:border-white/20'}`}
         style={customBgStyle}
       >
         {renderFormattingToolbar()}
