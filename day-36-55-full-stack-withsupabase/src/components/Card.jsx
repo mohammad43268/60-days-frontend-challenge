@@ -57,6 +57,7 @@ export const Card = memo(({ card }) => {
     clearSelection,
     activeTool,
     updateCardSize,
+    updateCard,
     connections,
     cards,
     toggleCardCollapse,
@@ -262,9 +263,9 @@ export const Card = memo(({ card }) => {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
 
-      const newWidth = parseFloat(node.style.width);
-      const newHeight = parseFloat(node.style.height);
-      updateCardSize(card.id, newWidth, newHeight);
+      const finalWidth = Math.round(parseFloat(node.style.width));
+      const finalHeight = Math.round(parseFloat(node.style.height));
+      updateCard(card.id, { width: finalWidth, height: finalHeight });
     };
 
     window.addEventListener('pointermove', onPointerMove);

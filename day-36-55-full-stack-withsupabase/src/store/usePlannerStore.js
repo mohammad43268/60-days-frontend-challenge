@@ -253,6 +253,16 @@ export const usePlannerStore = create((set, get) => {
 
     commitCardPosition: () => saveHistory(),
 
+    updateCard: (id, updates) => {
+      saveHistory();
+      set((state) => {
+        const newCards = state.cards.map((c) => (c.id === id ? { ...c, ...updates } : c));
+        const card = newCards.find((c) => c.id === id);
+        if (card) queueUpsert('cards', card, state.workspaceId);
+        return { cards: newCards };
+      });
+    },
+
     updateCardSize: (id, width, height) => {
       saveHistory();
       set((state) => {
