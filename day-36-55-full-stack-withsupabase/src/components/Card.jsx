@@ -61,6 +61,7 @@ export const Card = memo(({ card }) => {
     cards,
     toggleCardCollapse,
     activeConnectionStart,
+    updateCardPosition,
   } = usePlannerStore();
 
   const isSelected = selectedCardIds.includes(card.id);
@@ -70,6 +71,16 @@ export const Card = memo(({ card }) => {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const contentRef = useRef(null);
+  const cardRef = useRef(null);
+  const currentPos = useRef({ x: card.x, y: card.y });
+
+  // Update currentPos if card.x/card.y change from outside (e.g. initial load or sync)
+  useEffect(() => {
+    currentPos.current = { x: card.x, y: card.y };
+    if (cardRef.current) {
+      cardRef.current.style.transform = `translate(${card.x}px, ${card.y}px)`;
+    }
+  }, [card.x, card.y]);
 
   // Safely update innerHTML without stealing focus
   useEffect(() => {
@@ -130,21 +141,77 @@ export const Card = memo(({ card }) => {
 
   const handlePointerDown = (e) => {
     if (activeTool === 'cursor') {
+      const target = e.target;
+      if (
+        target.closest(
+          'input, textarea, button, select, [contenteditable="true"], .port, [data-resize-handle]'
+        )
+      ) {
+        return;
+      }
+
       e.stopPropagation();
       const isSelectedNow = selectedCardIds.includes(card.id);
 
-      // If we shift-click, toggle selection
+      // If we shift-click, toggle selection and don't drag immediately
       if (e.shiftKey) {
         toggleCardSelection(card.id, true);
+        return;
       } else {
-        // Normal click. If it's already selected, don't clear (might be dragging group).
-        // GSAP will handle dragging. If we just click without dragging, maybe it stays selected.
-        // Actually, if we click an unselected card, clear and select it.
         if (!isSelectedNow) {
           clearSelection();
           toggleCardSelection(card.id, false);
         }
       }
+
+      const store = usePlannerStore.getState();
+      const selectedIds = store.selectedCardIds.includes(card.id) ? store.selectedCardIds : [card.id];
+      
+      const initialPositions = selectedIds.map((id) => {
+        const node = document.getElementById(id);
+        const c = store.cards.find((c) => c.id === id);
+        return { id, x: c?.x || 0, y: c?.y || 0, node };
+      });
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+
+      const onPointerMove = (moveEvent) => {
+        const currentScale = usePlannerStore.getState().viewport.scale || 1;
+        const dx = (moveEvent.clientX - startX) / currentScale;
+        const dy = (moveEvent.clientY - startY) / currentScale;
+
+        initialPositions.forEach(({ id, x, y, node }) => {
+          const newX = x + dx;
+          const newY = y + dy;
+          
+          if (id === card.id) currentPos.current = { x: newX, y: newY };
+          
+          if (node) {
+            node.style.transform = `translate(${newX}px, ${newY}px)`;
+            node.dataset.dragX = newX;
+            node.dataset.dragY = newY;
+          }
+        });
+
+        window.dispatchEvent(new CustomEvent('updatePaths'));
+      };
+
+      const onPointerUp = () => {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+        
+        initialPositions.forEach(({ id, node }) => {
+          if (node && node.dataset.dragX !== undefined) {
+             store.updateCardPosition(id, parseFloat(node.dataset.dragX), parseFloat(node.dataset.dragY));
+             delete node.dataset.dragX;
+             delete node.dataset.dragY;
+          }
+        });
+      };
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
     }
   };
 
@@ -1265,13 +1332,14 @@ export const Card = memo(({ card }) => {
   return (
     <div
       id={card.id}
+      ref={cardRef}
       className={`card-node absolute ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
       style={{
         width: card.width || 250,
         height: card.height || 200,
         left: 0,
         top: 0,
-        transform: `translate(${card.x}px, ${card.y}px)`,
+        transform: `translate(${currentPos.current.x}px, ${currentPos.current.y}px)`,
         position: 'absolute',
       }}
       onPointerDown={handlePointerDown}

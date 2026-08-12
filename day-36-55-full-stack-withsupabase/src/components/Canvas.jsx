@@ -71,6 +71,17 @@ export const Canvas = () => {
   const isDraggingCardRef = useRef(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const currentDrawingIdRef = useRef(null);
+  
+  const isPanningRef = useRef(false);
+  const panStartRef = useRef({ x: 0, y: 0 });
+  const viewportPosRef = useRef({ x: viewport.x, y: viewport.y });
+
+  useEffect(() => {
+    viewportPosRef.current = { x: viewport.x, y: viewport.y };
+    if (wrapperRef.current && !isPanningRef.current) {
+      wrapperRef.current.style.transform = `translate3d(${viewport.x}px, ${viewport.y}px, 0) scale(${viewport.scale})`;
+    }
+  }, [viewport.x, viewport.y, viewport.scale]);
 
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -91,63 +102,7 @@ export const Canvas = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Viewport Draggable for Pan
-  useEffect(() => {
-    if (!wrapperRef.current) return;
-
-    const vpDraggable = Draggable.create(wrapperRef.current, {
-      type: 'x,y',
-      trigger: containerRef.current,
-      inertia: true,
-      zIndexBoost: false,
-      clickableTest: function (e) {
-        if (usePlannerStore.getState().activeTool === 'pan') return false;
-        const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
-        if (
-          target?.closest?.('.card-node') ||
-          target?.closest?.('.port') ||
-          target?.closest?.('[data-resize-handle]')
-        )
-          return true;
-        return false;
-      },
-      onPress: function (e) {
-        if (usePlannerStore.getState().activeTool === 'pan') return;
-
-        const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
-        if (
-          selectedCardIds.length > 0 ||
-          target?.closest?.('.card-node') ||
-          target?.closest?.('.port')
-        ) {
-          this.endDrag(e);
-        }
-      },
-      onDrag: function () {
-        if (gridRef.current) {
-          gridRef.current.style.backgroundPosition = `${this.x}px ${this.y}px`;
-        }
-      },
-      onDragEnd: function () {
-        updateViewport({ x: this.x, y: this.y, scale: viewport.scale });
-      },
-    });
-
-    if (activeTool === 'pan') {
-      vpDraggable[0].enable();
-    } else if (selectedCardIds.length > 0) {
-      vpDraggable[0].disable();
-    } else if (activeTool !== 'cursor') {
-      vpDraggable[0].disable();
-    } else {
-      vpDraggable[0].enable();
-    }
-
-    return () => {
-      vpDraggable[0].kill();
-    };
-  }, [activeTool, viewport.scale, updateViewport, selectedCardIds]);
-
+  // Viewport Draggable removed in favor of native pointer events
   // Zoom logic
   useEffect(() => {
     const handleWheel = (e) => {
@@ -270,18 +225,20 @@ export const Canvas = () => {
     updatePaths();
   }, [updatePaths]);
 
-  // Global Redraw Trigger: Sync wires if positional data changes outside of GSAP drag
+  // Global Redraw Trigger: Sync wires if positional data changes outside of native drag
   useEffect(() => {
-    if (!isDraggingCardRef.current) {
-      activeCards.forEach((card) => {
-        const node = document.getElementById(card.id);
-        if (node) {
-          gsap.set(node, { x: card.x, y: card.y });
-        }
-      });
-      updatePaths();
-    }
-  }, [activeCards, updatePaths]);
+    activeCards.forEach((card) => {
+      const node = document.getElementById(card.id);
+      if (node && node.dataset.dragX === undefined) {
+        node.style.transform = `translate(${card.x}px, ${card.y}px)`;
+      }
+    });
+  }, [activeCards]);
+
+  useEffect(() => {
+    window.addEventListener('updatePaths', updatePaths);
+    return () => window.removeEventListener('updatePaths', updatePaths);
+  }, [updatePaths]);
 
   useEffect(() => {
     resizeObserverRef.current = new ResizeObserver((entries) => {
@@ -302,90 +259,6 @@ export const Canvas = () => {
     };
   }, [activeCards, updateCardSize, updatePaths]);
 
-  useEffect(() => {
-    const draggables = [];
-    activeCards.forEach((card) => {
-      const node = document.getElementById(card.id);
-      if (node) {
-        cardRefs.current[card.id] = node;
-        resizeObserverRef.current.observe(node);
-        const d = Draggable.create(node, {
-          type: 'x,y',
-          allowEventDefault: true,
-          clickableTest: function (e) {
-            if (usePlannerStore.getState().activeTool === 'pan') return true;
-            const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
-            if (
-              target?.closest?.(
-                'input, textarea, button, select, [contenteditable="true"], .port, [data-resize-handle]'
-              )
-            )
-              return true;
-            const rect = node.getBoundingClientRect();
-            const clientX =
-              e.clientX ?? (e.touches && e.touches.length > 0 ? e.touches[0].clientX : 0);
-            const clientY =
-              e.clientY ?? (e.touches && e.touches.length > 0 ? e.touches[0].clientY : 0);
-            if (clientX > rect.right - 25 && clientY > rect.bottom - 25) return true;
-            return false;
-          },
-          onDragStart: (e) => {
-            if (isConnectingRef.current) return;
-            e.stopPropagation();
-            isDraggingCardRef.current = true;
-
-            const store = usePlannerStore.getState();
-            if (!store.selectedCardIds.includes(card.id)) {
-              store.clearSelection();
-              store.toggleCardSelection(card.id, false);
-            }
-
-            const vp = Draggable.get(wrapperRef.current);
-            if (vp) vp.disable();
-          },
-          onDrag: function () {
-            const store = usePlannerStore.getState();
-            if (store.selectedCardIds.includes(card.id)) {
-              store.selectedCardIds.forEach((id) => {
-                if (id !== card.id) {
-                  const siblingNode = document.getElementById(id);
-                  if (siblingNode) {
-                    gsap.set(siblingNode, { x: '+=' + this.deltaX, y: '+=' + this.deltaY });
-                  }
-                }
-              });
-            }
-            updatePaths();
-          },
-          onDragEnd: function () {
-            const store = usePlannerStore.getState();
-            if (store.selectedCardIds.includes(card.id)) {
-              store.selectedCardIds.forEach((id) => {
-                const node = document.getElementById(id);
-                if (node) {
-                  const finalX = gsap.getProperty(node, 'x');
-                  const finalY = gsap.getProperty(node, 'y');
-                  updateCardPosition(id, finalX, finalY);
-                }
-              });
-            } else {
-              updateCardPosition(card.id, this.x, this.y);
-            }
-            if (store.activeTool === 'pan' || store.activeTool === 'cursor') {
-              const vp = Draggable.get(wrapperRef.current);
-              if (vp) vp.enable();
-            }
-            isDraggingCardRef.current = false;
-          },
-        });
-        draggables.push(d[0]);
-      }
-    });
-    return () => {
-      draggables.forEach((d) => d.kill());
-    };
-  }, [activeCards, updatePaths, updateCardPosition, updateCardSize]);
-
   const visibleCards = activeCards.filter((card) => {
     const left = -viewport.x / viewport.scale - BUFFER;
     const top = -viewport.y / viewport.scale - BUFFER;
@@ -399,20 +272,6 @@ export const Canvas = () => {
   const [connecting, setConnecting] = useState(null);
   const connectingPathRef = useRef(null);
   const currentConnectingRef = useRef(null);
-
-  const setDraggablesEnabled = (enabled) => {
-    if (wrapperRef.current) {
-      const vp = Draggable.get(wrapperRef.current);
-      if (vp) enabled ? vp.enable() : vp.disable();
-    }
-    activeCards.forEach((card) => {
-      const node = document.getElementById(card.id);
-      if (node) {
-        const d = Draggable.get(node);
-        if (d) enabled ? d.enable() : d.disable();
-      }
-    });
-  };
 
   const handlePointerDown = (e) => {
     const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
@@ -467,8 +326,6 @@ export const Canvas = () => {
           calculateBezier(p1, { x, y }, currentConnectingRef.current.sourcePort, 'center')
         );
       }
-
-      setDraggablesEnabled(false);
       return;
     }
 
@@ -499,17 +356,26 @@ export const Canvas = () => {
           width: drawingWidth,
         });
       }
-      setDraggablesEnabled(false);
       return;
-    } else if (activeTool === 'cursor') {
-      if (!e.shiftKey) clearSelection();
-      const rect = wrapperRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / viewport.scale;
-      const y = (e.clientY - rect.top) / viewport.scale;
-      isLassoing.current = true;
-      lassoStart.current = { x, y };
-      setLassoRect({ startX: x, startY: y, endX: x, endY: y });
-      setDraggablesEnabled(false);
+    } else if (activeTool === 'cursor' || activeTool === 'pan') {
+      const isCardHit = target?.closest?.('.card-node') || target?.closest?.('.port') || target?.closest?.('[data-resize-handle]');
+      
+      if (activeTool === 'pan' || (activeTool === 'cursor' && !isCardHit && e.button !== 2)) {
+        if (activeTool === 'cursor' && e.shiftKey) {
+          const rect = wrapperRef.current.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / viewport.scale;
+          const y = (e.clientY - rect.top) / viewport.scale;
+          isLassoing.current = true;
+          lassoStart.current = { x, y };
+          setLassoRect({ startX: x, startY: y, endX: x, endY: y });
+        } else {
+          if (!e.shiftKey) clearSelection();
+          isPanningRef.current = true;
+          panStartRef.current = { x: e.clientX, y: e.clientY };
+        }
+      } else if (activeTool === 'cursor' && !e.shiftKey) {
+        clearSelection();
+      }
     }
   };
 
@@ -537,6 +403,19 @@ export const Canvas = () => {
           )
         );
       }
+    } else if (isPanningRef.current) {
+      const dx = e.clientX - panStartRef.current.x;
+      const dy = e.clientY - panStartRef.current.y;
+      
+      const newX = viewportPosRef.current.x + dx;
+      const newY = viewportPosRef.current.y + dy;
+      
+      if (wrapperRef.current) {
+        wrapperRef.current.style.transform = `translate3d(${newX}px, ${newY}px, 0) scale(${viewport.scale})`;
+      }
+      if (gridRef.current) {
+        gridRef.current.style.backgroundPosition = `${newX}px ${newY}px`;
+      }
     } else if (isLassoing.current) {
       const rect = wrapperRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / viewport.scale;
@@ -561,7 +440,6 @@ export const Canvas = () => {
       } else if (currentDrawingIdRef.current) {
         const drawing = drawings.find((d) => d.id === currentDrawingIdRef.current);
         if (drawing) {
-          // Throttling or simplification could go here, but for now we push
           updateDrawing(currentDrawingIdRef.current, { points: [...drawing.points, { x, y }] });
         }
       }
@@ -571,7 +449,6 @@ export const Canvas = () => {
   const handlePointerUp = (e) => {
     const target = e.target?.nodeType === 3 ? e.target.parentNode : e.target;
     const port = target?.closest?.('.port');
-    const store = usePlannerStore.getState();
     
     if (currentConnectingRef.current) {
       e.stopPropagation();
@@ -588,7 +465,7 @@ export const Canvas = () => {
             ''
           );
         }
-        store.setActiveConnectionStart(null);
+        usePlannerStore.getState().setActiveConnectionStart(null);
         setConnecting(null);
         currentConnectingRef.current = null;
         if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
@@ -596,10 +473,21 @@ export const Canvas = () => {
         if (connectingPathRef.current) connectingPathRef.current.style.display = 'none';
         currentConnectingRef.current = null;
       }
-      
-      setDraggablesEnabled(true);
       return;
     }
+
+    if (isPanningRef.current) {
+      isPanningRef.current = false;
+      const dx = e.clientX - panStartRef.current.x;
+      const dy = e.clientY - panStartRef.current.y;
+      const newX = viewportPosRef.current.x + dx;
+      const newY = viewportPosRef.current.y + dy;
+      
+      viewportPosRef.current = { x: newX, y: newY };
+      updateViewport({ x: newX, y: newY, scale: viewport.scale });
+      return;
+    }
+
     if (activeTool === 'draw' && isDrawing) {
       if (currentDrawingIdRef.current) {
         const store = usePlannerStore.getState();
@@ -753,7 +641,8 @@ export const Canvas = () => {
         ref={wrapperRef}
         className="absolute inset-0 origin-top-left"
         style={{
-          transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.scale})`,
+          transform: `translate3d(${viewportPosRef.current.x}px, ${viewportPosRef.current.y}px, 0) scale(${viewport.scale})`,
+          willChange: 'transform',
         }}
       >
         <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-[5]">
