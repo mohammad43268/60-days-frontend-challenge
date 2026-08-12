@@ -243,8 +243,8 @@ export const Card = memo(({ card }) => {
     const node = document.getElementById(card.id);
     if (!node) return;
 
-    const startWidth = parseFloat(node.style.width) || node.offsetWidth || 250;
-    const startHeight = parseFloat(node.style.height) || node.offsetHeight || 200;
+    const startWidth = parseFloat(node.style.width) || node.offsetWidth || (card.width || 250);
+    const startHeight = parseFloat(node.style.height) || node.offsetHeight || (card.height || 200);
 
     const onPointerMove = (moveEvent) => {
       const currentScale = usePlannerStore.getState().viewport.scale || 1;
@@ -1314,8 +1314,8 @@ export const Card = memo(({ card }) => {
       ref={cardRef}
       className={`card-node absolute min-w-[200px] ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
       style={{
-        width: card.width || 250,
-        height: card.height || 200,
+        width: card.width ? `${card.width}px` : '250px',
+        height: card.height ? `${card.height}px` : '200px',
         left: 0,
         top: 0,
         transform: `translate(${currentPos.current.x}px, ${currentPos.current.y}px)`,
