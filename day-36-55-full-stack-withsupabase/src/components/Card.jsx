@@ -849,8 +849,9 @@ export const Card = memo(({ card }) => {
           }
 
           return (
-            <div key={idx} className="relative w-full h-full group/item overflow-hidden">
+            <div key={idx} className="relative w-full h-full group/item overflow-hidden rounded-b-lg">
               {mediaElement}
+              <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] pointer-events-none rounded-b-lg"></div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -983,14 +984,12 @@ export const Card = memo(({ card }) => {
 
       case 'code':
         return (
-          <div className="flex flex-col h-full bg-[#0D0D0E] rounded-lg overflow-hidden border border-white/10 shadow-2xl relative group font-mono transition-colors hover:border-white/20">
+          <div className="flex flex-col h-full bg-[#0A0A0B] rounded-lg overflow-hidden border border-white/10 shadow-2xl relative group font-mono transition-colors hover:border-white/20">
             {/* Mac Window Header */}
-            <div className="h-9 bg-white/5 backdrop-blur-md border-b border-white/10 flex items-center px-4 shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#FF5F56] shadow-[0_0_5px_rgba(255,95,86,0.5)]"></div>
-                <div className="w-3 h-3 rounded-full bg-[#FFBD2E] shadow-[0_0_5px_rgba(255,189,46,0.5)]"></div>
-                <div className="w-3 h-3 rounded-full bg-[#27C93F] shadow-[0_0_5px_rgba(39,201,63,0.5)]"></div>
-              </div>
+            <div className="flex items-center gap-1.5 px-3 py-2 bg-black/40 border-b border-white/10 shrink-0">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
 
               <div className="flex items-center ml-auto">
                 <select
@@ -1031,29 +1030,9 @@ export const Card = memo(({ card }) => {
               </div>
             </div>
             {/* Editor Area */}
-            <div className="flex-1 relative flex overflow-hidden">
-              {/* Fake line numbers column */}
-              <div className="w-10 shrink-0 bg-[#0D0D0E] border-r border-white/5 flex flex-col items-end py-3 px-3 text-[11px] text-gray-600 font-mono select-none overflow-hidden">
-                {card.content ? (
-                  card.content.split('\n').map((_, i) => <div key={i}>{i + 1}</div>)
-                ) : (
-                  <div>1</div>
-                )}
-              </div>
+            <div className="flex-1 relative flex max-h-[300px] overflow-y-auto custom-scrollbar bg-[#0A0A0B]">
               <textarea
-                className="flex-1 h-full bg-transparent resize-none outline-none font-mono text-[13px] leading-relaxed p-3 custom-scrollbar whitespace-pre"
-                style={{
-                  color:
-                    card.metadata?.language === 'python'
-                      ? '#A6E22E'
-                      : card.metadata?.language === 'html'
-                        ? '#E6DB74'
-                        : card.metadata?.language === 'css'
-                          ? '#66D9EF'
-                          : card.metadata?.language === 'sql'
-                            ? '#F92672'
-                            : '#D4D4D4',
-                }}
+                className="flex-1 w-full bg-transparent resize-none outline-none font-mono text-sm text-green-400/90 p-4 whitespace-pre"
                 value={card.content}
                 onChange={(e) => updateCardContent(card.id, e.target.value)}
                 onPointerDown={(e) => e.stopPropagation()}
@@ -1333,7 +1312,7 @@ export const Card = memo(({ card }) => {
     <div
       id={card.id}
       ref={cardRef}
-      className={`card-node absolute ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
+      className={`card-node absolute min-w-[200px] ${isSelected ? 'z-10' : 'z-0'} ${activeTool === 'cursor' ? 'cursor-move' : activeTool === 'pan' ? 'pointer-events-none' : ''}`}
       style={{
         width: card.width || 250,
         height: card.height || 200,
