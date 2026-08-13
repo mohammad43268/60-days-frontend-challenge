@@ -17,8 +17,6 @@ import { recognizeShape } from '../utils/shapeRecognizer';
 
 gsap.registerPlugin(Draggable);
 
-const BUFFER = 500;
-
 const EmptyState = () => (
   <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center text-text-muted/60 select-none z-0">
     <Sparkles className="w-12 h-12 mb-4 opacity-50" />
@@ -93,6 +91,25 @@ export const Canvas = () => {
     (conn) =>
       activeCards.some((c) => c.id === conn.source) && activeCards.some((c) => c.id === conn.target)
   );
+
+  // Dynamic Buffer for Virtualization
+  const buffer = Math.max(500, windowSize.width / viewport.scale);
+
+  // Spatial Virtualization (Cards)
+  const visibleCards = activeCards.filter((card) => {
+    const left = -viewport.x / viewport.scale - buffer;
+    const top = -viewport.y / viewport.scale - buffer;
+    const right = (windowSize.width - viewport.x) / viewport.scale + buffer;
+    const bottom = (windowSize.height - viewport.y) / viewport.scale + buffer;
+    const w = card.width || 250;
+    const h = card.height || 250;
+    return card.x + w > left && card.x < right && card.y + h > top && card.y < bottom;
+  });
+
+  // Spatial Virtualization (Connections)
+  const visibleConnections = activeConnections.filter((conn) => {
+    return visibleCards.some(c => c.id === conn.source || c.id === conn.target);
+  });
 
   // Handle window resize
   useEffect(() => {
@@ -202,7 +219,7 @@ export const Canvas = () => {
   };
 
   const updatePaths = useCallback(() => {
-    activeConnections.forEach((conn) => {
+    visibleConnections.forEach((conn) => {
       const sourceCard = activeCards.find((c) => c.id === conn.source);
       const targetCard = activeCards.find((c) => c.id === conn.target);
       if (sourceCard && targetCard) {
@@ -219,7 +236,7 @@ export const Canvas = () => {
         }
       }
     });
-  }, [activeCards, activeConnections]);
+  }, [activeCards, visibleConnections]);
 
   useLayoutEffect(() => {
     updatePaths();
@@ -258,16 +275,6 @@ export const Canvas = () => {
       if (resizeObserverRef.current) resizeObserverRef.current.disconnect();
     };
   }, [activeCards, updateCardSize, updatePaths]);
-
-  const visibleCards = activeCards.filter((card) => {
-    const left = -viewport.x / viewport.scale - BUFFER;
-    const top = -viewport.y / viewport.scale - BUFFER;
-    const right = (windowSize.width - viewport.x) / viewport.scale + BUFFER;
-    const bottom = (windowSize.height - viewport.y) / viewport.scale + BUFFER;
-    const w = card.width || 250;
-    const h = card.height || 250;
-    return card.x + w > left && card.x < right && card.y + h > top && card.y < bottom;
-  });
 
   const [connecting, setConnecting] = useState(null);
   const connectingPathRef = useRef(null);
@@ -415,6 +422,13 @@ export const Canvas = () => {
       }
       if (gridRef.current) {
         gridRef.current.style.backgroundPosition = `${newX}px ${newY}px`;
+      }
+
+      // Throttled Viewport Update for Spatial Virtualization
+      // If we've panned more than 300px away from the last known React state, update React so new cards load smoothly
+      const dist = Math.hypot(newX - viewport.x, newY - viewport.y);
+      if (dist > 300 * viewport.scale) {
+        updateViewport({ x: newX, y: newY, scale: viewport.scale });
       }
     } else if (isLassoing.current) {
       const rect = wrapperRef.current.getBoundingClientRect();
@@ -800,7 +814,7 @@ export const Canvas = () => {
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316" />
             </marker>
           </defs>
-          {activeConnections.map((conn) => {
+          {visibleConnections.map((conn) => {
             const style = getConnectionStyle(conn.type);
             const pathData =
               pathRefs.current[conn.id] && pathRefs.current[conn.id][0]
