@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Toolbar } from './components/Toolbar';
 import { CommandPalette } from './components/CommandPalette';
 import { ExportModal } from './components/modals/ExportModal';
+import { AuthLoader } from './components/AuthLoader';
 import { usePlannerStore } from './store/usePlannerStore';
 import { supabase } from './lib/supabase';
 
@@ -149,11 +150,7 @@ function App() {
   }, []);
 
   if (isAuthLoading) {
-    return (
-      <div className="w-screen h-screen bg-[#050505] flex items-center justify-center text-[#F97316] font-mono tracking-widest text-sm">
-        SYNCING ZAFORGE CORE...
-      </div>
-    );
+    return <AuthLoader />;
   }
 
   // Safe Route Guarding
