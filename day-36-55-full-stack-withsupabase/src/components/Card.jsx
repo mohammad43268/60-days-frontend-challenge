@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
 import gsap from 'gsap';
 import { usePlannerStore } from '../store/usePlannerStore';
-import { useShallow } from 'zustand/react/shallow';
 import {
   Trash2,
   GripHorizontal,
@@ -64,21 +63,7 @@ export const Card = memo(({ card }) => {
     toggleCardCollapse,
     activeConnectionStart,
     updateCardPosition,
-  } = usePlannerStore(useShallow(state => ({
-    updateCardContent: state.updateCardContent,
-    updateCardMetadata: state.updateCardMetadata,
-    selectedCardIds: state.selectedCardIds,
-    toggleCardSelection: state.toggleCardSelection,
-    clearSelection: state.clearSelection,
-    activeTool: state.activeTool,
-    updateCardSize: state.updateCardSize,
-    updateCard: state.updateCard,
-    connections: state.connections,
-    cards: state.cards,
-    toggleCardCollapse: state.toggleCardCollapse,
-    activeConnectionStart: state.activeConnectionStart,
-    updateCardPosition: state.updateCardPosition,
-  })));
+  } = usePlannerStore();
 
   const isSelected = selectedCardIds.includes(card.id);
   const showPorts = activeTool === 'connect' || isSelected;
