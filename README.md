@@ -1,103 +1,185 @@
+<div align="center">
+
 # 🚀 60 Days Frontend Challenge
 
-> Turning consistency into craft. Building one project every day for 60 days.
+**Mohammad Huzaifa — Frontend Architect | CS Student | Aspiring SWE**
 
-![Progress](https://img.shields.io/badge/Day-07%20of%2060-00ff88?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-![GitHub commits](https://img.shields.io/github/commit-activity/w/mohammad43268/60-days-frontend-challenge?style=for-the-badge)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/mohammad-huzaifa-359673344/)
+[![AKIRA Studio](https://img.shields.io/badge/Live_Project-AKIRA_Studio-0e75b6?style=flat-square&logo=vercel&logoColor=white)](https://60-days-frontend-challenge.vercel.app/)
+[![Zaforge](https://img.shields.io/badge/Live_Project-Zaforge-0e75b6?style=flat-square&logo=vercel&logoColor=white)](https://zaforgevercelapp.vercel.app/)
+[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:huzaifa2086@gmail.com)
 
-## 🌐 Live Demo
-**[AKIRA Studios — Week 1 Capstone](https://60-days-frontend-challenge.vercel.app)**
+![Days](https://img.shields.io/badge/Days-60%20%2F%2060-00ff88?style=flat-square)
+![Commits](https://img.shields.io/github/commit-activity/t/mohammad43268/60-days-frontend-challenge?style=flat-square&color=0e75b6)
+![Last Commit](https://img.shields.io/github/last-commit/mohammad43268/60-days-frontend-challenge?style=flat-square&color=0e75b6)
 
----
-
-## 👨‍💻 About Me
-
-I am Mohammad Huzaifa, a Computer Science student at Jamia Millia Islamia.
-This is my public commitment to become a job-ready frontend engineer in 60 days —
-building real projects daily, pushing to GitHub, and documenting everything on LinkedIn.
-
-**Goal:** Land a frontend engineering role and build toward working in Germany's tech industry.
+</div>
 
 ---
 
-## 🗺️ Roadmap
+## 👨‍💻 About This Repo
 
-| Week | Focus | Status |
-|------|-------|--------|
-| Week 1 (Days 01–07) | CSS Mastery | ✅ Complete |
-| Week 2 (Days 08–14) | JavaScript ES6+ | 🔄 In Progress |
-| Week 3 (Days 15–21) | GSAP + CSS 3D Animations | ⬜ Upcoming |
-| Week 4 (Days 22–28) | Three.js + Spline + Lenis | ⬜ Upcoming |
-| Week 5 (Days 29–35) | React Fundamentals | ⬜ Upcoming |
-| Week 6 (Days 36–42) | React Advanced + Deploy | ⬜ Upcoming |
-| Week 7 (Days 43–49) | DSA Easy — 30 Problems | ⬜ Upcoming |
-| Week 8 (Days 50–60) | DSA Medium + Final Portfolio | ⬜ Upcoming |
+I'm a Computer Science diploma student at Jamia Millia Islamia, Delhi, building toward international Software Engineering roles and open-source contribution (GSoC). This repository is a self-imposed 60-day public challenge: build and ship something real every day, starting from CSS fundamentals and working up through JavaScript, motion/animation systems, 3D on the web, and React.
+
+The goal wasn't a curriculum checklist — it was consistency, and a GitHub history I can defend line by line in an interview.
+
+**🌱 Currently exploring:** Three.js, Electron.js, local-first architecture
+**🎯 Goals:** GSoC contribution, frontend engineering roles, eventually the German tech market
 
 ---
 
-## 📅 Daily Progress
+## 🌐 Live Projects
 
-| Day | Topic | Projects Built | Status |
-|-----|-------|---------------|--------|
-| 01 | CSS Reset + Box Model | Reset Demo, Box Model Visual | ✅ |
-| 02 | Flexbox | Navbar, Card Row, Holy Grail Layout | ✅ |
-| 03 | CSS Grid + Variables | Bento Gallery, Dashboard, Theme Switcher | ✅ |
-| 04 | Responsive + Typography | Fluid Typography Engine, Landing Page | ✅ |
-| 05 | CSS Animations | Design System Masterclass, Animated Hero | ✅ |
-| 06 | Scroll Animations | Scroll Showcase, Spider-Verse Story | ✅ |
-| 07 | CSS Landing Page | AKIRA Studios Game Studio — Live on Vercel | ✅ |
-| 08 | JavaScript ES6+ | Coming soon | ⬜ |
+| Project | Description | Link |
+|---|---|---|
+| 🎮 **AKIRA Studio** | Next-gen gaming brand landing page — pure CSS, zero JS libraries | [Live →](https://60-days-frontend-challenge.vercel.app/) |
+| 🗂️ **Zaforge** | Production spatial canvas app — infinite pan/zoom board, real auth, real database | [Live →](https://zaforgevercelapp.vercel.app/) |
 
 ---
 
-## 🏆 Projects Built
+## 🛠️ Technical Expertise
 
-### 🎮 AKIRA Studios — Game Studio Landing Page
-> Week 1 Capstone — Pure CSS, Zero Libraries
-- Cinematic hero with text-behind-image effect
-- Featured game section (Project Katana)
-- Bento game library grid
-- Character showcase with horizontal scroll
-- Scroll progress bar
-- **[Live Demo](https://60-days-frontend-challenge.vercel.app)**
+<div align="center">
 
-### 🕷️ Spider-Verse Cinematic Story
-> Scroll-driven narrative experience
-- Full scroll storytelling page
-- Each section animates into view
-- Red scroll progress indicator
-- Original copywriting for each character
+**Frontend Ecosystem**<br>
+<img src="https://skillicons.dev/icons?i=html,css,js,react,ts,tailwind,threejs,figma" alt="Frontend" />
+
+<br><br>
+
+**Backend & Languages**<br>
+<img src="https://skillicons.dev/icons?i=nodejs,py,cpp,c,mongodb,mysql" alt="Backend" />
+
+<br><br>
+
+**Tools & Architecture**<br>
+<img src="https://skillicons.dev/icons?i=git,github,vercel,electron,supabase,vscode" alt="Tools" />
+
+</div>
+
+---
+
+## 🗺️ The Journey — Week by Week
+
+| Week | Focus | Highlight Project |
+|---|---|---|
+| Week 1 (Days 01–07) | CSS Fundamentals — Box Model, Flexbox, Grid, Variables, Animation, Scroll | **AKIRA Studio** — full landing page, pure CSS |
+| Week 2 (Days 08–14) | JavaScript ES6+ — scope, destructuring, modules, DOM, async/await | Tech Talent Directory — live search & filtering |
+| Week 3 (Days 15–21) | GSAP + CSS 3D — timelines, ScrollTrigger, ScrollSmoother | **Land Rover Defender configurator**, **PNEUMA** 3D tilt card |
+| Week 4 (Days 22–28) | Three.js + WebGL | **NOVULARI SYNDICATE** driving simulator, **WOLF Acoustics** GLB showcase, VIEWPORT-X |
+| Week 5–6 (Days 29–42) | React — hooks, routing, state, deployment | NOIR ATELIER, Verdant & Co. |
+| Week 7 (Days 43–49) | Full-stack detour | **Zaforge** — Supabase, Google OAuth, RLS, custom viewport-culling math |
+| Week 8 (Days 50–60) | Systems + capstone | **Aura OS** — browser-based desktop environment |
+
+> **Honest note on DSA:** the original roadmap included 60 LeetCode problems across Weeks 7–8. A hardware failure mid-challenge and other real-life priorities pushed this out of scope. It's an open item, not a hidden one — being picked back up separately, not backfilled here.
+
+---
+
+## 🏆 Featured Projects
+
+### 🗂️ Zaforge — Spatial Canvas Application
+*First full production app in the challenge — not just a static build.*
+- Infinite pannable/zoomable canvas with AABB (axis-aligned bounding box) viewport culling — only renders what's visible, tested across zoom levels
+- Real authentication (Google OAuth via Supabase) with Row Level Security
+- State managed with Zustand
+- **[Live →](https://zaforgevercelapp.vercel.app/)**
+
+### 🎮 AKIRA Studio — Gaming Brand Landing Page
+*Week 1 capstone. Pure CSS, no animation libraries.*
+- Cinematic hero with text-behind-image layering
+- Bento-style game library grid, horizontal-scroll character showcase
+- Scroll-driven reveals using `animation-timeline: view()`
+- **[Live →](https://60-days-frontend-challenge.vercel.app/)**
+
+### 🚗 NOVULARI SYNDICATE — Three.js Driving Simulator
+- Driveable Audi model with physics-based movement and a chase camera
+- Web Audio API for engine/ambient sound
+- Built alongside VIEWPORT-X (tactical 3D lab) and a WebGL Explorer Laboratory
+
+### 🎧 WOLF Acoustics — 3D Product Showcase
+- GLB headphone model in an interactive Three.js scene with a live material switcher
+- Marked the shift from CDN-based Three.js to a proper Vite + npm setup
+
+### 🛞 Land Rover Defender Configurator — GSAP
+- Interactive configurator using GSAP's MotionPathPlugin for camera movement along an SVG path
+- Live color/state changes on an "ignite" interaction
+
+### 🖥️ Aura OS — Browser-Based Desktop Environment *(local only)*
+- Simulated desktop OS in the browser: draggable windows, taskbar, app panels
+- Frontend in GSAP + Vanilla JS, backend in Python (FastAPI), Gemini function-calling for an AI assistant window
+- Not deployed publicly — shown here as a systems project rather than a typical UI build
 
 ### 🎨 Design System Masterclass
-> CSS Animation Playground
-- Glassmorphism, Claymorphism, Neomorphism
-- Interactive elements, toggles, sliders
-- 6 different UI design styles
-
-### 📊 Huzaifa OS Dashboard
-> Admin dashboard with CSS Grid
-- SaaS-style interface
-- Stats cards, sidebar, data visualization
-- Named after my own OS concept
-
-### 🖼️ Bento Art Gallery
-> Apple-style grid layout
-- Cyberpunk and anime aesthetic
-- Different sized cells with spanning
-- Real images with overlay effects
+- Glassmorphism, Claymorphism, and Neomorphism implemented side by side, each with working interactive elements
 
 ---
 
-## 🛠️ Tech Stack
+## 📸 Screenshots
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![GSAP](https://img.shields.io/badge/GSAP-coming_soon-88CE02?style=flat-square)
-![React](https://img.shields.io/badge/React-coming_soon-61DAFB?style=flat-square&logo=react)
-![C++](https://img.shields.io/badge/C++-DSA-00599C?style=flat-square&logo=cplusplus)
+<p align="center">
+  <img src="./screenshots/akira-studio.png" alt="AKIRA Studio landing page" width="90%" />
+</p>
+
+<p align="center">
+  <img src="./screenshots/zaforge.png" alt="Zaforge spatial canvas app" width="90%" />
+</p>
+
+<p align="center">
+  <img src="./screenshots/novulari-syndicate.png" alt="NOVULARI SYNDICATE Three.js driving simulator" width="45%" />
+  <img src="./screenshots/aura-os.png" alt="Aura OS browser desktop environment" width="45%" />
+</p>
+
+> *Create a `/screenshots` folder in the repo root and add: `akira-studio.png`, `zaforge.png`, `novulari-syndicate.png`, `aura-os.png` — or rename the files above to match whatever you save.*
+
+---
+
+## 📊 GitHub Overview
+
+<div align="center">
+
+<img src="https://github-readme-stats.vercel.app/api?username=mohammad43268&show_icons=true&locale=en&bg_color=0D1117&hide_border=true&title_color=0e75b6&text_color=c9d1d9&icon_color=0e75b6" alt="GitHub Stats" height="170" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=mohammad43268&show_icons=true&locale=en&layout=compact&bg_color=0D1117&hide_border=true&title_color=0e75b6&text_color=c9d1d9" alt="Top Languages" height="170" />
+
+</div>
 
 ---
 
 ## 📁 Repository Structure
+
+```
+60-days-frontend-challenge/
+├── day-01-css-basics/
+├── day-02-flexbox/
+├── day-03-css-grid/
+├── day-04-responsive/
+├── day-05-animations/
+├── day-06-scroll-animations/
+├── day-07-landing-page/
+│   └── akira-studios/        → live on Vercel
+├── day-08-javascript/
+├── day-09-modules/
+├── ...
+├── week-3-gsap/
+│   ├── land-rover-configurator/
+│   ├── pneuma/
+│   └── noir-digital-craft/
+├── week-4-threejs/
+│   ├── novulari-syndicate/
+│   ├── wolf-acoustics/
+│   ├── viewport-x/
+│   └── webgl-explorer-lab/
+├── week-5-6-react/
+│   ├── noir-atelier/
+│   └── verdant-and-co/
+└── screenshots/
+```
+
+*(Zaforge and Aura OS live in separate repositories — linked above.)*
+
+---
+
+<div align="center">
+
+**60 days. Real projects. Nothing backdated, nothing faked.**
+<sub>Built with consistency, not motivation.</sub>
+
+</div>
